@@ -148,7 +148,7 @@ function renderPlayers() {
         const item = document.createElement('div');
         item.className = 'player-item';
         item.innerHTML = `
-            <div style="font-weight: 600;">${p.name}</div>
+            <div style="font-weight: 600; text-shadow: 0 0 10px rgba(255,255,255,0.3);">${p.name}</div>
             <div class="score-controls">
                 <button class="score-btn" style="color: #ef4444;" onclick="removePlayer(${p.id})">×</button>
             </div>
@@ -171,7 +171,7 @@ function renderGameGrid() {
         card.style.borderColor = `var(--neon-${game.color})`;
         card.innerHTML = `
             <div class="game-icon">${game.icon}</div>
-            <div style="font-weight: 600; font-size: 0.9rem;">${game.name}</div>
+            <div style="font-weight: 600; font-size: 0.95rem; text-shadow: 0 0 10px var(--neon-${game.color});">${game.name}</div>
         `;
         card.onclick = () => openGame(game.id);
         grid.appendChild(card);
@@ -197,6 +197,11 @@ function openGame(gameId) {
     
     const content = document.getElementById('game-content');
     content.innerHTML = ''; 
+    
+    // Trigger Animation
+    content.classList.remove('animate-entrance');
+    void content.offsetWidth; // Force Reflow
+    content.classList.add('animate-entrance');
 
     switch(gameId) {
         case 'tod': initToD(content); break;
@@ -231,12 +236,12 @@ let gameInterval, gameTimeout;
 function initToD(container) {
     container.innerHTML = `
         <p class="text-muted mb-4">สุ่มผู้เล่นและเลือก Truth (ความจริง) หรือ Dare (กล้า)</p>
-        <div id="tod-target" style="font-size: 1.2rem; color: var(--neon-blue); margin-bottom: 20px; font-weight: bold;"></div>
+        <div id="tod-target" style="font-size: 1.5rem; color: var(--neon-blue); margin-bottom: 20px; font-weight: bold; text-shadow: 0 0 20px rgba(59, 130, 246, 0.8);"></div>
         <div style="display: flex; gap: 10px; width: 100%; max-width: 300px; margin-bottom: 20px;">
-            <button class="btn-neon-purple" onclick="rollToD('truths')">Truth 😇</button>
-            <button class="btn-neon-pink" onclick="rollToD('dares')">Dare 😈</button>
+            <button class="btn-neon-purple action-btn" onclick="rollToD('truths')">Truth 😇</button>
+            <button class="btn-neon-pink action-btn" onclick="rollToD('dares')">Dare 😈</button>
         </div>
-        <div class="display-text" id="tod-display">...</div>
+        <div class="display-text glass-card p-4" id="tod-display" style="width: 100%;">...</div>
     `;
     window.rollToD = (type) => {
         document.getElementById('tod-target').innerText = `ผู้ถูกเลือก: ${getRandomPlayer()}`;
@@ -246,17 +251,17 @@ function initToD(container) {
 
 function initNHIE(container) {
     container.innerHTML = `
-        <div class="display-text" id="nhie-display" style="color: var(--neon-blue);">กดปุ่มเพื่อสุ่มคำถาม</div>
-        <p class="text-muted mb-4">ใครเคยทำสิ่งนี้ ให้ยกมือ/ดื่มน้ำ หรือโดนทำโทษ!</p>
-        <button class="btn-neon-blue" onclick="document.getElementById('nhie-display').innerText = getRandom(gameData.neverHaveIEver)" style="max-width: 250px;">🎲 สุ่ม "ฉันไม่เคย"</button>
+        <div class="display-text glass-card p-4" id="nhie-display" style="color: var(--neon-blue); width: 100%;">กดปุ่มเพื่อสุ่มคำถาม</div>
+        <p class="text-muted mb-4 mt-4">ใครเคยทำสิ่งนี้ ให้ยกมือ/ดื่มน้ำ หรือโดนทำโทษ!</p>
+        <button class="btn-neon-blue action-btn" onclick="document.getElementById('nhie-display').innerText = getRandom(gameData.neverHaveIEver)" style="max-width: 250px;">🎲 สุ่ม "ฉันไม่เคย"</button>
     `;
 }
 
 function initMostLikely(container) {
     container.innerHTML = `
-        <div class="display-text" id="ml-display" style="color: var(--neon-pink);">...</div>
-        <p class="text-muted mb-4">นับ 1 2 3 แล้วชี้ไปที่คนที่ตรงกับคำถามที่สุด!</p>
-        <button class="btn-neon-pink" onclick="document.getElementById('ml-display').innerText = getRandom(gameData.mostLikely)" style="max-width: 250px;">👉 สุ่มคำถาม</button>
+        <div class="display-text glass-card p-4" id="ml-display" style="color: var(--neon-pink); width: 100%;">...</div>
+        <p class="text-muted mb-4 mt-4">นับ 1 2 3 แล้วชี้ไปที่คนที่ตรงกับคำถามที่สุด!</p>
+        <button class="btn-neon-pink action-btn" onclick="document.getElementById('ml-display').innerText = getRandom(gameData.mostLikely)" style="max-width: 250px;">👉 สุ่มคำถาม</button>
     `;
     document.getElementById('ml-display').innerText = getRandom(gameData.mostLikely);
 }
@@ -264,26 +269,28 @@ function initMostLikely(container) {
 function initWheel(container) {
     container.innerHTML = `
         <div class="wheel-container" id="wheel-circle">เตรียมหมุน!</div>
-        <button class="btn-neon-purple mt-4" onclick="spinWheel()" style="max-width: 200px;">🎡 หมุนวงล้อ</button>
+        <button class="btn-neon-purple mt-4 action-btn" onclick="spinWheel()" style="max-width: 200px;">🎡 หมุนวงล้อ</button>
     `;
     window.spinWheel = () => {
         const wheel = document.getElementById('wheel-circle');
         const result = getRandom(gameData.wheelOptions);
-        wheel.style.transform = `rotate(${Math.floor(Math.random() * 360) + 1080}deg)`;
+        wheel.style.transform = `rotate(${Math.floor(Math.random() * 360) + 1440}deg)`;
+        wheel.style.animation = 'none';
         wheel.innerText = "กำลังหมุน...";
         setTimeout(() => {
             wheel.innerText = result;
             wheel.style.transform = `rotate(0deg)`;
-        }, 3000);
+            wheel.style.animation = 'ring-pulse 2s infinite';
+        }, 3500);
     };
 }
 
 function initHotPotato(container) {
     container.innerHTML = `
-        <h3 class="mb-2" id="hp-category">หมวดหมู่: ...</h3>
+        <h3 class="mb-4 text-gradient" id="hp-category">หมวดหมู่: ...</h3>
         <div class="display-text timer-text" id="hp-status">💣</div>
-        <p class="text-muted mb-4">ส่งมือถือวนไปพร้อมตอบคำถาม ใครถือตอนระเบิด=แพ้!</p>
-        <button class="btn-danger" onclick="startPotato()" id="hp-btn" style="max-width: 200px;">▶ เริ่มเกม</button>
+        <p class="text-muted mb-4 mt-4">ส่งมือถือวนไปพร้อมตอบคำถาม ใครถือตอนระเบิด=แพ้!</p>
+        <button class="btn-danger action-btn" onclick="startPotato()" id="hp-btn" style="max-width: 200px;">▶ เริ่มเกม</button>
     `;
     window.startPotato = () => {
         const status = document.getElementById('hp-status');
@@ -309,8 +316,8 @@ function initHotPotato(container) {
 function initFiveSec(container) {
     container.innerHTML = `
         <div class="timer-text mb-4" id="fs-timer">5</div>
-        <div class="display-text" id="fs-display" style="font-size:1.2rem; min-height: 60px;">...</div>
-        <button class="btn-neon-pink mb-4" onclick="startFiveSec()" id="fs-btn" style="max-width: 200px;">▶ สุ่มโจทย์ & เริ่มจับเวลา</button>
+        <div class="display-text glass-card p-4" id="fs-display" style="font-size:1.2rem; min-height: 60px; width:100%;">...</div>
+        <button class="btn-neon-pink mb-4 mt-4 action-btn" onclick="startFiveSec()" id="fs-btn" style="max-width: 200px;">▶ สุ่มโจทย์ & จับเวลา</button>
     `;
     window.startFiveSec = () => {
         const timerEl = document.getElementById('fs-timer');
@@ -336,9 +343,9 @@ function initFiveSec(container) {
 
 function initGuessWho(container) {
     container.innerHTML = `
-        <div class="display-text" id="gw-display" style="color: var(--neon-purple);">...</div>
-        <p class="text-muted mb-4">ทุกคนโหวตว่าคำใบ้นี้คือใคร ทายถูกรอดตัว ทายผิดโดน!</p>
-        <button class="btn-neon-purple" onclick="document.getElementById('gw-display').innerText = getRandom(gameData.guessWho)" style="max-width: 250px;">🕵️ สุ่มคำใบ้</button>
+        <div class="display-text glass-card p-4" id="gw-display" style="color: var(--neon-purple); width: 100%;">...</div>
+        <p class="text-muted mb-4 mt-4">ทุกคนโหวตว่าคำใบ้นี้คือใคร ทายถูกรอดตัว ทายผิดโดน!</p>
+        <button class="btn-neon-purple action-btn" onclick="document.getElementById('gw-display').innerText = getRandom(gameData.guessWho)" style="max-width: 250px;">🕵️ สุ่มคำใบ้</button>
     `;
     document.getElementById('gw-display').innerText = getRandom(gameData.guessWho);
 }
@@ -347,7 +354,7 @@ function initQuiz(container) {
     container.innerHTML = `
         <div id="quiz-q" class="display-text" style="font-size: 1.2rem;">...</div>
         <div id="quiz-choices" style="width: 100%; max-width: 350px;"></div>
-        <button class="btn-neon-blue mt-4" onclick="loadQuiz()" style="max-width: 200px;">🔄 สุ่มข้อใหม่</button>
+        <button class="btn-neon-blue mt-4 action-btn" onclick="loadQuiz()" style="max-width: 200px;">🔄 สุ่มข้อใหม่</button>
     `;
     window.loadQuiz = () => {
         const qData = getRandom(gameData.quiz);
@@ -360,10 +367,12 @@ function initQuiz(container) {
             btn.innerText = c;
             btn.onclick = () => {
                 if(index === qData.ans) {
-                    btn.style.background = 'green';
+                    btn.style.background = 'rgba(34, 197, 94, 0.4)';
+                    btn.style.borderColor = '#22c55e';
                     btn.innerText += " ✅ รอดตัว!";
                 } else {
-                    btn.style.background = 'red';
+                    btn.style.background = 'rgba(239, 68, 68, 0.4)';
+                    btn.style.borderColor = '#ef4444';
                     btn.innerText += " ❌ โดนทำโทษ!";
                 }
                 Array.from(choicesDiv.children).forEach(b => b.disabled = true);
@@ -377,8 +386,8 @@ function initQuiz(container) {
 function initSecret(container) {
     container.innerHTML = `
         <p class="text-muted mb-4">ส่งมือถือให้ผู้เล่นทีละคน กดเปิดดูภารกิจลับ ห้ามให้คนอื่นเห็น! ทำไม่สำเร็จโดนทำโทษ</p>
-        <div class="display-text hidden" id="sm-display" style="border: 2px dashed var(--neon-pink); padding: 20px; border-radius: 12px;"></div>
-        <button class="btn-neon-pink" onclick="toggleSecret()" id="sm-btn" style="max-width: 200px;">👀 เปิดดูภารกิจ</button>
+        <div class="display-text hidden glass-card p-4" id="sm-display" style="border: 2px dashed var(--neon-pink); border-radius: 12px; width:100%;"></div>
+        <button class="btn-neon-pink action-btn mt-4" onclick="toggleSecret()" id="sm-btn" style="max-width: 200px;">👀 เปิดดูภารกิจ</button>
     `;
     window.toggleSecret = () => {
         const display = document.getElementById('sm-display');
@@ -396,9 +405,9 @@ function initSecret(container) {
 
 function initRoast(container) {
     container.innerHTML = `
-        <div id="roast-target" class="timer-text" style="font-size: 2rem; color: var(--neon-blue); margin-bottom: 10px;">...</div>
-        <div class="display-text" id="roast-display" style="font-size: 1.2rem; color: var(--text-main);">...</div>
-        <button class="btn-neon-purple mt-4" onclick="generateRoast()" style="max-width: 250px;">🔥 สุ่มแซวเพื่อน</button>
+        <div id="roast-target" class="timer-text" style="font-size: 2.5rem; color: var(--neon-blue); margin-bottom: 20px;">...</div>
+        <div class="display-text glass-card p-4" id="roast-display" style="font-size: 1.2rem; color: var(--text-main); width: 100%;">...</div>
+        <button class="btn-neon-purple mt-4 action-btn" onclick="generateRoast()" style="max-width: 250px;">🔥 สุ่มแซวเพื่อน</button>
     `;
     window.generateRoast = () => {
         document.getElementById('roast-target').innerText = getRandomPlayer();
@@ -418,12 +427,12 @@ function endParty() {
     document.getElementById('summary-view').classList.remove('hidden');
     
     let summaryHTML = `
-        <p style="text-align: center; margin-bottom: 20px;">เล่นไปทั้งหมด: <strong style="color: var(--neon-blue);">${gamesPlayed}</strong> เกม</p>
-        <h3 style="color: var(--neon-purple); margin-bottom: 20px;">🎉 ผู้รอดชีวิตในวง 🎉</h3>
+        <p style="text-align: center; margin-bottom: 20px;">เล่นไปทั้งหมด: <strong style="color: var(--neon-blue); text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);">${gamesPlayed}</strong> เกม</p>
+        <h3 style="color: var(--neon-purple); margin-bottom: 20px; text-shadow: 0 0 15px rgba(168, 85, 247, 0.5);">🎉 ผู้รอดชีวิตในวง 🎉</h3>
     `;
     
     players.forEach((p, i) => {
-        summaryHTML += `<div style="text-align: center; font-size: 1.2rem; margin-bottom: 10px;">
+        summaryHTML += `<div style="text-align: center; font-size: 1.2rem; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px;">
             ${i+1}. ${p.name}
         </div>`;
     });
