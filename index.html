@@ -9,49 +9,62 @@
 </head>
 <body>
 
+<!-- แสงพื้นหลังลอยไปมา (Animated Orbs) -->
+<div class="bg-orb orb-1"></div>
+<div class="bg-orb orb-2"></div>
+<div class="bg-orb orb-3"></div>
+
 <div id="app-container">
     
+    <!-- หน้าแรก (Home View) -->
     <div id="home-view" class="p-4">
         <div class="header mb-4">
-            <h1 class="text-gradient">วงนี้มีเกม 🎮</h1>
+            <h1 class="text-gradient pulse-text">วงนี้มีเกม 🎮</h1>
             <p class="text-muted">รวม 10 เกมปาร์ตี้ เล่นได้ในเว็บเดียว</p>
         </div>
 
+        <!-- ส่วนจัดการผู้เล่น -->
         <div class="mb-4">
             <div style="display: flex; gap: 8px; margin-bottom: 15px;">
                 <input type="text" id="new-player-name" placeholder="ใส่ชื่อผู้เล่น..." autocomplete="off">
-                <button onclick="addPlayer()" class="btn-neon-blue" style="width: 80px;">เพิ่ม</button>
+                <button onclick="addPlayer()" class="btn-neon-blue" style="width: 80px; box-shadow: none;">เพิ่ม</button>
             </div>
             <div id="player-list"></div>
         </div>
 
-        <hr style="border-color: #2d2d3a; margin: 20px 0;">
+        <hr style="border-color: rgba(255,255,255,0.1); margin: 20px 0;">
 
-        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-            <button onclick="randomGameSelect()" class="btn-neon-purple">🎲 สุ่มเกม</button>
-            <button onclick="endParty()" class="btn-danger">🛑 จบปาร์ตี้</button>
+        <!-- ปุ่มควบคุมหลัก -->
+        <div style="display: flex; gap: 10px; margin-bottom: 25px;">
+            <button onclick="randomGameSelect()" class="btn-neon-purple action-btn">🎲 สุ่มเกม</button>
+            <button onclick="endParty()" class="btn-danger action-btn">🛑 จบปาร์ตี้</button>
         </div>
 
-        <h3 class="mb-2 text-gradient">เลือกเกม</h3>
+        <!-- ตารางเลือกเกม -->
+        <h3 class="mb-3 text-gradient">เลือกเกม</h3>
         <div class="game-grid" id="game-grid">
-            </div>
+            <!-- ข้อมูลเกมจะถูกสร้างผ่าน JS -->
+        </div>
     </div>
 
-    <div id="game-view" class="hidden">
+    <!-- หน้าต่างเล่นเกม (Game View Overlay) -->
+    <div id="game-view" class="hidden glass-overlay">
         <div class="game-header">
             <button class="back-btn" onclick="closeGame()">◀ กลับ</button>
             <h2 id="game-title" class="text-gradient" style="flex: 1; text-align: left;">Game Title</h2>
         </div>
         <div class="game-content" id="game-content">
-            </div>
+            <!-- เนื้อหาเกมแต่ละเกมจะถูกแทรกที่นี่ -->
+        </div>
     </div>
 
-    <div id="summary-view" class="hidden p-4">
-        <h1 class="text-gradient mb-4 mt-4">🎉 สรุปผลปาร์ตี้ 🎉</h1>
-        <div id="summary-content" style="background: var(--card-dark); border-radius: 16px; padding: 20px; margin-bottom: 20px; border: 1px solid var(--neon-pink);">
+    <!-- หน้าต่างสรุปผล (Summary View) -->
+    <div id="summary-view" class="hidden p-4 glass-overlay">
+        <h1 class="text-gradient mb-4 mt-4 pulse-text">🎉 สรุปผลปาร์ตี้ 🎉</h1>
+        <div id="summary-content" class="glass-card mb-4 p-4" style="border-color: var(--neon-pink);">
         </div>
-        <button onclick="copySummary()" class="btn-neon-blue mb-2">📋 คัดลอกผลสรุป</button>
-        <button onclick="resetAll()" class="btn-danger">🔄 ล้างข้อมูลทั้งหมด (เริ่มใหม่)</button>
+        <button onclick="copySummary()" class="btn-neon-blue mb-3 action-btn">📋 คัดลอกผลสรุป</button>
+        <button onclick="resetAll()" class="btn-danger action-btn">🔄 เริ่มงานใหม่ทั้งหมด</button>
     </div>
 
 </div>
