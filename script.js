@@ -263,4 +263,193 @@ function initMostLikely(container) {
 
 function initWheel(container) {
     container.innerHTML = `
-        <div class="wheel-container" id="
+        <div class="wheel-container" id="wheel-circle">เตรียมหมุน!</div>
+        <button class="btn-neon-purple mt-4" onclick="spinWheel()" style="max-width: 200px;">🎡 หมุนวงล้อ</button>
+    `;
+    window.spinWheel = () => {
+        const wheel = document.getElementById('wheel-circle');
+        const result = getRandom(gameData.wheelOptions);
+        wheel.style.transform = `rotate(${Math.floor(Math.random() * 360) + 1080}deg)`;
+        wheel.innerText = "กำลังหมุน...";
+        setTimeout(() => {
+            wheel.innerText = result;
+            wheel.style.transform = `rotate(0deg)`;
+        }, 3000);
+    };
+}
+
+function initHotPotato(container) {
+    container.innerHTML = `
+        <h3 class="mb-2" id="hp-category">หมวดหมู่: ...</h3>
+        <div class="display-text timer-text" id="hp-status">💣</div>
+        <p class="text-muted mb-4">ส่งมือถือวนไปพร้อมตอบคำถาม ใครถือตอนระเบิด=แพ้!</p>
+        <button class="btn-danger" onclick="startPotato()" id="hp-btn" style="max-width: 200px;">▶ เริ่มเกม</button>
+    `;
+    window.startPotato = () => {
+        const status = document.getElementById('hp-status');
+        const btn = document.getElementById('hp-btn');
+        document.getElementById('hp-category').innerText = `หมวดหมู่: ${getRandom(gameData.categories)}`;
+        status.innerText = "ติ๊ก... ติ๊ก...";
+        status.style.color = "var(--text-main)";
+        btn.disabled = true;
+        btn.innerText = "กำลังเล่น...";
+        
+        const time = Math.floor(Math.random() * 15000) + 5000;
+        clearTimeout(gameTimeout);
+        gameTimeout = setTimeout(() => {
+            status.innerText = "💥 BOOM! 💥";
+            status.style.color = "red";
+            btn.disabled = false;
+            btn.innerText = "เล่นใหม่";
+            document.getElementById('hp-category').innerText = `คนถือมือถือโดนทำโทษ!`;
+        }, time);
+    };
+}
+
+function initFiveSec(container) {
+    container.innerHTML = `
+        <div class="timer-text mb-4" id="fs-timer">5</div>
+        <div class="display-text" id="fs-display" style="font-size:1.2rem; min-height: 60px;">...</div>
+        <button class="btn-neon-pink mb-4" onclick="startFiveSec()" id="fs-btn" style="max-width: 200px;">▶ สุ่มโจทย์ & เริ่มจับเวลา</button>
+    `;
+    window.startFiveSec = () => {
+        const timerEl = document.getElementById('fs-timer');
+        const btn = document.getElementById('fs-btn');
+        document.getElementById('fs-display').innerText = `โจทย์: ${getRandom(gameData.fiveSec)}`;
+        let timeLeft = 5;
+        timerEl.innerText = timeLeft;
+        btn.disabled = true;
+        
+        clearInterval(gameInterval);
+        gameInterval = setInterval(() => {
+            timeLeft--;
+            timerEl.innerText = timeLeft;
+            if(timeLeft <= 0) {
+                clearInterval(gameInterval);
+                timerEl.innerText = "หมดเวลา!";
+                btn.disabled = false;
+                btn.innerText = "เล่นใหม่";
+            }
+        }, 1000);
+    };
+}
+
+function initGuessWho(container) {
+    container.innerHTML = `
+        <div class="display-text" id="gw-display" style="color: var(--neon-purple);">...</div>
+        <p class="text-muted mb-4">ทุกคนโหวตว่าคำใบ้นี้คือใคร ทายถูกรอดตัว ทายผิดโดน!</p>
+        <button class="btn-neon-purple" onclick="document.getElementById('gw-display').innerText = getRandom(gameData.guessWho)" style="max-width: 250px;">🕵️ สุ่มคำใบ้</button>
+    `;
+    document.getElementById('gw-display').innerText = getRandom(gameData.guessWho);
+}
+
+function initQuiz(container) {
+    container.innerHTML = `
+        <div id="quiz-q" class="display-text" style="font-size: 1.2rem;">...</div>
+        <div id="quiz-choices" style="width: 100%; max-width: 350px;"></div>
+        <button class="btn-neon-blue mt-4" onclick="loadQuiz()" style="max-width: 200px;">🔄 สุ่มข้อใหม่</button>
+    `;
+    window.loadQuiz = () => {
+        const qData = getRandom(gameData.quiz);
+        document.getElementById('quiz-q').innerText = qData.q;
+        const choicesDiv = document.getElementById('quiz-choices');
+        choicesDiv.innerHTML = '';
+        qData.choices.forEach((c, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'choice-btn';
+            btn.innerText = c;
+            btn.onclick = () => {
+                if(index === qData.ans) {
+                    btn.style.background = 'green';
+                    btn.innerText += " ✅ รอดตัว!";
+                } else {
+                    btn.style.background = 'red';
+                    btn.innerText += " ❌ โดนทำโทษ!";
+                }
+                Array.from(choicesDiv.children).forEach(b => b.disabled = true);
+            };
+            choicesDiv.appendChild(btn);
+        });
+    };
+    loadQuiz();
+}
+
+function initSecret(container) {
+    container.innerHTML = `
+        <p class="text-muted mb-4">ส่งมือถือให้ผู้เล่นทีละคน กดเปิดดูภารกิจลับ ห้ามให้คนอื่นเห็น! ทำไม่สำเร็จโดนทำโทษ</p>
+        <div class="display-text hidden" id="sm-display" style="border: 2px dashed var(--neon-pink); padding: 20px; border-radius: 12px;"></div>
+        <button class="btn-neon-pink" onclick="toggleSecret()" id="sm-btn" style="max-width: 200px;">👀 เปิดดูภารกิจ</button>
+    `;
+    window.toggleSecret = () => {
+        const display = document.getElementById('sm-display');
+        const btn = document.getElementById('sm-btn');
+        if(display.classList.contains('hidden')) {
+            display.innerText = getRandom(gameData.secretMissions);
+            display.classList.remove('hidden');
+            btn.innerText = "🙈 ซ่อนภารกิจ";
+        } else {
+            display.classList.add('hidden');
+            btn.innerText = "👀 สุ่มเปิดภารกิจใหม่";
+        }
+    };
+}
+
+function initRoast(container) {
+    container.innerHTML = `
+        <div id="roast-target" class="timer-text" style="font-size: 2rem; color: var(--neon-blue); margin-bottom: 10px;">...</div>
+        <div class="display-text" id="roast-display" style="font-size: 1.2rem; color: var(--text-main);">...</div>
+        <button class="btn-neon-purple mt-4" onclick="generateRoast()" style="max-width: 250px;">🔥 สุ่มแซวเพื่อน</button>
+    `;
+    window.generateRoast = () => {
+        document.getElementById('roast-target').innerText = getRandomPlayer();
+        document.getElementById('roast-display').innerText = `"${getRandom(gameData.roasts)}"`;
+    };
+    generateRoast();
+}
+
+// --- End Party & Summary ---
+function endParty() {
+    if(players.length === 0) {
+        alert('ยังไม่มีข้อมูลผู้เล่นครับ');
+        return;
+    }
+    
+    document.getElementById('home-view').classList.add('hidden');
+    document.getElementById('summary-view').classList.remove('hidden');
+    
+    let summaryHTML = `
+        <p style="text-align: center; margin-bottom: 20px;">เล่นไปทั้งหมด: <strong style="color: var(--neon-blue);">${gamesPlayed}</strong> เกม</p>
+        <h3 style="color: var(--neon-purple); margin-bottom: 20px;">🎉 ผู้รอดชีวิตในวง 🎉</h3>
+    `;
+    
+    players.forEach((p, i) => {
+        summaryHTML += `<div style="text-align: center; font-size: 1.2rem; margin-bottom: 10px;">
+            ${i+1}. ${p.name}
+        </div>`;
+    });
+    
+    document.getElementById('summary-content').innerHTML = summaryHTML;
+}
+
+function copySummary() {
+    let text = `🎉 สรุปผลปาร์ตี้ "วงนี้มีเกม" 🎉\nเล่นไปทั้งหมด ${gamesPlayed} เกม\n\n`;
+    text += `ผู้ร่วมชะตากรรม:\n`;
+    players.forEach((p, i) => { text += `${i+1}. ${p.name}\n`; });
+    
+    navigator.clipboard.writeText(text).then(() => {
+        alert('คัดลอกผลสรุปแล้ว! นำไปแปะในแชทกลุ่มได้เลย');
+    });
+}
+
+function resetAll() {
+    if(confirm('แน่ใจหรือไม่ว่าต้องการล้างข้อมูลทั้งหมด? (เริ่มใหม่)')) {
+        players = [];
+        gamesPlayed = 0;
+        saveState();
+        document.getElementById('summary-view').classList.add('hidden');
+        document.getElementById('home-view').classList.remove('hidden');
+    }
+}
+
+// Initialize App
+init();
