@@ -37,17 +37,17 @@ const gameData = {
         "ใครมาถึงงานสายที่สุด โดน! ⏰",
         "ใครมีแฟนแล้ว โดนหมั่นไส้ โดน! 💘",
         "ใครโสดสนิท โดนปลอบใจ โดน! 💔",
-        // หมวด: คะแนนและไอเทม
-        "คนแต้มเยอะสุด โดน! (สกัดดาวรุ่ง) 👑",
-        "คนแต้มน้อยสุด โดน! (ซ้ำเติม) 🤡",
-        "รับแต้มฟรี +3 แต้ม 🎉",
-        "โดนหัก -2 แต้ม 📉",
-        "ขโมยแต้มจากคนซ้าย 1 แต้ม 🥷",
-        "เศรษฐีใจบุญ แจกแต้มให้เพื่อน 2 คน คนละ 1 แต้ม 💸",
-        "ได้เกราะป้องกัน! (ใช้ยกเลิกบทลงโทษได้ 1 ครั้ง) 🛡️",
-        "สลับคะแนนของตัวเอง กับคนที่มีแต้มเยอะที่สุด! 🔄",
-        "ซวยจัด! รีเซ็ตคะแนนตัวเองให้กลับไปเริ่ม 0 ใหม่ 😱",
-        "คนหมุนมีสิทธิ์หักคะแนนใครก็ได้ 2 แต้ม ✂️",
+        // หมวด: ไอเทมและแกล้งเพื่อน
+        "คนเกิดเดือนนี้ โดน! 🎂",
+        "คนเกิดเดือนที่แล้ว โดน! 🤡",
+        "รอดตัว! มีสิทธิ์สั่งเพื่อน 1 คนให้โดนแทน 🎉",
+        "รอดตัว! แถมได้สั่งเพื่อน 2 คนให้โดนทำโทษ 😈",
+        "สลับที่นั่งกับคนทางซ้าย 🔄",
+        "สั่งใครก็ได้ให้ลุกขึ้นเต้น 10 วิ 🕺",
+        "ได้เกราะป้องกัน! (ใช้ยกเลิกบทลงโทษให้ตัวเองได้ 1 ครั้ง) 🛡️",
+        "ชี้ใครก็ได้ให้โดนรวดเดียว 2 คน! ✌️",
+        "ซวยจัด! โดนทำโทษควบ 2 แก้ว/2 สเต็ป 😱",
+        "คนหมุนสั่งให้ทุกคนทำหน้าตลก ใครหลุดขำก่อน โดน! 😂",
         // หมวด: แอคชันและมินิเกม
         "จ่ายเข้ากองกลาง 10 บาท! 💸",
         "เป่ายิ้งฉุบกับคนตรงข้าม ใครแพ้โดน! ✌️✊🖐️",
@@ -113,7 +113,6 @@ function saveState() {
     localStorage.setItem('partyPlayers', JSON.stringify(players));
     localStorage.setItem('partyGamesCount', gamesPlayed.toString());
     renderPlayers();
-    renderQuickScore();
 }
 
 function init() {
@@ -126,7 +125,7 @@ function addPlayer() {
     const input = document.getElementById('new-player-name');
     const name = input.value.trim();
     if (name && players.length < 15) { 
-        players.push({ id: Date.now(), name: name, score: 0 });
+        players.push({ id: Date.now(), name: name });
         input.value = '';
         saveState();
     } else if (players.length >= 15) {
@@ -141,31 +140,16 @@ function removePlayer(id) {
     }
 }
 
-function updateScore(id, delta) {
-    const player = players.find(p => p.id === id);
-    if (player) {
-        player.score += delta;
-        saveState();
-    }
-}
-
 function renderPlayers() {
     const list = document.getElementById('player-list');
     list.innerHTML = '';
     
-    const sortedPlayers = [...players].sort((a, b) => b.score - a.score);
-    
-    sortedPlayers.forEach((p, index) => {
+    players.forEach((p) => {
         const item = document.createElement('div');
         item.className = 'player-item';
-        let rankIcon = '';
-        if (index === 0 && p.score > 0) rankIcon = '👑 ';
-        
         item.innerHTML = `
-            <div style="font-weight: 600;">${rankIcon}${p.name} <span style="color: var(--neon-pink); margin-left: 5px;">${p.score} แต้ม</span></div>
+            <div style="font-weight: 600;">${p.name}</div>
             <div class="score-controls">
-                <button class="score-btn text-muted" onclick="updateScore(${p.id}, -1)">-</button>
-                <button class="score-btn" style="color: var(--neon-blue);" onclick="updateScore(${p.id}, 1)">+</button>
                 <button class="score-btn" style="color: #ef4444;" onclick="removePlayer(${p.id})">×</button>
             </div>
         `;
@@ -175,20 +159,6 @@ function renderPlayers() {
     if(players.length === 0) {
         list.innerHTML = '<p class="text-muted" style="text-align:center; padding: 20px 0;">ยังไม่มีผู้เล่น เพิ่มชื่อด้านบนเลย!</p>';
     }
-}
-
-function renderQuickScore() {
-    const list = document.getElementById('quick-score-list');
-    list.innerHTML = '';
-    players.forEach(p => {
-        const btn = document.createElement('div');
-        btn.style.cssText = 'background: #2d2d3a; padding: 5px 12px; border-radius: 20px; white-space: nowrap; display: flex; align-items: center; gap: 5px; cursor: pointer; border: 1px solid var(--text-muted);';
-        btn.innerHTML = `
-            <span>${p.name} (${p.score})</span>
-            <span style="color: var(--neon-blue); font-weight: bold; margin-left:5px;" onclick="updateScore(${p.id}, 1); event.stopPropagation();">+1</span>
-        `;
-        list.appendChild(btn);
-    });
 }
 
 // --- Navigation & Game Rendering ---
@@ -241,7 +211,6 @@ function openGame(gameId) {
         case 'roast': initRoast(content); break;
     }
 
-    renderQuickScore();
     document.getElementById('home-view').classList.add('hidden');
     document.getElementById('game-view').classList.remove('hidden');
 }
@@ -278,7 +247,7 @@ function initToD(container) {
 function initNHIE(container) {
     container.innerHTML = `
         <div class="display-text" id="nhie-display" style="color: var(--neon-blue);">กดปุ่มเพื่อสุ่มคำถาม</div>
-        <p class="text-muted mb-4">ใครเคยทำสิ่งนี้ ให้ยกมือ/ดื่มน้ำ และกด +1 แต้มด้านล่าง</p>
+        <p class="text-muted mb-4">ใครเคยทำสิ่งนี้ ให้ยกมือ/ดื่มน้ำ หรือโดนทำโทษ!</p>
         <button class="btn-neon-blue" onclick="document.getElementById('nhie-display').innerText = getRandom(gameData.neverHaveIEver)" style="max-width: 250px;">🎲 สุ่ม "ฉันไม่เคย"</button>
     `;
 }
@@ -294,208 +263,4 @@ function initMostLikely(container) {
 
 function initWheel(container) {
     container.innerHTML = `
-        <div class="wheel-container" id="wheel-circle">เตรียมหมุน!</div>
-        <button class="btn-neon-purple mt-4" onclick="spinWheel()" style="max-width: 200px;">🎡 หมุนวงล้อ</button>
-    `;
-    window.spinWheel = () => {
-        const wheel = document.getElementById('wheel-circle');
-        const result = getRandom(gameData.wheelOptions);
-        wheel.style.transform = `rotate(${Math.floor(Math.random() * 360) + 1080}deg)`;
-        wheel.innerText = "กำลังหมุน...";
-        setTimeout(() => {
-            wheel.innerText = result;
-            wheel.style.transform = `rotate(0deg)`;
-        }, 3000);
-    };
-}
-
-function initHotPotato(container) {
-    container.innerHTML = `
-        <h3 class="mb-2" id="hp-category">หมวดหมู่: ...</h3>
-        <div class="display-text timer-text" id="hp-status">💣</div>
-        <p class="text-muted mb-4">ส่งมือถือวนไปพร้อมตอบคำถาม ใครถือตอนระเบิด=แพ้!</p>
-        <button class="btn-danger" onclick="startPotato()" id="hp-btn" style="max-width: 200px;">▶ เริ่มเกม</button>
-    `;
-    window.startPotato = () => {
-        const status = document.getElementById('hp-status');
-        const btn = document.getElementById('hp-btn');
-        document.getElementById('hp-category').innerText = `หมวดหมู่: ${getRandom(gameData.categories)}`;
-        status.innerText = "ติ๊ก... ติ๊ก...";
-        status.style.color = "var(--text-main)";
-        btn.disabled = true;
-        btn.innerText = "กำลังเล่น...";
-        
-        const time = Math.floor(Math.random() * 15000) + 5000;
-        clearTimeout(gameTimeout);
-        gameTimeout = setTimeout(() => {
-            status.innerText = "💥 BOOM! 💥";
-            status.style.color = "red";
-            btn.disabled = false;
-            btn.innerText = "เล่นใหม่";
-            document.getElementById('hp-category').innerText = `คนถือมือถือโดนทำโทษ!`;
-        }, time);
-    };
-}
-
-function initFiveSec(container) {
-    container.innerHTML = `
-        <div class="timer-text mb-4" id="fs-timer">5</div>
-        <div class="display-text" id="fs-display" style="font-size:1.2rem; min-height: 60px;">...</div>
-        <button class="btn-neon-pink mb-4" onclick="startFiveSec()" id="fs-btn" style="max-width: 200px;">▶ สุ่มโจทย์ & เริ่มจับเวลา</button>
-    `;
-    window.startFiveSec = () => {
-        const timerEl = document.getElementById('fs-timer');
-        const btn = document.getElementById('fs-btn');
-        document.getElementById('fs-display').innerText = `โจทย์: ${getRandom(gameData.fiveSec)}`;
-        let timeLeft = 5;
-        timerEl.innerText = timeLeft;
-        btn.disabled = true;
-        
-        clearInterval(gameInterval);
-        gameInterval = setInterval(() => {
-            timeLeft--;
-            timerEl.innerText = timeLeft;
-            if(timeLeft <= 0) {
-                clearInterval(gameInterval);
-                timerEl.innerText = "หมดเวลา!";
-                btn.disabled = false;
-                btn.innerText = "เล่นใหม่";
-            }
-        }, 1000);
-    };
-}
-
-function initGuessWho(container) {
-    container.innerHTML = `
-        <div class="display-text" id="gw-display" style="color: var(--neon-purple);">...</div>
-        <p class="text-muted mb-4">ทุกคนโหวตว่าคำใบ้นี้คือใคร ทายถูกได้แต้ม!</p>
-        <button class="btn-neon-purple" onclick="document.getElementById('gw-display').innerText = getRandom(gameData.guessWho)" style="max-width: 250px;">🕵️ สุ่มคำใบ้</button>
-    `;
-    document.getElementById('gw-display').innerText = getRandom(gameData.guessWho);
-}
-
-function initQuiz(container) {
-    container.innerHTML = `
-        <div id="quiz-q" class="display-text" style="font-size: 1.2rem;">...</div>
-        <div id="quiz-choices" style="width: 100%; max-width: 350px;"></div>
-        <button class="btn-neon-blue mt-4" onclick="loadQuiz()" style="max-width: 200px;">🔄 สุ่มข้อใหม่</button>
-    `;
-    window.loadQuiz = () => {
-        const qData = getRandom(gameData.quiz);
-        document.getElementById('quiz-q').innerText = qData.q;
-        const choicesDiv = document.getElementById('quiz-choices');
-        choicesDiv.innerHTML = '';
-        qData.choices.forEach((c, index) => {
-            const btn = document.createElement('button');
-            btn.className = 'choice-btn';
-            btn.innerText = c;
-            btn.onclick = () => {
-                if(index === qData.ans) {
-                    btn.style.background = 'green';
-                    btn.innerText += " ✅ ถูกต้อง!";
-                } else {
-                    btn.style.background = 'red';
-                    btn.innerText += " ❌ ผิด!";
-                }
-                Array.from(choicesDiv.children).forEach(b => b.disabled = true);
-            };
-            choicesDiv.appendChild(btn);
-        });
-    };
-    loadQuiz();
-}
-
-function initSecret(container) {
-    container.innerHTML = `
-        <p class="text-muted mb-4">ส่งมือถือให้ผู้เล่นทีละคน กดเปิดดูภารกิจลับ ห้ามให้คนอื่นเห็น! ทำสำเร็จรับแต้ม</p>
-        <div class="display-text hidden" id="sm-display" style="border: 2px dashed var(--neon-pink); padding: 20px; border-radius: 12px;"></div>
-        <button class="btn-neon-pink" onclick="toggleSecret()" id="sm-btn" style="max-width: 200px;">👀 เปิดดูภารกิจ</button>
-    `;
-    window.toggleSecret = () => {
-        const display = document.getElementById('sm-display');
-        const btn = document.getElementById('sm-btn');
-        if(display.classList.contains('hidden')) {
-            display.innerText = getRandom(gameData.secretMissions);
-            display.classList.remove('hidden');
-            btn.innerText = "🙈 ซ่อนภารกิจ";
-        } else {
-            display.classList.add('hidden');
-            btn.innerText = "👀 สุ่มเปิดภารกิจใหม่";
-        }
-    };
-}
-
-function initRoast(container) {
-    container.innerHTML = `
-        <div id="roast-target" class="timer-text" style="font-size: 2rem; color: var(--neon-blue); margin-bottom: 10px;">...</div>
-        <div class="display-text" id="roast-display" style="font-size: 1.2rem; color: var(--text-main);">...</div>
-        <button class="btn-neon-purple mt-4" onclick="generateRoast()" style="max-width: 250px;">🔥 สุ่มแซวเพื่อน</button>
-    `;
-    window.generateRoast = () => {
-        document.getElementById('roast-target').innerText = getRandomPlayer();
-        document.getElementById('roast-display').innerText = `"${getRandom(gameData.roasts)}"`;
-    };
-    generateRoast();
-}
-
-// --- End Party & Summary ---
-function endParty() {
-    if(players.length === 0) {
-        alert('ยังไม่มีข้อมูลผู้เล่นครับ');
-        return;
-    }
-    
-    document.getElementById('home-view').classList.add('hidden');
-    document.getElementById('summary-view').classList.remove('hidden');
-    
-    const sorted = [...players].sort((a, b) => b.score - a.score);
-    const mvp = sorted[0];
-    const lowest = sorted[sorted.length - 1];
-    
-    let summaryHTML = `
-        <p style="text-align: center; margin-bottom: 20px;">เล่นไปทั้งหมด: <strong style="color: var(--neon-blue);">${gamesPlayed}</strong> เกม</p>
-        <h3 style="color: gold; margin-bottom: 10px;">👑 MVP ของงาน</h3>
-        <p style="text-align: center; font-size: 1.5rem; margin-bottom: 20px;">${mvp.name} (${mvp.score} แต้ม)</p>
-        
-        <h3 style="color: #ef4444; margin-bottom: 10px;">🤡 คนดวงซวย (แต้มน้อยสุด)</h3>
-        <p style="text-align: center; font-size: 1.2rem; margin-bottom: 20px;">${lowest.name} (${lowest.score} แต้ม)</p>
-        
-        <hr style="border-color: #2d2d3a; margin: 20px 0;">
-        <h4 class="mb-2">ตารางคะแนนรวม</h4>
-    `;
-    
-    sorted.forEach((p, i) => {
-        summaryHTML += `<div style="display:flex; justify-content: space-between; margin-bottom: 5px;">
-            <span>${i+1}. ${p.name}</span>
-            <span style="color: var(--neon-pink);">${p.score}</span>
-        </div>`;
-    });
-    
-    document.getElementById('summary-content').innerHTML = summaryHTML;
-}
-
-function copySummary() {
-    const sorted = [...players].sort((a, b) => b.score - a.score);
-    let text = `🎉 สรุปผลปาร์ตี้ "วงนี้มีเกม" 🎉\nเล่นไปทั้งหมด ${gamesPlayed} เกม\n\n`;
-    text += `👑 MVP: ${sorted[0].name} (${sorted[0].score} แต้ม)\n`;
-    text += `🤡 โดนทำโทษบ่อยสุด: ${sorted[sorted.length-1].name} (${sorted[sorted.length-1].score} แต้ม)\n\n`;
-    text += `ตารางคะแนน:\n`;
-    sorted.forEach((p, i) => { text += `${i+1}. ${p.name}: ${p.score}\n`; });
-    
-    navigator.clipboard.writeText(text).then(() => {
-        alert('คัดลอกผลสรุปแล้ว! นำไปแปะในแชทกลุ่มได้เลย');
-    });
-}
-
-function resetAll() {
-    if(confirm('แน่ใจหรือไม่ว่าต้องการล้างข้อมูลทั้งหมด? (ผู้เล่นและคะแนนจะหายไป)')) {
-        players = [];
-        gamesPlayed = 0;
-        saveState();
-        document.getElementById('summary-view').classList.add('hidden');
-        document.getElementById('home-view').classList.remove('hidden');
-    }
-}
-
-// Initialize App
-init();
+        <div class="wheel-container" id="
