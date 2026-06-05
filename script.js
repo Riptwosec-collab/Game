@@ -56,23 +56,22 @@ const gameData = {
     roasts: [
         "คนนี้คือคนที่บอกว่า 'ใกล้ถึงแล้ว' แต่ยังไม่ได้แต่งตัว", "หน้าตาดีนะ แต่แปลกที่ยังโสด... หรือว่านิสัย?", "เพื่อนคนนี้คือ นิยามของคำว่า 'เงินเดือนหรือเงินทอน'", "ความจำดีเยี่ยม... เฉพาะเรื่องของชาวบ้าน", "คนนี้คือคนที่กินเท่าไหร่ก็ไม่อ้วน น่าหมั่นไส้!", "หน้าตาเหมือนคนนอนเต็มอิ่ม แต่จริงๆ นอนเช้า", "เพื่อนคนนี้ไว้ใจได้เสมอ... ยกเว้นเรื่องยืมเงิน", "คนนี้พิมพ์แชทเก่งมาก แต่ตัวจริงเงียบกริบ", "เป็นคนรักสุขภาพมาก... กินสลัดคลุกหมูกรอบ", "คนนี้คือเดอะแบกของกลุ่ม... แบกความฮาและความกาว"
     ],
-    // ข้อมูลเกมทายคำบนหัว (Heads Up) แบบจัดเต็มมหาศาล
     headsup: {
         animals: { 
             name: "🐶 สัตว์โลกน่ารัก", 
-            words: ["สิงโต", "ช้าง", "ยีราฟ", "แพนด้า", "ฉลาม", "วาฬเพชฌฆาต", "นกฮูก", "สลอธ", "โคอาล่า", "แมวน้ำ", "เพนกวิน", "จิงโจ้", "ฮิปโป", "แรด", "นกยูง", "เต่าทะเล", "ปลาหมึก", "ม้าลาย", "หมีขั้วโลก", "อัลปาก้า", "นกฟลามิงโก้", "จระเข้", "งูหลาม", "แมงมุม", "หมาป่า", "นกแก้ว", "ลิงชิมแปนซี", "กอริลลา", "โลมา", "เต่าตนุ", "เม่น", "แรคคูน", "นกกระจอกเทศ", "อูฐ", "หมูป่า", "จิ้งจอก", "เสือชีตาห์", "เสือดาว", "ไฮยีน่า", "ค้างคาว", "แมงกะพรุน", "ดาวทะเล", "ม้าน้ำ", "ปลาปักเป้า", "ปลากระเบน", "กบ", "คางคก", "งูจงอาง", "ตะขาบ", "แมงป่อง", "มดลูกไก่", "ผีเสื้อ", "ผึ้ง", "แมลงวัน", "ยุง", "จิ้งจก", "ตุ๊กแก", "อีกัวน่า", "หนูแฮมสเตอร์", "กระต่าย", "สุนัขโกลเด้น", "แมวเปอร์เซีย", "ชิวาวา", "ไซบีเรียนฮัสกี้", "พุดเดิ้ล", "ปลากัด", "ปลาคาร์ฟ", "ปลาทอง", "ปลาหมอสี", "ไก่แจ้", "เป็ด", "ห่าน", "นกพิราบ", "นกนางนวล", "อินทรี", "เหยี่ยว", "นกกระจิบ", "กิ้งกือ", "หอยทาก", "หอยนางรม", "กุ้งมังกร", "ปูม้า", "ปูเสฉวน", "แมงดาทะเล", "ตัวนิ่ม", "สมเสร็จ", "พะยูน", "ฉลามวาฬ", "แมวสฟิงซ์", "สิงโตทะเล", "วอลรัส", "กวางเรนเดียร์", "นกกีวี่", "จิงโจ้น้ำ", "หนูตะเภา", "นกหัวขวาน", "กิ้งก่า", "ไดโนเสาร์"] 
+            words: ["สิงโต", "ช้าง", "ยีราฟ", "แพนด้า", "ฉลาม", "วาฬเพชฌฆาต", "นกฮูก", "สลอธ", "โคอาล่า", "แมวน้ำ", "เพนกวิน", "จิงโจ้", "ฮิปโป", "แรด", "นกยูง", "เต่าทะเล", "ปลาหมึก", "ม้าลาย", "หมีขั้วโลก", "อัลปาก้า", "จระเข้", "งูหลาม", "แมงมุม", "หมาป่า", "นกแก้ว", "ลิงชิมแปนซี", "โลมา", "เต่าตนุ", "เม่น", "แรคคูน", "นกกระจอกเทศ", "อูฐ", "จิ้งจอก", "เสือชีตาห์", "ค้างคาว", "แมงกะพรุน", "ดาวทะเล", "ม้าน้ำ", "ปลาปักเป้า", "ปลากระเบน", "กบ", "คางคก", "ตะขาบ", "แมงป่อง", "ผีเสื้อ", "ผึ้ง", "แมลงวัน", "ยุง", "จิ้งจก", "ตุ๊กแก", "อีกัวน่า", "หนูแฮมสเตอร์", "กระต่าย", "ไซบีเรียนฮัสกี้", "พุดเดิ้ล", "ปลากัด", "ปลาคาร์ฟ", "ไก่แจ้", "เป็ด", "อินทรี", "หอยทาก", "กุ้งมังกร", "ปูม้า", "แมงดาทะเล", "พะยูน", "ฉลามวาฬ", "ไดโนเสาร์"] 
         },
         food: { 
             name: "🍔 ของกินพาสาม", 
-            words: ["หมูกระทะ", "ชาบู", "ส้มตำ", "ข้าวมันไก่", "ผัดกะเพรา", "ชานมไข่มุก", "บิงซู", "พิซซ่า", "ซูชิ", "แซลมอนดอง", "ต้มยำกุ้ง", "ก๋วยเตี๋ยวเรือ", "ข้าวเหนียวมะม่วง", "หมูปิ้ง", "ยำแซลมอน", "หมาล่า", "ปาท่องโก๋", "โรตี", "ขนมจีนน้ำยา", "ไข่เจียวหมูสับ", "แกงเขียวหวาน", "ข้าวผัด", "ไก่ทอด", "น้ำแข็งไส", "หม่าล่าทั่ง", "สลัดโรล", "ผัดไทย", "หอยทอด", "ข้าวหมูแดง", "ข้าวขาหมู", "ข้าวมกไก่", "โจ๊ก", "ต้มเลือดหมู", "ข้าวต้มกุ๊ย", "ยำวุ้นเส้น", "ยำมาม่า", "ส้มตำปูปลาร้า", "ตำซั่ว", "ตำป่า", "ไก่ย่าง", "คอหมูย่าง", "น้ำตกหมู", "ลาบหมู", "ซุปหน่อไม้", "แกงอ่อม", "ต้มแซ่บ", "ปลาหมึกย่าง", "กุ้งเผา", "หอยแครงลวก", "ปูไข่ดอง", "ยำปูม้า", "ไข่ตุ๋น", "ต้มข่าไก่", "แกงมัสมั่น", "พะแนงหมู", "ผัดซีอิ๊ว", "ราดหน้า", "สุกี้น้ำ", "สุกี้แห้ง", "ไข่กระทะ", "ขนมปังปิ้ง", "วาฟเฟิล", "แพนเค้ก", "เครปญี่ปุ่น", "ไอศกรีม", "มาการอง", "ครัวซองต์", "บราวนี่", "ทาร์ตไข่", "โดนัท", "แซนด์วิช", "เบอร์เกอร์", "เฟรนช์ฟรายส์", "ฮอทดอก", "สปาเก็ตตี้", "มักกะโรนี", "สเต็กเนื้อ", "สเต็กหมู", "พอร์คชอป", "ซาซิมิ", "ทาโกะยากิ", "โอโคโนมิยากิ", "ราเมน", "อูด้ง", "ข้าวปั้น", "แกงกะหรี่", "กิมจิ", "ต๊อกบกกี", "จาจังมยอน", "หมูสามชั้นย่าง", "ไก่ทอดเกาหลี", "บิบิมบับ", "ไข่ชะอม", "น้ำพริกกะปิ", "ปลาทูทอด", "ชามะนาว", "กาแฟดำ", "คาปูชิโน่", "ลาเต้", "มัทฉะ"] 
+            words: ["หมูกระทะ", "ชาบู", "ส้มตำ", "ข้าวมันไก่", "ผัดกะเพรา", "ชานมไข่มุก", "บิงซู", "พิซซ่า", "ซูชิ", "แซลมอนดอง", "ต้มยำกุ้ง", "ก๋วยเตี๋ยวเรือ", "ข้าวเหนียวมะม่วง", "หมูปิ้ง", "ยำแซลมอน", "หมาล่า", "ปาท่องโก๋", "โรตี", "ขนมจีนน้ำยา", "ไข่เจียวหมูสับ", "แกงเขียวหวาน", "ข้าวผัด", "ไก่ทอด", "น้ำแข็งไส", "หม่าล่าทั่ง", "สลัดโรล", "ผัดไทย", "หอยทอด", "ข้าวหมูแดง", "ข้าวขาหมู", "ข้าวมกไก่", "โจ๊ก", "ต้มเลือดหมู", "ยำวุ้นเส้น", "ยำมาม่า", "ส้มตำปูปลาร้า", "ไก่ย่าง", "คอหมูย่าง", "น้ำตกหมู", "ลาบหมู", "ซุปหน่อไม้", "แกงอ่อม", "ต้มแซ่บ", "ปลาหมึกย่าง", "กุ้งเผา", "หอยแครงลวก", "ปูไข่ดอง", "ยำปูม้า", "ไข่ตุ๋น", "ต้มข่าไก่", "แกงมัสมั่น", "ผัดซีอิ๊ว", "สุกี้แห้ง", "ไข่กระทะ", "ขนมปังปิ้ง", "วาฟเฟิล", "แพนเค้ก", "เครปญี่ปุ่น", "ไอศกรีม", "มาการอง", "ครัวซองต์", "บราวนี่", "ทาร์ตไข่", "โดนัท", "แซนด์วิช", "เบอร์เกอร์", "เฟรนช์ฟรายส์", "ฮอทดอก", "สปาเก็ตตี้", "สเต็กเนื้อ", "ซาซิมิ", "ทาโกะยากิ", "ราเมน", "อูด้ง", "ข้าวปั้น", "แกงกะหรี่", "กิมจิ", "ต๊อกบกกี", "จาจังมยอน", "หมูสามชั้นย่าง", "บิบิมบับ", "น้ำพริกกะปิ", "ปลาทูทอด", "ชามะนาว", "กาแฟดำ"] 
         },
         jobs: { 
             name: "👨‍⚕️ อาชีพต่างๆ", 
-            words: ["หมอ", "พยาบาล", "ตำรวจ", "ทหาร", "ครู", "นักดับเพลิง", "นักบิน", "แอร์โฮสเตส", "เชฟ", "วิศวกร", "สถาปนิก", "โปรแกรมเมอร์", "นักข่าว", "ช่างภาพ", "ยูทูบเบอร์", "ดารา", "นักร้อง", "แม่ค้าออนไลน์", "ทนายความ", "ผู้พิพากษา", "ช่างตัดผม", "พนักงานออฟฟิศ", "นักกีฬา", "คนขับแท็กซี่", "ไรเดอร์", "สัตวแพทย์", "หมอฟัน", "เภสัชกร", "นักจิตวิทยา", "นักกายภาพบำบัด", "นักสืบ", "อัยการ", "รปภ.", "แม่บ้าน", "ชาวนา", "ชาวประมง", "นักบินอวกาศ", "นักวิทยาศาสตร์", "นักเขียน", "บรรณาธิการ", "ผู้กำกับภาพยนตร์", "นักแสดงตลก", "แดนเซอร์", "ดีเจ", "นักออกแบบกราฟิก", "นักวาดภาพประกอบ", "สไตลิสต์", "ช่างแต่งหน้า", "ช่างซ่อมรถ", "ช่างประปา", "ช่างไฟฟ้า", "ชาวสวน", "นักดนตรี", "บาริสต้า", "พนักงานเสิร์ฟ", "บาร์เทนเดอร์", "ไกด์นำเที่ยว", "ล่ามแปลภาษา", "พนักงานต้อนรับ", "นักการตลาด", "นักบัญชี", "พนักงานขาย", "นายหน้าอสังหาฯ", "ช่างสัก", "หมอดู", "นักมายากล", "นักมวย", "นักฟุตบอล", "โค้ชกีฬา", "เทรนเนอร์ฟิตเนส", "กัปตันเรือ", "นักโบราณคดี", "นักดาราศาสตร์", "นักวิเคราะห์ข้อมูล", "แอดมินเพจ", "สตรีมเมอร์", "โปรเพลเยอร์", "นักการทูต", "นายกรัฐมนตรี", "นักการเมือง", "นักเทศน์", "มัคคุเทศก์", "นักพัฒนาเกม", "นักวิจัย", "พนักงานธนาคาร", "พนักงานไปรษณีย์", "คนเก็บขยะ", "ช่างเย็บผ้า", "นายแบบ", "นางแบบ", "ผู้ประกาศข่าว"] 
+            words: ["หมอ", "พยาบาล", "ตำรวจ", "ทหาร", "ครู", "นักดับเพลิง", "นักบิน", "แอร์โฮสเตส", "เชฟ", "วิศวกร", "สถาปนิก", "โปรแกรมเมอร์", "นักข่าว", "ช่างภาพ", "ยูทูบเบอร์", "ดารา", "นักร้อง", "แม่ค้าออนไลน์", "ทนายความ", "ผู้พิพากษา", "ช่างตัดผม", "พนักงานออฟฟิศ", "นักกีฬา", "คนขับแท็กซี่", "ไรเดอร์", "สัตวแพทย์", "หมอฟัน", "เภสัชกร", "นักจิตวิทยา", "นักกายภาพบำบัด", "นักสืบ", "รปภ.", "แม่บ้าน", "ชาวนา", "ชาวประมง", "นักบินอวกาศ", "นักวิทยาศาสตร์", "นักเขียน", "ผู้กำกับภาพยนตร์", "นักแสดงตลก", "แดนเซอร์", "ดีเจ", "นักออกแบบกราฟิก", "ช่างแต่งหน้า", "ช่างซ่อมรถ", "ช่างประปา", "ช่างไฟฟ้า", "ชาวสวน", "นักดนตรี", "บาริสต้า", "พนักงานเสิร์ฟ", "บาร์เทนเดอร์", "ไกด์นำเที่ยว", "ล่ามแปลภาษา", "พนักงานต้อนรับ", "นักการตลาด", "นักบัญชี", "พนักงานขาย", "นายหน้าอสังหาฯ", "ช่างสัก", "หมอดู", "นักมายากล", "นักมวย", "นักฟุตบอล", "โค้ชกีฬา", "เทรนเนอร์ฟิตเนส", "กัปตันเรือ", "นักโบราณคดี", "แอดมินเพจ", "สตรีมเมอร์", "โปรเพลเยอร์", "นักการเมือง", "พนักงานธนาคาร", "พนักงานไปรษณีย์", "ช่างเย็บผ้า", "นายแบบ", "นางแบบ", "ผู้ประกาศข่าว"] 
         },
         movies: { 
             name: "🎬 หนัง/ซีรีส์ดัง", 
-            words: ["Harry Potter", "Avengers", "Spider-Man", "Titanic", "Avatar", "Star Wars", "Jurassic Park", "Transformer", "Fast & Furious", "Pirates of the Caribbean", "Squid Game", "Stranger Things", "Game of Thrones", "The Walking Dead", "Money Heist", "บุพเพสันนิวาส", "นาคี", "พี่มาก..พระโขนง", "ฉลาดเกมส์โกง", "เพื่อน..ที่ระลึก", "Iron Man", "Captain America", "Thor", "Black Panther", "Doctor Strange", "Guardians of the Galaxy", "Deadpool", "X-Men", "Wolverine", "Batman", "Superman", "Wonder Woman", "Aquaman", "Joker", "The Matrix", "Lord of the Rings", "The Hobbit", "Inception", "Interstellar", "The Dark Knight", "Gladiator", "Forrest Gump", "The Shawshank Redemption", "Pulp Fiction", "Kill Bill", "John Wick", "Mission Impossible", "James Bond", "Terminator", "Alien", "Predator", "King Kong", "Godzilla", "Toy Story", "Finding Nemo", "Up", "Inside Out", "Frozen", "Moana", "Zootopia", "The Lion King", "Aladdin", "Mulan", "Beauty and the Beast", "Shrek", "Minions", "Despicable Me", "Kung Fu Panda", "How to Train Your Dragon", "Spider-Verse", "Spirited Away", "My Neighbor Totoro", "Your Name", "Demon Slayer", "Attack on Titan", "One Piece", "Naruto", "Dragon Ball Z", "Itaewon Class", "Crash Landing on You", "Vincenzo", "Goblin", "Descendants of the Sun", "Reply 1988", "Hospital Playlist", "The Glory", "Moving", "Kingdom", "Alice in Borderland", "Peaky Blinders", "Breaking Bad", "Better Call Saul", "The Boys", "The Crown", "Bridgerton", "Emily in Paris", "Wednesday", "Black Mirror"] 
+            words: ["Harry Potter", "Avengers", "Spider-Man", "Titanic", "Avatar", "Star Wars", "Jurassic Park", "Transformer", "Fast & Furious", "Pirates of the Caribbean", "Squid Game", "Stranger Things", "Game of Thrones", "The Walking Dead", "Money Heist", "บุพเพสันนิวาส", "นาคี", "พี่มาก..พระโขนง", "ฉลาดเกมส์โกง", "เพื่อน..ที่ระลึก", "Iron Man", "Captain America", "Thor", "Black Panther", "Doctor Strange", "Guardians of the Galaxy", "Deadpool", "X-Men", "Wolverine", "Batman", "Superman", "Wonder Woman", "Aquaman", "Joker", "The Matrix", "Lord of the Rings", "The Hobbit", "Inception", "Interstellar", "The Dark Knight", "Gladiator", "Forrest Gump", "Pulp Fiction", "Kill Bill", "John Wick", "Mission Impossible", "James Bond", "Terminator", "Alien", "Predator", "King Kong", "Godzilla", "Toy Story", "Finding Nemo", "Up", "Inside Out", "Frozen", "Moana", "Zootopia", "The Lion King", "Aladdin", "Mulan", "Beauty and the Beast", "Shrek", "Minions", "Despicable Me", "Kung Fu Panda", "How to Train Your Dragon", "Spirited Away", "My Neighbor Totoro", "Your Name", "Demon Slayer", "Attack on Titan", "One Piece", "Naruto", "Dragon Ball Z", "Itaewon Class", "Crash Landing on You", "Vincenzo", "Goblin", "Descendants of the Sun", "Reply 1988", "Hospital Playlist", "The Glory", "Moving", "Kingdom", "Alice in Borderland", "Peaky Blinders", "Breaking Bad", "The Boys", "The Crown", "Bridgerton", "Emily in Paris", "Wednesday", "Black Mirror"] 
         },
         random: { 
             name: "🌪️ สุ่มมั่ว (ยากสุด)", 
@@ -82,17 +81,17 @@ const gameData = {
 };
 
 const gameList = [
+    { id: 'headsup', name: 'ทายคำบนหัว', icon: '📱', color: 'pink' },
+    { id: 'wheel', name: 'Spin the Wheel', icon: '🎡', color: 'purple' },
+    { id: 'hotpotato', name: 'Hot Potato', icon: '💣', color: 'blue' },
     { id: 'tod', name: 'Truth or Dare', icon: '🎭', color: 'purple' },
     { id: 'nhie', name: 'Never Have I Ever', icon: '🙅‍♂️', color: 'blue' },
     { id: 'mostlikely', name: 'Most Likely To', icon: '👉', color: 'pink' },
-    { id: 'wheel', name: 'Spin the Wheel', icon: '🎡', color: 'purple' },
-    { id: 'hotpotato', name: 'Hot Potato', icon: '💣', color: 'blue' },
     { id: 'fivesec', name: '5 Second Challenge', icon: '⏱️', color: 'pink' },
     { id: 'guesswho', name: 'Guess Who', icon: '🕵️', color: 'purple' },
     { id: 'quiz', name: 'Quiz Battle', icon: '🧠', color: 'blue' },
     { id: 'secret', name: 'Secret Mission', icon: '🤫', color: 'pink' },
-    { id: 'roast', name: 'AI Roast Friend', icon: '🔥', color: 'purple' },
-    { id: 'headsup', name: 'ทายคำบนหัว', icon: '🤔', color: 'blue' }
+    { id: 'roast', name: 'AI Roast Friend', icon: '🔥', color: 'purple' }
 ];
 
 // --- Core Functions ---
@@ -185,9 +184,8 @@ function openGame(gameId) {
     const content = document.getElementById('game-content');
     content.innerHTML = ''; 
     
-    // Trigger Animation
     content.classList.remove('animate-entrance');
-    void content.offsetWidth; // Force Reflow
+    void content.offsetWidth; 
     content.classList.add('animate-entrance');
 
     switch(gameId) {
@@ -211,6 +209,11 @@ function openGame(gameId) {
 function closeGame() {
     clearInterval(gameInterval);
     clearTimeout(gameTimeout);
+    
+    // Stop Gyroscope listener if active
+    window.removeEventListener('deviceorientation', handleHeadsUpTilt);
+    
+    document.body.style.backgroundColor = 'var(--bg-dark)';
     document.getElementById('game-view').classList.add('hidden');
     document.getElementById('home-view').classList.remove('hidden');
 }
@@ -220,115 +223,198 @@ function getRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 function getRandomPlayer() { return getRandom(players).name; }
 let gameInterval, gameTimeout;
 
-// --- Individual Games Logic ---
+// -----------------------------------------------------------------
+// --- เกมทายคำบนหัว (Heads Up) แบบเก็บคะแนน + ใช้เซ็นเซอร์เอียงจอ ---
+// -----------------------------------------------------------------
+let huScore = 0;
+let huWordsList = [];
+let huCurrentIndex = 0;
+let isHuPlaying = false;
+let huReadyForNextTilt = true;
 
-// เกมทายคำบนหัว (Heads Up) อัปเกรด
 function initHeadsUp(container) {
+    // Reset variables
+    huScore = 0;
+    isHuPlaying = false;
+    window.removeEventListener('deviceorientation', handleHeadsUpTilt);
+
     let catHTML = `
-        <h3 class="mb-3 text-gradient">ตั้งค่าเวลา</h3>
-        <div class="glass-card p-4 mb-4" style="text-align: left; width: 100%; max-width: 350px;">
-            <label style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px; cursor: pointer; font-size: 1.1rem;">
-                <input type="radio" name="hu-timer-mode" value="down" checked style="width: 20px; height: 20px; accent-color: var(--neon-pink);"> 
-                ⏳ นับถอยหลัง 60 วินาที
-            </label>
-            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 1.1rem;">
-                <input type="radio" name="hu-timer-mode" value="up" style="width: 20px; height: 20px; accent-color: var(--neon-blue);"> 
-                ⏱️ จับเวลาไปเรื่อยๆ (กดหยุดเอง)
-            </label>
+        <div class="game-rules-box mb-4">
+            <span style="font-size: 1.2rem;">📱</span> <strong>วิธีเล่น (ทายคำบนหัว):</strong><br>
+            เลือกหมวดหมู่ ถือมือถือแนบหน้าผากหันหน้าจอไปหาเพื่อน ให้เพื่อนใบ้คำให้ (ห้ามพูดคำนั้นออกมา)<br>
+            <br>
+            ✅ <strong>ทายถูก:</strong> ให้ "เงย" หน้าจอโทรศัพท์ขึ้นชี้ฟ้า<br>
+            ⏭️ <strong>ข้ามคำ:</strong> ให้ "คว่ำ" หน้าจอโทรศัพท์ลงชี้พื้น<br>
+            <em>(ทายให้ได้มากที่สุดใน 60 วินาที!)</em>
         </div>
-        <h3 class="mb-3 text-gradient">เลือกหมวดหมู่คำใบ้</h3>
+        <h3 class="mb-3 text-gradient">เลือกหมวดหมู่เพื่อเริ่มเล่น</h3>
         <div style="display:flex; flex-direction:column; gap:12px; width:100%; max-width:350px;">`;
         
     for (let key in gameData.headsup) {
-        catHTML += `<button class="btn-neon-blue action-btn" onclick="startHeadsUpCategory('${key}')">${gameData.headsup[key].name}</button>`;
+        catHTML += `<button class="btn-neon-blue action-btn" onclick="startHeadsUpSensorCheck('${key}')">${gameData.headsup[key].name}</button>`;
     }
     catHTML += `</div>`;
     container.innerHTML = catHTML;
 }
 
-window.startHeadsUpCategory = (categoryKey) => {
-    const mode = document.querySelector('input[name="hu-timer-mode"]:checked').value;
+// เช็คและขออนุญาตใช้งานเซ็นเซอร์ (จำเป็นสำหรับ iPhone iOS 13+)
+window.startHeadsUpSensorCheck = (categoryKey) => {
+    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+        DeviceOrientationEvent.requestPermission()
+            .then(permissionState => {
+                if (permissionState === 'granted') {
+                    startHeadsUpGameLoop(categoryKey);
+                } else {
+                    alert('ไม่สามารถใช้ระบบเอียงจอได้ แต่ยังสามารถใช้ "ปุ่มกด" เล่นได้ตามปกติครับ');
+                    startHeadsUpGameLoop(categoryKey);
+                }
+            })
+            .catch(console.error);
+    } else {
+        startHeadsUpGameLoop(categoryKey);
+    }
+};
+
+window.startHeadsUpGameLoop = (categoryKey) => {
     const catData = gameData.headsup[categoryKey];
-    let words = [...catData.words].sort(() => 0.5 - Math.random()); // สลับคำมั่ว
-    let currentWordIndex = 0;
-    let timeCount = mode === 'down' ? 60 : 0;
+    huWordsList = [...catData.words].sort(() => 0.5 - Math.random());
+    huCurrentIndex = 0;
+    huScore = 0;
+    let timeLeft = 60;
     
     const container = document.getElementById('game-content');
     container.innerHTML = `
-        <div class="text-muted mb-2">หมวด: ${catData.name} | ${mode === 'down' ? 'โหมด: 60 วิ' : 'โหมด: นับไปเรื่อยๆ'}</div>
-        <div class="timer-text mb-4" id="hu-timer">${timeCount}</div>
-        
-        <div class="display-text glass-card p-4" id="hu-word" style="font-size: 3.5rem; color: var(--neon-pink); width: 100%; word-break: break-word; min-height: 150px; text-shadow: 0 0 20px rgba(236,72,153,0.5);">เตรียมตัว...</div>
-        <p class="text-muted mt-4 mb-4">หันจอมือถือให้เพื่อนดู แล้วถามคำถาม (เพื่อนตอบได้แค่ ใช่/ไม่ใช่)</p>
-        
-        <div style="display: flex; gap: 10px; width: 100%; max-width: 400px; margin-top: 10px;" id="hu-controls">
-            <button class="btn-danger action-btn" onclick="nextHeadsUpWord()">⏭️ ข้ามคำนี้</button>
-            <button class="btn-neon-purple action-btn" onclick="correctHeadsUpWord()">✅ ทายถูก! (หยุดเวลา)</button>
+        <div style="display: flex; justify-content: space-between; width: 100%; padding: 0 20px;">
+            <div class="text-muted" style="font-size: 1.2rem;">⏱️ <span id="hu-timer">60</span></div>
+            <div class="text-muted" style="font-size: 1.2rem;">✅ <span id="hu-score">0</span> คำ</div>
         </div>
-        <button class="btn-neon-blue action-btn mt-4" style="max-width: 250px; display: none;" id="hu-restart-btn" onclick="initHeadsUp(document.getElementById('game-content'))">🔄 เลือกตั้งค่าใหม่</button>
+        
+        <div class="display-text glass-card p-4" id="hu-word" style="font-size: 4rem; color: var(--neon-pink); width: 100%; word-break: break-word; min-height: 250px; text-shadow: 0 0 20px rgba(236,72,153,0.5);">นำมือถือแตะหน้าผากเลย!</div>
+        
+        <div style="display: flex; gap: 10px; width: 100%; max-width: 400px; margin-top: 20px;" id="hu-controls">
+            <button class="btn-danger action-btn" onclick="markHeadsUpPass()">คว่ำจอเพื่อ ข้าม ⏭️</button>
+            <button class="btn-neon-purple action-btn" onclick="markHeadsUpCorrect()">เงยจอเพื่อ ถูก ✅</button>
+        </div>
+        <button class="btn-neon-blue action-btn mt-4" style="max-width: 250px; display: none;" id="hu-restart-btn" onclick="initHeadsUp(document.getElementById('game-content'))">🔄 เล่นหมวดอื่นต่อ</button>
     `;
 
     const wordDisplay = document.getElementById('hu-word');
     const timerDisplay = document.getElementById('hu-timer');
     const controls = document.getElementById('hu-controls');
-    const restartBtn = document.getElementById('hu-restart-btn');
     
-    // นับถอยหลังก่อนเริ่ม 3 2 1
-    controls.style.display = 'none';
+    controls.style.opacity = '0.5';
+    controls.style.pointerEvents = 'none';
+
+    // นับถอยหลัง 3 2 1
     wordDisplay.innerText = "3";
     setTimeout(() => wordDisplay.innerText = "2", 1000);
     setTimeout(() => wordDisplay.innerText = "1", 2000);
     setTimeout(() => {
-        controls.style.display = 'flex';
-        wordDisplay.innerText = words[currentWordIndex];
+        // เริ่มเกม
+        controls.style.opacity = '1';
+        controls.style.pointerEvents = 'auto';
+        wordDisplay.innerText = huWordsList[huCurrentIndex];
+        
+        isHuPlaying = true;
+        window.addEventListener('deviceorientation', handleHeadsUpTilt);
         
         clearInterval(gameInterval);
         gameInterval = setInterval(() => {
-            if (mode === 'down') {
-                timeCount--;
-                timerDisplay.innerText = timeCount;
-                if (timeCount <= 0) {
-                    clearInterval(gameInterval);
-                    timerDisplay.innerText = "0";
-                    wordDisplay.innerText = "หมดเวลา! ⏰\nโดนทำโทษซะดีๆ";
-                    endTurn();
-                }
-            } else {
-                // โหมดนับขึ้นเรื่อยๆ
-                timeCount++;
-                timerDisplay.innerText = timeCount;
+            timeLeft--;
+            timerDisplay.innerText = timeLeft;
+            if (timeLeft <= 0) {
+                endHeadsUpGame();
             }
         }, 1000);
     }, 3000);
-
-    window.nextHeadsUpWord = () => {
-        currentWordIndex++;
-        if (currentWordIndex >= words.length) {
-            wordDisplay.innerText = "โหดเกิ๊น! ทายหมดหมวดแล้ว 🎉";
-            clearInterval(gameInterval);
-            endTurn();
-        } else {
-            wordDisplay.innerText = words[currentWordIndex];
-        }
-    };
-
-    window.correctHeadsUpWord = () => {
-        clearInterval(gameInterval);
-        const timeUsed = mode === 'down' ? (60 - timeCount) : timeCount;
-        wordDisplay.innerHTML = `<span style="font-size: 1.5rem; color: var(--text-main);">สุดยอด! ทายถูกในเวลา</span><br>${timeUsed} วินาที! 🎉`;
-        endTurn();
-    };
-    
-    function endTurn() {
-        controls.style.display = 'none';
-        restartBtn.style.display = 'flex';
-    }
 };
 
-// ... โค้ดเกมอื่นๆ ด้านล่างยังเหมือนเดิม ...
+// ฟังก์ชันดักจับการเอียงหน้าจอโทรศัพท์
+function handleHeadsUpTilt(event) {
+    if (!isHuPlaying) return;
+    
+    // beta = การก้มเงยโทรศัพท์ในแนวตั้ง (Portrait)
+    // ถือแนบหน้าผากตั้งตรง beta จะประมาณ 80-100 องศา
+    let b = event.beta; 
+    
+    if (huReadyForNextTilt) {
+        if (b > -20 && b < 45) { 
+            // เงยจอขึ้นชี้ฟ้า (หงายจอ) -> หงายหลัง
+            huReadyForNextTilt = false;
+            markHeadsUpCorrect();
+        } else if (b > 135 && b <= 180) { 
+            // คว่ำจอลงชี้พื้น -> ก้มหน้า
+            huReadyForNextTilt = false;
+            markHeadsUpPass();
+        }
+    } else {
+        // รีเซ็ตสถานะเมื่อเอาโทรศัพท์กลับมาตั้งตรงที่หน้าผาก (ระหว่าง 60 ถึง 120 องศา)
+        if (b > 60 && b < 120) {
+            huReadyForNextTilt = true;
+            document.body.className = ''; // ลบสีพื้นหลัง
+        }
+    }
+}
+
+window.markHeadsUpCorrect = () => {
+    if (!isHuPlaying) return;
+    huScore++;
+    document.getElementById('hu-score').innerText = huScore;
+    
+    // เอฟเฟกต์กระพริบจอสีเขียว
+    document.body.classList.remove('flash-red');
+    void document.body.offsetWidth;
+    document.body.classList.add('flash-green');
+    
+    loadNextHeadsUpWord();
+};
+
+window.markHeadsUpPass = () => {
+    if (!isHuPlaying) return;
+    
+    // เอฟเฟกต์กระพริบจอสีแดง
+    document.body.classList.remove('flash-green');
+    void document.body.offsetWidth;
+    document.body.classList.add('flash-red');
+    
+    loadNextHeadsUpWord();
+};
+
+function loadNextHeadsUpWord() {
+    huCurrentIndex++;
+    if (huCurrentIndex >= huWordsList.length) {
+        endHeadsUpGame(true); // คำหมด
+    } else {
+        document.getElementById('hu-word').innerText = huWordsList[huCurrentIndex];
+    }
+}
+
+function endHeadsUpGame(outOfWords = false) {
+    clearInterval(gameInterval);
+    isHuPlaying = false;
+    window.removeEventListener('deviceorientation', handleHeadsUpTilt);
+    document.body.className = ''; // ล้างเอฟเฟกต์
+    
+    document.getElementById('hu-controls').style.display = 'none';
+    document.getElementById('hu-restart-btn').style.display = 'flex';
+    
+    const wordDisplay = document.getElementById('hu-word');
+    if(outOfWords) {
+        wordDisplay.innerHTML = `<span style="font-size: 1.5rem; color: var(--text-main);">เก่งเกิ๊น คำหมดสต็อก! ทายถูกไป</span><br><span style="font-size: 5rem;">${huScore}</span> คำ 🎉`;
+    } else {
+        wordDisplay.innerHTML = `<span style="font-size: 1.5rem; color: var(--text-main);">หมดเวลา! ทายถูกทั้งหมด</span><br><span style="font-size: 5rem;">${huScore}</span> คำ 🎉`;
+    }
+}
+
+// -----------------------------------------------------------------
+// --- เกมอื่นๆ (เพิ่มกล่อง Rule box ให้ทุกเกมดูโปรขึ้น) -----------
+// -----------------------------------------------------------------
+
 function initToD(container) {
     container.innerHTML = `
-        <p class="text-muted mb-4">สุ่มผู้เล่นและเลือก Truth (ความจริง) หรือ Dare (กล้า)</p>
+        <div class="game-rules-box mb-4">
+            <span style="font-size: 1.2rem;">📖</span> <strong>วิธีเล่น:</strong> ระบบจะสุ่มเลือกผู้โชคร้าย ให้คนนั้นเลือกว่าจะตอบความจริง (Truth) หรือทำภารกิจสุดกล้า (Dare)
+        </div>
         <div id="tod-target" style="font-size: 1.5rem; color: var(--neon-blue); margin-bottom: 20px; font-weight: bold; text-shadow: 0 0 20px rgba(59, 130, 246, 0.8);"></div>
         <div style="display: flex; gap: 10px; width: 100%; max-width: 300px; margin-bottom: 20px;">
             <button class="btn-neon-purple action-btn" onclick="rollToD('truths')">Truth 😇</button>
@@ -344,23 +430,30 @@ function initToD(container) {
 
 function initNHIE(container) {
     container.innerHTML = `
-        <div class="display-text glass-card p-4" id="nhie-display" style="color: var(--neon-blue); width: 100%;">กดปุ่มเพื่อสุ่มคำถาม</div>
-        <p class="text-muted mb-4 mt-4">ใครเคยทำสิ่งนี้ ให้ยกมือ/ดื่มน้ำ หรือโดนทำโทษ!</p>
-        <button class="btn-neon-blue action-btn" onclick="document.getElementById('nhie-display').innerText = getRandom(gameData.neverHaveIEver)" style="max-width: 250px;">🎲 สุ่ม "ฉันไม่เคย"</button>
+        <div class="game-rules-box mb-4">
+            <span style="font-size: 1.2rem;">📖</span> <strong>วิธีเล่น:</strong> อ่านประโยค "ฉันไม่เคย..." บนจอ หากใครในวง <strong>"เคยทำ"</strong> สิ่งนั้น จะต้องยกมือ ดื่มน้ำ หรือโดนทำโทษ!
+        </div>
+        <div class="display-text glass-card p-4" id="nhie-display" style="color: var(--neon-blue); width: 100%;">กดปุ่มเพื่อเริ่มสุ่ม</div>
+        <button class="btn-neon-blue action-btn mt-4" onclick="document.getElementById('nhie-display').innerText = getRandom(gameData.neverHaveIEver)" style="max-width: 250px;">🎲 สุ่มคำถาม</button>
     `;
 }
 
 function initMostLikely(container) {
     container.innerHTML = `
+        <div class="game-rules-box mb-4">
+            <span style="font-size: 1.2rem;">📖</span> <strong>วิธีเล่น:</strong> อ่านคำถามบนจอให้นับ 1-2-3 แล้วทุกคนชี้ไปที่เพื่อนที่ตรงกับคำถามนั้นที่สุด คนที่โดนชี้เยอะสุดโดนทำโทษ!
+        </div>
         <div class="display-text glass-card p-4" id="ml-display" style="color: var(--neon-pink); width: 100%;">...</div>
-        <p class="text-muted mb-4 mt-4">นับ 1 2 3 แล้วชี้ไปที่คนที่ตรงกับคำถามที่สุด!</p>
-        <button class="btn-neon-pink action-btn" onclick="document.getElementById('ml-display').innerText = getRandom(gameData.mostLikely)" style="max-width: 250px;">👉 สุ่มคำถาม</button>
+        <button class="btn-neon-pink action-btn mt-4" onclick="document.getElementById('ml-display').innerText = getRandom(gameData.mostLikely)" style="max-width: 250px;">👉 สุ่มคำถาม</button>
     `;
     document.getElementById('ml-display').innerText = getRandom(gameData.mostLikely);
 }
 
 function initWheel(container) {
     container.innerHTML = `
+        <div class="game-rules-box mb-4">
+            <span style="font-size: 1.2rem;">📖</span> <strong>วิธีเล่น:</strong> กดหมุนวงล้อวัดดวง ใครซวยโดนทำโทษ หรืออาจจะได้แจกจ่ายความบรรลัยให้เพื่อน!
+        </div>
         <div class="wheel-container" id="wheel-circle">เตรียมหมุน!</div>
         <button class="btn-neon-purple mt-4 action-btn" onclick="spinWheel()" style="max-width: 200px;">🎡 หมุนวงล้อ</button>
     `;
@@ -380,10 +473,12 @@ function initWheel(container) {
 
 function initHotPotato(container) {
     container.innerHTML = `
+        <div class="game-rules-box mb-4">
+            <span style="font-size: 1.2rem;">📖</span> <strong>วิธีเล่น:</strong> เมื่อกดเริ่มระเบิดเวลาจะเดิน ให้ผลัดกันตอบคำถามในหมวดหมู่ที่ขึ้นโชว์ แล้วรีบส่งมือถือให้คนถัดไป ระเบิดตู้มที่ใคร คนนั้นแพ้!
+        </div>
         <h3 class="mb-4 text-gradient" id="hp-category">หมวดหมู่: ...</h3>
         <div class="display-text timer-text" id="hp-status">💣</div>
-        <p class="text-muted mb-4 mt-4">ส่งมือถือวนไปพร้อมตอบคำถาม ใครถือตอนระเบิด=แพ้!</p>
-        <button class="btn-danger action-btn" onclick="startPotato()" id="hp-btn" style="max-width: 200px;">▶ เริ่มเกม</button>
+        <button class="btn-danger action-btn mt-4" onclick="startPotato()" id="hp-btn" style="max-width: 200px;">▶ เริ่มเกม</button>
     `;
     window.startPotato = () => {
         const status = document.getElementById('hp-status');
@@ -408,6 +503,9 @@ function initHotPotato(container) {
 
 function initFiveSec(container) {
     container.innerHTML = `
+        <div class="game-rules-box mb-4">
+            <span style="font-size: 1.2rem;">📖</span> <strong>วิธีเล่น:</strong> คุณมีเวลาแค่ 5 วินาทีในการตอบคำถาม 3 ข้อบนหน้าจอให้ครบ ถ้าตอบไม่ทันโดนทำโทษ!
+        </div>
         <div class="timer-text mb-4" id="fs-timer">5</div>
         <div class="display-text glass-card p-4" id="fs-display" style="font-size:1.2rem; min-height: 60px; width:100%;">...</div>
         <button class="btn-neon-pink mb-4 mt-4 action-btn" onclick="startFiveSec()" id="fs-btn" style="max-width: 200px;">▶ สุ่มโจทย์ & จับเวลา</button>
@@ -436,15 +534,20 @@ function initFiveSec(container) {
 
 function initGuessWho(container) {
     container.innerHTML = `
+        <div class="game-rules-box mb-4">
+            <span style="font-size: 1.2rem;">📖</span> <strong>วิธีเล่น:</strong> อ่านคำใบ้ปริศนาเกี่ยวกับคนในวงบนหน้าจอ แล้วให้ทุกคนโหวตว่าหมายถึงใคร ใครโดนทายถูกรับจบ!
+        </div>
         <div class="display-text glass-card p-4" id="gw-display" style="color: var(--neon-purple); width: 100%;">...</div>
-        <p class="text-muted mb-4 mt-4">ทุกคนโหวตว่าคำใบ้นี้คือใคร ทายถูกรอดตัว ทายผิดโดน!</p>
-        <button class="btn-neon-purple action-btn" onclick="document.getElementById('gw-display').innerText = getRandom(gameData.guessWho)" style="max-width: 250px;">🕵️ สุ่มคำใบ้</button>
+        <button class="btn-neon-purple action-btn mt-4" onclick="document.getElementById('gw-display').innerText = getRandom(gameData.guessWho)" style="max-width: 250px;">🕵️ สุ่มคำใบ้</button>
     `;
     document.getElementById('gw-display').innerText = getRandom(gameData.guessWho);
 }
 
 function initQuiz(container) {
     container.innerHTML = `
+        <div class="game-rules-box mb-4">
+            <span style="font-size: 1.2rem;">📖</span> <strong>วิธีเล่น:</strong> ช่วยกันตอบคำถามความรู้รอบตัวสุดปั่น ถ้าวงตอบผิดเตรียมโดนทำโทษยกวง!
+        </div>
         <div id="quiz-q" class="display-text" style="font-size: 1.2rem;">...</div>
         <div id="quiz-choices" style="width: 100%; max-width: 350px;"></div>
         <button class="btn-neon-blue mt-4 action-btn" onclick="loadQuiz()" style="max-width: 200px;">🔄 สุ่มข้อใหม่</button>
@@ -478,7 +581,9 @@ function initQuiz(container) {
 
 function initSecret(container) {
     container.innerHTML = `
-        <p class="text-muted mb-4">ส่งมือถือให้ผู้เล่นทีละคน กดเปิดดูภารกิจลับ ห้ามให้คนอื่นเห็น! ทำไม่สำเร็จโดนทำโทษ</p>
+        <div class="game-rules-box mb-4">
+            <span style="font-size: 1.2rem;">📖</span> <strong>วิธีเล่น:</strong> ส่งมือถือให้ทีละคน กดเปิดดูภารกิจลับแล้วซ่อนไว้ ระหว่างงานใครทำภารกิจไม่สำเร็จโดนปรับ!
+        </div>
         <div class="display-text hidden glass-card p-4" id="sm-display" style="border: 2px dashed var(--neon-pink); border-radius: 12px; width:100%;"></div>
         <button class="btn-neon-pink action-btn mt-4" onclick="toggleSecret()" id="sm-btn" style="max-width: 200px;">👀 เปิดดูภารกิจ</button>
     `;
@@ -498,6 +603,9 @@ function initSecret(container) {
 
 function initRoast(container) {
     container.innerHTML = `
+        <div class="game-rules-box mb-4">
+            <span style="font-size: 1.2rem;">📖</span> <strong>วิธีเล่น:</strong> ระบบจะเลือกผู้โชคร้ายและทำการแซวแบบเจ็บๆ คันๆ เอาไว้สร้างเสียงหัวเราะในวงเฉยๆ!
+        </div>
         <div id="roast-target" class="timer-text" style="font-size: 2.5rem; color: var(--neon-blue); margin-bottom: 20px;">...</div>
         <div class="display-text glass-card p-4" id="roast-display" style="font-size: 1.2rem; color: var(--text-main); width: 100%;">...</div>
         <button class="btn-neon-purple mt-4 action-btn" onclick="generateRoast()" style="max-width: 250px;">🔥 สุ่มแซวเพื่อน</button>
