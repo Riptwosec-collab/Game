@@ -2,8 +2,8 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>วงนี้มีเกม - Party Game Hub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>วงนี้มีเกม - Premium Party Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
@@ -16,50 +16,52 @@
 <div id="flash-overlay"></div>
 
 <div id="app-container">
-    <div id="home-view" class="p-4">
-        <div class="header mb-4">
-            <h1 class="text-gradient pulse-text">วงนี้มีเกม 🎮</h1>
-            <p class="text-muted">สุดยอดเว็บแอปรวมเกมปาร์ตี้</p>
+    
+    <div id="home-view" class="dashboard-layout">
+        
+        <div class="header-section text-center mb-4">
+            <h1 class="text-gradient pulse-text" style="font-size: 2.5rem; margin-bottom: 5px;">วงนี้มีเกม 🎮</h1>
+            <p class="text-muted">Premium Party Hub</p>
         </div>
 
-        <div style="display: flex; gap: 8px; margin-bottom: 15px; flex-wrap: wrap;">
-            <button onclick="toggleCampfire()" id="btn-campfire" class="action-btn" style="flex: 1; font-size: 0.8rem; background: #222; border-color: #555;">🏕️ โหมดแคมป์</button>
-            <button onclick="shareApp()" class="btn-neon-blue action-btn" style="flex: 1; font-size: 0.8rem;">🔗 ชวนเพื่อน</button>
-            <button onclick="splitTeams()" class="btn-neon-pink action-btn" style="flex: 1; font-size: 0.8rem;">🤝 แบ่งทีม</button>
+        <div class="toolbar-section mb-4">
+            <button onclick="toggleCampfire()" id="btn-campfire" class="action-btn toolbar-btn">🏕️ โหมดแคมป์</button>
+            <button onclick="shareApp()" class="action-btn toolbar-btn btn-neon-blue">🔗 ชวนเพื่อน</button>
+            <button onclick="splitTeams()" class="action-btn toolbar-btn btn-neon-pink">🤝 แบ่งทีม</button>
+            <button onclick="showPenaltyModal()" class="action-btn toolbar-btn btn-danger">💀 สุ่มทำโทษ</button>
         </div>
 
-        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-            <button onclick="showPenaltyModal()" class="btn-danger action-btn" style="flex: 1; font-size: 0.8rem;">💀 สุ่มบทลงโทษ</button>
-            <button onclick="showCustomModal()" class="btn-neon-purple action-btn" style="flex: 1; font-size: 0.8rem;">✏️ สร้างคำถามเอง</button>
-        </div>
-
-        <div class="mb-4">
-            <div style="display: flex; gap: 8px; margin-bottom: 15px;">
-                <input type="text" id="new-player-name" placeholder="ใส่ชื่อผู้เล่น..." autocomplete="off">
-                <button onclick="addPlayer()" class="btn-neon-blue" style="width: 80px; box-shadow: none;">เพิ่ม</button>
+        <div class="dashboard-grid">
+            
+            <div class="player-panel glass-card p-4">
+                <h3 class="mb-3 text-gradient">👥 รายชื่อผู้เล่น & HP</h3>
+                <div class="add-player-box mb-3">
+                    <input type="text" id="new-player-name" placeholder="ใส่ชื่อเพื่อน..." autocomplete="off">
+                    <button onclick="addPlayer()" class="btn-neon-blue">เพิ่ม</button>
+                </div>
+                <div id="player-list" class="player-list-container"></div>
+                
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button onclick="endParty()" class="btn-danger action-btn" style="flex: 1;">🛑 จบปาร์ตี้</button>
+                </div>
             </div>
-            <div id="player-list"></div>
-        </div>
 
-        <hr style="border-color: rgba(255,255,255,0.1); margin: 20px 0;">
+            <div class="game-panel glass-card p-4">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h3 class="text-gradient" style="margin: 0;">🎮 เลือกเกม</h3>
+                    <button onclick="randomGameSelect()" class="btn-neon-purple" style="width: auto; padding: 5px 15px; font-size: 0.9rem;">🎲 สุ่มเกม</button>
+                </div>
+                <div class="mb-3" style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.3); padding: 8px 15px; border-radius: 12px;">
+                    <span style="font-size: 0.9rem;">🔊 เสียงคลอ:</span>
+                    <select id="ambience-select" onchange="changeAmbience()" style="padding: 5px; border-radius: 8px; background: rgba(0,0,0,0.5); color: white; border: 1px solid var(--neon-blue);">
+                        <option value="none">ปิดเสียง</option>
+                        <option value="crickets">🏕️ เสียงจิ้งหรีด</option>
+                        <option value="heartbeat">💓 ลุ้นระทึก</option>
+                    </select>
+                </div>
+                <div class="game-grid" id="game-grid"></div>
+            </div>
 
-        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-            <button onclick="randomGameSelect()" class="btn-neon-blue action-btn">🎲 สุ่มเกม</button>
-            <button onclick="endParty()" class="btn-danger action-btn">🛑 จบปาร์ตี้</button>
-        </div>
-
-        <div class="glass-card p-2 mb-4" style="display: flex; align-items: center; justify-content: space-between;">
-            <span style="font-size: 0.9rem; margin-left: 10px;">🔊 เสียงคลอ (Ambience):</span>
-            <select id="ambience-select" onchange="changeAmbience()" style="padding: 5px; border-radius: 8px; background: rgba(0,0,0,0.5); color: white; border: 1px solid var(--neon-blue);">
-                <option value="none">ปิดเสียง</option>
-                <option value="crickets">🏕️ เสียงจิ้งหรีด</option>
-                <option value="heartbeat">💓 ลุ้นระทึก (ตึกตัก)</option>
-            </select>
-        </div>
-
-        <h3 class="mb-3 text-gradient">เลือกเกมเอง</h3>
-        <div class="game-grid" id="game-grid">
-            <p class="text-muted" style="grid-column: 1 / -1; text-align: center;">กำลังโหลดรายการเกม...</p>
         </div>
     </div>
 
@@ -72,8 +74,8 @@
     </div>
 
     <div id="summary-view" class="hidden p-4 glass-overlay">
-        <h1 class="text-gradient mb-4 mt-4 pulse-text">🎉 สรุปผลปาร์ตี้ 🎉</h1>
-        <div id="summary-content" class="glass-card mb-4 p-4" style="border-color: var(--neon-pink);"></div>
+        <h1 class="text-gradient mb-4 mt-4 pulse-text text-center">🎉 สรุปผลปาร์ตี้ 🎉</h1>
+        <div id="summary-content" class="glass-card mb-4 p-4"></div>
         <button onclick="copySummary()" class="btn-neon-blue mb-3 action-btn">📋 คัดลอกผลสรุป</button>
         <button onclick="resetAll()" class="btn-danger action-btn">🔄 เริ่มงานใหม่ทั้งหมด</button>
     </div>
@@ -87,20 +89,6 @@
         </div>
     </div>
 
-    <div id="custom-modal" class="hidden modal-overlay">
-        <div class="glass-card p-4 modal-box">
-            <h2 class="mb-4 text-gradient">✏️ สร้างคำถาม/คำใบ้เอง</h2>
-            <select id="custom-category" style="width: 100%; padding: 10px; margin-bottom: 10px; background: rgba(0,0,0,0.5); color: white; border-radius: 8px;">
-                <option value="tod-truth">Truth (ความจริง)</option>
-                <option value="tod-dare">Dare (กล้าทำ)</option>
-                <option value="headsup">ทายคำบนหัว</option>
-            </select>
-            <input type="text" id="custom-input" placeholder="พิมพ์ข้อความที่นี่..." class="mb-4">
-            <button class="btn-neon-blue action-btn mb-2" onclick="saveCustomData()">💾 บันทึก</button>
-            <button class="btn-danger action-btn" onclick="closeModals()">ปิดหน้าต่าง</button>
-        </div>
-    </div>
-
     <div id="team-modal" class="hidden modal-overlay">
         <div class="glass-card p-4 modal-box text-center">
             <h2 class="mb-4 text-gradient">🤝 ผลการแบ่งทีม</h2>
@@ -109,6 +97,7 @@
             <button class="btn-danger action-btn" onclick="closeModals()">ปิดหน้าต่าง</button>
         </div>
     </div>
+
 </div>
 
 <script src="script.js"></script>
