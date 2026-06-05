@@ -9,10 +9,13 @@
 </head>
 <body>
 
-<!-- แสงพื้นหลังลอยไปมา (Animated Orbs) -->
+<!-- แสงพื้นหลังลอยไปมา -->
 <div class="bg-orb orb-1"></div>
 <div class="bg-orb orb-2"></div>
 <div class="bg-orb orb-3"></div>
+
+<!-- แผ่นใสสำหรับเอฟเฟกต์กระพริบหน้าจอ -->
+<div id="flash-overlay"></div>
 
 <div id="app-container">
     
@@ -20,7 +23,13 @@
     <div id="home-view" class="p-4">
         <div class="header mb-4">
             <h1 class="text-gradient pulse-text">วงนี้มีเกม 🎮</h1>
-            <p class="text-muted">รวม 10 เกมปาร์ตี้ เล่นได้ในเว็บเดียว</p>
+            <p class="text-muted">รวม 15 เกมปาร์ตี้ เล่นได้ในเว็บเดียว</p>
+        </div>
+
+        <!-- ฟีเจอร์เสริมหน้าแรก -->
+        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+            <button onclick="showPenaltyModal()" class="btn-danger action-btn" style="flex: 1; font-size: 0.8rem;">💀 สุ่มบทลงโทษ</button>
+            <button onclick="showCustomModal()" class="btn-neon-purple action-btn" style="flex: 1; font-size: 0.8rem;">✏️ สร้างคำถามเอง</button>
         </div>
 
         <!-- ส่วนจัดการผู้เล่น -->
@@ -36,7 +45,7 @@
 
         <!-- ปุ่มควบคุมหลัก -->
         <div style="display: flex; gap: 10px; margin-bottom: 25px;">
-            <button onclick="randomGameSelect()" class="btn-neon-purple action-btn">🎲 สุ่มเกม</button>
+            <button onclick="randomGameSelect()" class="btn-neon-blue action-btn">🎲 สุ่มเกม</button>
             <button onclick="endParty()" class="btn-danger action-btn">🛑 จบปาร์ตี้</button>
         </div>
 
@@ -61,10 +70,34 @@
     <!-- หน้าต่างสรุปผล (Summary View) -->
     <div id="summary-view" class="hidden p-4 glass-overlay">
         <h1 class="text-gradient mb-4 mt-4 pulse-text">🎉 สรุปผลปาร์ตี้ 🎉</h1>
-        <div id="summary-content" class="glass-card mb-4 p-4" style="border-color: var(--neon-pink);">
-        </div>
+        <div id="summary-content" class="glass-card mb-4 p-4" style="border-color: var(--neon-pink);"></div>
         <button onclick="copySummary()" class="btn-neon-blue mb-3 action-btn">📋 คัดลอกผลสรุป</button>
         <button onclick="resetAll()" class="btn-danger action-btn">🔄 เริ่มงานใหม่ทั้งหมด</button>
+    </div>
+
+    <!-- Modal บทลงโทษ -->
+    <div id="penalty-modal" class="hidden glass-overlay" style="padding: 20px; justify-content: center;">
+        <div class="glass-card p-4 text-center">
+            <h2 class="mb-4 text-gradient">💀 บทลงโทษ</h2>
+            <div id="penalty-result" class="timer-text mb-4" style="font-size: 2rem;">...</div>
+            <button class="btn-danger action-btn mb-2" onclick="rollPenalty()">🎲 สุ่มลงโทษ</button>
+            <button class="btn-neon-purple action-btn" onclick="closeModals()">ปิด</button>
+        </div>
+    </div>
+
+    <!-- Modal สร้างเกมเอง -->
+    <div id="custom-modal" class="hidden glass-overlay" style="padding: 20px; justify-content: center;">
+        <div class="glass-card p-4">
+            <h2 class="mb-4 text-gradient">✏️ เพิ่มคำถาม/คำใบ้ ของวงเรา</h2>
+            <select id="custom-category" style="width: 100%; padding: 10px; margin-bottom: 10px; background: rgba(0,0,0,0.5); color: white; border-radius: 8px;">
+                <option value="tod-truth">Truth (ความจริง)</option>
+                <option value="tod-dare">Dare (กล้าทำ)</option>
+                <option value="headsup">ทายคำบนหัว</option>
+            </select>
+            <input type="text" id="custom-input" placeholder="พิมพ์ข้อความที่นี่..." class="mb-4">
+            <button class="btn-neon-blue action-btn mb-2" onclick="saveCustomData()">💾 บันทึก</button>
+            <button class="btn-danger action-btn" onclick="closeModals()">ปิด</button>
+        </div>
     </div>
 
 </div>
