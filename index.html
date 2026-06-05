@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>วงนี้มีเกม - Party Game Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
@@ -10,37 +10,29 @@
 </head>
 <body>
 
-<!-- แสงพื้นหลังลอยไปมา -->
 <div class="bg-orb orb-1"></div>
 <div class="bg-orb orb-2"></div>
 <div class="bg-orb orb-3"></div>
-
-<!-- แผ่นใสสำหรับเอฟเฟกต์กระพริบหน้าจอ -->
 <div id="flash-overlay"></div>
 
 <div id="app-container">
-    
-    <!-- หน้าแรก (Home View) -->
     <div id="home-view" class="p-4">
         <div class="header mb-4">
             <h1 class="text-gradient pulse-text">วงนี้มีเกม 🎮</h1>
             <p class="text-muted">สุดยอดเว็บแอปรวมเกมปาร์ตี้</p>
         </div>
 
-        <!-- ลูกเล่นฟีเจอร์เสริม (Top Bar) -->
         <div style="display: flex; gap: 8px; margin-bottom: 15px; flex-wrap: wrap;">
             <button onclick="toggleCampfire()" id="btn-campfire" class="action-btn" style="flex: 1; font-size: 0.8rem; background: #222; border-color: #555;">🏕️ โหมดแคมป์</button>
             <button onclick="shareApp()" class="btn-neon-blue action-btn" style="flex: 1; font-size: 0.8rem;">🔗 ชวนเพื่อน</button>
             <button onclick="splitTeams()" class="btn-neon-pink action-btn" style="flex: 1; font-size: 0.8rem;">🤝 แบ่งทีม</button>
         </div>
 
-        <!-- ปุ่ม 2 ปุ่มจาก image_8b6b81.png (แก้ไขให้กดได้แล้ว) -->
         <div style="display: flex; gap: 10px; margin-bottom: 15px;">
             <button onclick="showPenaltyModal()" class="btn-danger action-btn" style="flex: 1; font-size: 0.8rem;">💀 สุ่มบทลงโทษ</button>
             <button onclick="showCustomModal()" class="btn-neon-purple action-btn" style="flex: 1; font-size: 0.8rem;">✏️ สร้างคำถามเอง</button>
         </div>
 
-        <!-- ส่วนจัดการผู้เล่น -->
         <div class="mb-4">
             <div style="display: flex; gap: 8px; margin-bottom: 15px;">
                 <input type="text" id="new-player-name" placeholder="ใส่ชื่อผู้เล่น..." autocomplete="off">
@@ -51,13 +43,11 @@
 
         <hr style="border-color: rgba(255,255,255,0.1); margin: 20px 0;">
 
-        <!-- ปุ่มควบคุมหลัก -->
         <div style="display: flex; gap: 10px; margin-bottom: 15px;">
             <button onclick="randomGameSelect()" class="btn-neon-blue action-btn">🎲 สุ่มเกม</button>
             <button onclick="endParty()" class="btn-danger action-btn">🛑 จบปาร์ตี้</button>
         </div>
 
-        <!-- เสียงคลอ (Ambience) -->
         <div class="glass-card p-2 mb-4" style="display: flex; align-items: center; justify-content: space-between;">
             <span style="font-size: 0.9rem; margin-left: 10px;">🔊 เสียงคลอ (Ambience):</span>
             <select id="ambience-select" onchange="changeAmbience()" style="padding: 5px; border-radius: 8px; background: rgba(0,0,0,0.5); color: white; border: 1px solid var(--neon-blue);">
@@ -67,12 +57,12 @@
             </select>
         </div>
 
-        <!-- ตารางเลือกเกม -->
-        <h3 class="mb-3 text-gradient">เลือกเกม</h3>
-        <div class="game-grid" id="game-grid"></div>
+        <h3 class="mb-3 text-gradient">เลือกเกมเอง</h3>
+        <div class="game-grid" id="game-grid">
+            <p class="text-muted" style="grid-column: 1 / -1; text-align: center;">กำลังโหลดรายการเกม...</p>
+        </div>
     </div>
 
-    <!-- หน้าต่างเล่นเกม -->
     <div id="game-view" class="hidden glass-overlay">
         <div class="game-header">
             <button class="back-btn" onclick="closeGame()">◀ กลับ</button>
@@ -81,7 +71,6 @@
         <div class="game-content" id="game-content"></div>
     </div>
 
-    <!-- หน้าต่างสรุปผล -->
     <div id="summary-view" class="hidden p-4 glass-overlay">
         <h1 class="text-gradient mb-4 mt-4 pulse-text">🎉 สรุปผลปาร์ตี้ 🎉</h1>
         <div id="summary-content" class="glass-card mb-4 p-4" style="border-color: var(--neon-pink);"></div>
@@ -89,7 +78,6 @@
         <button onclick="resetAll()" class="btn-danger action-btn">🔄 เริ่มงานใหม่ทั้งหมด</button>
     </div>
 
-    <!-- Modal บทลงโทษ (แก้ไขจากภาพ image_8b6b81.png) -->
     <div id="penalty-modal" class="hidden modal-overlay">
         <div class="glass-card p-4 text-center modal-box">
             <h2 class="mb-4 text-gradient">💀 บทลงโทษ</h2>
@@ -99,7 +87,6 @@
         </div>
     </div>
 
-    <!-- Modal สร้างเกมเอง (แก้ไขจากภาพ image_8b6b81.png) -->
     <div id="custom-modal" class="hidden modal-overlay">
         <div class="glass-card p-4 modal-box">
             <h2 class="mb-4 text-gradient">✏️ สร้างคำถาม/คำใบ้เอง</h2>
@@ -114,7 +101,6 @@
         </div>
     </div>
 
-    <!-- Modal แบ่งทีม -->
     <div id="team-modal" class="hidden modal-overlay">
         <div class="glass-card p-4 modal-box text-center">
             <h2 class="mb-4 text-gradient">🤝 ผลการแบ่งทีม</h2>
@@ -123,9 +109,9 @@
             <button class="btn-danger action-btn" onclick="closeModals()">ปิดหน้าต่าง</button>
         </div>
     </div>
-
 </div>
 
 <script src="script.js"></script>
+<script src="fixes.js"></script>
 </body>
 </html>
