@@ -6,17 +6,16 @@
     <title>วงนี้มีเกม - Premium Party Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <link rel="manifest" href="manifest.json">
 </head>
 <body>
 
 <div class="bg-orb orb-1"></div><div class="bg-orb orb-2"></div><div class="bg-orb orb-3"></div>
 <div id="flash-overlay"></div>
+<div id="touch-roulette-overlay" class="hidden"></div> <!-- สำหรับเกมแตะนิ้ว -->
 
 <div id="app-container">
-    
+    <!-- หน้าแรก -->
     <div id="home-view" class="dashboard-layout">
-        
         <div class="header-section text-center mb-3 mt-3">
             <h1 class="text-gradient pulse-text" style="font-size: 2.2rem; margin-bottom: 5px;">วงนี้มีเกม 🎮</h1>
             <p class="text-muted" style="font-size: 0.9rem;">Premium Party Hub</p>
@@ -35,7 +34,6 @@
                     <h4 class="text-gradient m-0">👥 ผู้เล่น & HP (<span id="player-count">0</span>)</h4>
                     <span id="player-toggle-icon">▼</span>
                 </div>
-                
                 <div id="player-manage-section" class="mt-3">
                     <div class="add-player-box mb-2">
                         <input type="text" id="new-player-name" placeholder="ใส่ชื่อเพื่อน..." autocomplete="off">
@@ -59,12 +57,12 @@
                     </select>
                 </div>
                 <div class="game-grid" id="game-grid"></div>
-                
                 <button onclick="endParty()" class="btn-danger action-btn mt-4" style="width: 100%;">🛑 จบปาร์ตี้ สรุปผลซอมบี้</button>
             </div>
         </div>
     </div>
 
+    <!-- หน้าต่างเล่นเกม -->
     <div id="game-view" class="hidden glass-overlay">
         <div class="game-header-container" style="position: sticky; top: 0; z-index: 11; background: rgba(0,0,0,0.8); border-bottom: 1px solid rgba(255,255,255,0.05);">
             <div class="game-header" style="display: flex; align-items: center; padding: 15px;">
@@ -76,6 +74,7 @@
         <div class="game-content" id="game-content"></div>
     </div>
 
+    <!-- หน้าต่างสรุปผล -->
     <div id="summary-view" class="hidden p-4 glass-overlay">
         <h1 class="text-gradient mb-4 mt-4 pulse-text text-center">🎉 สรุปผลปาร์ตี้ 🎉</h1>
         <div id="summary-content" class="glass-card mb-4 p-4"></div>
@@ -83,6 +82,7 @@
         <button onclick="resetAll()" class="btn-danger action-btn">🔄 เริ่มงานใหม่ทั้งหมด</button>
     </div>
 
+    <!-- Modals -->
     <div id="penalty-modal" class="hidden modal-overlay"><div class="glass-card p-4 text-center modal-box"><h2 class="mb-4 text-gradient">💀 บทลงโทษ</h2><div id="penalty-result" class="timer-text mb-4" style="font-size: 1.5rem; color: #ef4444; line-height: 1.4;">กดสุ่มเลย!</div><button class="btn-danger action-btn mb-2" onclick="rollPenalty()">🎲 สุ่มลงโทษ</button><button class="btn-neon-purple action-btn" onclick="closeModals()">ปิดหน้าต่าง</button></div></div>
     <div id="team-modal" class="hidden modal-overlay"><div class="glass-card p-4 modal-box text-center"><h2 class="mb-4 text-gradient">🤝 ผลการแบ่งทีม</h2><div id="team-result" style="text-align: left; margin-bottom: 20px;"></div><button class="btn-neon-blue action-btn mb-2" onclick="splitTeams()">🔄 สุ่มใหม่</button><button class="btn-danger action-btn" onclick="closeModals()">ปิดหน้าต่าง</button></div></div>
     <div id="toast-container"></div>
