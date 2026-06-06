@@ -1,5 +1,21 @@
 /* ใส่ทับหรือต่อท้ายไฟล์ CSS เดิมทั้งหมด */
-:root { --bg-dark: #09090b; --card-dark: rgba(24, 24, 27, 0.7); --neon-purple: #a855f7; --neon-blue: #3b82f6; --neon-pink: #ec4899; --neon-green: #10b981; --text-main: #f3f4f6; --text-muted: #9ca3af; }
+/* ธีมหลัก (ค่าเริ่มต้น) */
+:root { --bg-dark: #09090b; --card-dark: rgba(24, 24, 27, 0.7); --neon-purple: #a855f7; --neon-blue: #3b82f6; --neon-pink: #ec4899; --neon-green: #10b981; --text-main: #f3f4f6; }
+
+/* 1. Cyberpunk */
+.theme-cyberpunk { --bg-dark: #050514; --card-dark: rgba(13, 14, 33, 0.7); --neon-purple: #f820c6; --neon-blue: #00ffff; --neon-pink: #ff003c; --neon-green: #39ff14; }
+/* 2. Sunset */
+.theme-sunset { --bg-dark: #1a0b1c; --card-dark: rgba(45, 15, 30, 0.6); --neon-purple: #ff5e62; --neon-blue: #ff9966; --neon-pink: #ff2a85; --neon-green: #00e676; }
+/* 3. Casino */
+.theme-casino { --bg-dark: #0a0a0a; --card-dark: rgba(25, 25, 25, 0.8); --neon-purple: #d4af37; --neon-blue: #f3e5ab; --neon-pink: #dc143c; --neon-green: #10893E; }
+/* 4. Galaxy */
+.theme-galaxy { --bg-dark: #0b0f19; --card-dark: rgba(20, 30, 50, 0.6); --neon-purple: #8a2be2; --neon-blue: #4d94ff; --neon-pink: #bf00ff; --neon-green: #00fa9a; }
+/* 5. Cream Premium */
+.theme-cream { --bg-dark: #f5e6ca; --card-dark: rgba(255, 255, 255, 0.6); --neon-purple: #d2b48c; --neon-blue: #8b7355; --neon-pink: #a0522d; --neon-green: #556b2f; --text-main: #333; }
+/* 6. Emerald Green (เข้ม) */
+.theme-emerald { --bg-dark: #022c22; --card-dark: rgba(6, 78, 59, 0.6); --neon-purple: #34d399; --neon-blue: #10b981; --neon-pink: #059669; --neon-green: #064e3b; }
+/* 7. Gold Black */
+.theme-goldblack { --bg-dark: #000; --card-dark: rgba(20, 20, 20, 0.8); --neon-purple: #ffd700; --neon-blue: #daa520; --neon-pink: #b8860b; --neon-green: #556b2f; }
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Noto Sans Thai', sans-serif; -webkit-tap-highlight-color: transparent; }
 body { background-color: var(--bg-dark); color: var(--text-main); display: flex; justify-content: center; min-height: 100vh; overflow-x: hidden; transition: background-color 0.3s; }
 body.campfire-mode { background-color: #000; } body.campfire-mode .bg-orb { display: none !important; } body.campfire-mode .glass-card { background: #111; border-color: #333; box-shadow: none; backdrop-filter: none; }
