@@ -440,6 +440,21 @@ window.endParty = () => {
 }
 window.copySummary = () => { let t = `🎉 สรุปผล "วงนี้มีเกม"\nเล่นไป ${gamesPlayed} เกม\n\n`; t += players.map(p => `${p.name} - HP: ${p.hp<=0?'ตาย(ซอมบี้)':p.hp}`).join('\n'); navigator.clipboard.writeText(t); showToast('✅ คัดลอกแล้ว!'); }
 window.resetAll = () => { if(confirm('ล้างข้อมูลเริ่มใหม่ทั้งหมด?')) { players = []; gamesPlayed = 0; saveState(); document.getElementById('summary-view').classList.add('hidden'); document.getElementById('home-view').classList.remove('hidden'); } }
+window.setTheme = (themeName) => {
+    // ลบธีมเก่าออกทั้งหมด
+    document.body.className = ''; 
+    // ใส่ธีมใหม่
+    document.body.classList.add('theme-' + themeName);
+    // บันทึกลง LocalStorage ให้จำธีมที่เลือกไว้
+    localStorage.setItem('partyTheme', themeName);
+    showToast(`เปลี่ยนเป็นธีม ${themeName} แล้ว!`);
+};
+
+// โหลดธีมที่เคยเลือกไว้ตอนเปิดแอป
+document.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('partyTheme');
+    if(savedTheme) setTheme(savedTheme);
+});
 
 // Init
 renderPlayers(); renderGameGrid(); renderMiniHP();
