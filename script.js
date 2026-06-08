@@ -271,4 +271,159 @@ function initTwoTruths(c) {
     `;
 }
 window.startTwoTruths = () => {
-    playSound('tick'); document
+    playSound('tick'); document.getElementById('btn-2t1l-start').style.display = 'none'; document.getElementById('2t1l-timer').classList.remove('hidden');
+    let t = 120; clearInterval(gameInterval);
+    gameInterval = setInterval(() => { t--; document.getElementById('2t1l-timer').innerText = t; if(t <= 0) { clearInterval(gameInterval); playSound('boom'); flashScreen('red'); document.getElementById('2t1l-timer').innerText = "หมดเวลาโหวต!"; } }, 1000);
+}
+
+// 6. Draw & Guess (Upgraded)
+let drawCtx, isDrawing = false, curColor = '#111', drawRound = 1, drawMax = 3, drawImages = [], curDrawWord = "";
+function initDrawGuess(c) {
+    drawImages = []; drawRound = 1;
+    c.innerHTML = `
+        <div class="game-rules-box mb-3">🎨 <strong>โหมดส่งต่อ:</strong> คนแรกวาด -> ถัดไปดูรูป 3 วิแล้ววาดต่อ -> คนสุดท้ายทาย! เวลาจะลดลงเรื่อยๆ</div>
+        <div id="draw-settings" class="glass-card p-3 mb-3" style="width:100%; max-width:400px; text-align:left;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:10px;"><label>จำนวนคนเล่น/รอบ:</label><input type="number" id="draw-max-p" value="3" style="width:60px; padding:5px;"></div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:10px;"><label>เวลาคนแรก (วิ):</label><input type="number" id="draw-base-t" value="30" style="width:60px; padding:5px;"></div>
+            <div style="display:flex; justify-content:space-between;"><label>ลดรอบละ (วิ):</label><input type="number" id="draw-red-t" value="5" style="width:60px; padding:5px;"></div>
+        </div>
+        <button id="start-draw-btn" class="btn-neon-pink action-btn" onclick="startDrawFlow()">▶ เริ่มเกมวาดรูป</button>
+        <div id="draw-flow-area" class="hidden" style="width:100%; display:flex; flex-direction:column; align-items:center;">
+            <h4 class="text-gradient">ส่งให้คนที่ <span id="draw-round-display">1</span></h4>
+            <div id="draw-view-img" class="hidden mb-3"><img id="draw-prev-img" src="" style="width:100%; max-width:350px; background:white; border-radius:10px;"><p class="text-muted mt-2">จำรูปนี้ให้ดี! มีเวลา 3 วิ</p></div>
+            <h1 id="draw-word" class="mb-2" style="color:var(--neon-pink); font-size:2rem;">???</h1>
+            <div id="draw-timer" class="timer-text mb-2" style="font-size: 2.5rem;">30</div>
+            <canvas id="canvas-container"></canvas>
+            <div class="draw-tools" id="draw-toolbar">
+                <button class="color-btn active" style="background:#111;" onclick="setDrawColor('#111', this)"></button>
+                <button class="color-btn" style="background:#ef4444;" onclick="setDrawColor('#ef4444', this)"></button>
+                <button class="color-btn" style="background:#3b82f6;" onclick="setDrawColor('#3b82f6', this)"></button>
+                <button class="color-btn" style="background:#10b981;" onclick="setDrawColor('#10b981', this)"></button>
+                <button class="btn-neon-purple" style="width:auto; padding:5px 10px; font-size:0.8rem;" onclick="setDrawColor('#fff', this)">🧼 ยางลบ</button>
+                <button class="btn-danger" style="width:auto; padding:5px 10px; font-size:0.8rem;" onclick="clearCanvas()">🗑️ ล้าง</button>
+            </div>
+            <button id="draw-next-btn" class="btn-neon-blue action-btn mt-4" style="max-width:300px;" onclick="finishDrawTurn()">✅ วาดเสร็จแล้ว / ถัดไป</button>
+        </div>
+    `;
+}
+window.startDrawFlow = () => {
+    drawMax = parseInt(document.getElementById('draw-max-p').value) || 3; curDrawWord = getRandom(drawWords);
+    document.getElementById('draw-settings').style.display = 'none'; document.getElementById('start-draw-btn').style.display = 'none'; document.getElementById('draw-flow-area').classList.remove('hidden');
+    const canvas = document.getElementById('canvas-container'); canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight;
+    drawCtx = canvas.getContext('2d'); drawCtx.lineCap = 'round'; drawCtx.lineJoin = 'round'; drawCtx.lineWidth = 4; curColor = '#111';
+    
+    const getPos = (e) => { const r = canvas.getBoundingClientRect(); const x = e.touches ? e.touches[0].clientX : e.clientX; const y = e.touches ? e.touches[0].clientY : e.clientY; return { x: x - r.left, y: y - r.top }; };
+    const startDraw = (e) => { isDrawing = true; const pos = getPos(e); drawCtx.beginPath(); drawCtx.moveTo(pos.x, pos.y); e.preventDefault(); };
+    const draw = (e) => { if(!isDrawing) return; const pos = getPos(e); drawCtx.strokeStyle = curColor; drawCtx.lineWidth = curColor === '#fff' ? 20 : 4; drawCtx.lineTo(pos.x, pos.y); drawCtx.stroke(); e.preventDefault(); };
+    const stopDraw = () => { isDrawing = false; drawCtx.closePath(); };
+
+    canvas.addEventListener('mousedown', startDraw); canvas.addEventListener('mousemove', draw); canvas.addEventListener('mouseup', stopDraw); canvas.addEventListener('mouseleave', stopDraw);
+    canvas.addEventListener('touchstart', startDraw, {passive: false}); canvas.addEventListener('touchmove', draw, {passive: false}); canvas.addEventListener('touchend', stopDraw);
+    prepDrawTurn();
+}
+function prepDrawTurn() {
+    clearCanvas(); document.getElementById('draw-round-display').innerText = drawRound;
+    if(drawRound > drawMax) { 
+        document.getElementById('draw-flow-area').innerHTML = `<h2 class="text-gradient">คนสุดท้าย!</h2><p class="text-muted">ทายซิว่ารูปนี้คืออะไร?</p><img src="${drawImages[drawImages.length-1]}" style="width:100%; max-width:350px; background:white; border-radius:10px; margin:20px 0;"><h3 style="color:var(--neon-pink);">เฉลย: ${curDrawWord}</h3><button class="btn-neon-blue mt-4 action-btn" onclick="initDrawGuess(document.getElementById('game-content'))">🔄 เล่นใหม่</button>`; return; 
+    }
+    let base = parseInt(document.getElementById('draw-base-t').value) || 30; let red = parseInt(document.getElementById('draw-red-t').value) || 5;
+    let t = base - ((drawRound - 1) * red); if(t < 5) t = 5;
+    document.getElementById('draw-timer').innerText = t; document.getElementById('canvas-container').style.display = 'block'; document.getElementById('draw-toolbar').style.display = 'flex'; document.getElementById('draw-next-btn').style.display = 'flex';
+    
+    if(drawRound === 1) { document.getElementById('draw-word').innerText = `วาด: ${curDrawWord}`; startDrawTimer(t); } 
+    else {
+        document.getElementById('draw-word').innerText = "จำรูปเพื่อน!"; document.getElementById('canvas-container').style.display = 'none'; document.getElementById('draw-toolbar').style.display = 'none'; document.getElementById('draw-next-btn').style.display = 'none';
+        const imgV = document.getElementById('draw-view-img'); imgV.classList.remove('hidden'); document.getElementById('draw-prev-img').src = drawImages[drawRound-2];
+        playSound('tick'); setTimeout(() => { imgV.classList.add('hidden'); document.getElementById('draw-word').innerText = "วาดเลย!"; document.getElementById('canvas-container').style.display = 'block'; document.getElementById('draw-toolbar').style.display = 'flex'; document.getElementById('draw-next-btn').style.display = 'flex'; startDrawTimer(t); }, 3000);
+    }
+}
+function startDrawTimer(t) { clearInterval(gameInterval); gameInterval = setInterval(() => { t--; document.getElementById('draw-timer').innerText = t; if(t <= 0) { clearInterval(gameInterval); playSound('boom'); finishDrawTurn(); } }, 1000); }
+window.finishDrawTurn = () => { clearInterval(gameInterval); drawImages.push(document.getElementById('canvas-container').toDataURL()); drawRound++; prepDrawTurn(); }
+window.setDrawColor = (c, btn) => { curColor = c; document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active')); if(btn.classList.contains('color-btn')) btn.classList.add('active'); }
+window.clearCanvas = () => { if(drawCtx) drawCtx.clearRect(0, 0, 1000, 1000); }
+
+// 7. Croc (Upgraded)
+function initCroc(c) {
+    c.innerHTML = `
+        <div class="game-rules-box mb-3">🐊 ผลัดกันกดฟันจระเข้ทีละซี่ โดนงับ = หัก 1 HP!</div>
+        <div id="croc-status" class="display-text text-gradient mb-2" style="font-size:1.2rem; min-height:40px;">เลืออกดฟันได้เลย!</div>
+        <div class="croc-mouth-bg" style="position:relative; width:100%; max-width:350px; margin: 0 auto;">
+            <div class="croc-jaw" id="croc-top-jaw"></div>
+            <div style="height:40px; background:#111; margin:5px 0; border-radius:10px; box-shadow:0 0 10px #000;"></div>
+            <div class="croc-jaw" id="croc-bottom-jaw"></div>
+        </div>
+        <button class="btn-neon-blue mt-4 action-btn" style="max-width:200px;" onclick="initCroc(document.getElementById('game-content'))">🔄 สุ่มใหม่</button>
+    `;
+    const top = document.getElementById('croc-top-jaw'); const bottom = document.getElementById('croc-bottom-jaw');
+    const trap = Math.floor(Math.random() * 16) + 1;
+    for(let i=1; i<=16; i++) {
+        let btn = document.createElement('div'); btn.innerText = i;
+        if(i <= 8) { btn.className = 'croc-tooth-top'; top.appendChild(btn); } else { btn.className = 'croc-tooth-bottom'; bottom.appendChild(btn); }
+        btn.onclick = () => {
+            if(btn.classList.contains('pressed')) return;
+            if(i === trap) { playSound('boom'); flashScreen('red'); document.getElementById('croc-status').innerHTML = `<span style="color:red; font-size:1.5rem;">งับ!! โดนซี่ที่ ${i} (เสีย HP)</span>`; document.querySelectorAll('.croc-tooth-top, .croc-tooth-bottom').forEach(b => b.classList.add('pressed')); } 
+            else { playSound('tick'); btn.classList.add('pressed'); document.getElementById('croc-status').innerHTML = `<span style="color:var(--neon-green);">รอดตัว! กดซี่ที่ ${i}</span>`; }
+        };
+    }
+}
+
+// 8. TextBomb
+let tbTime = 0;
+function initTextBomb(c) { c.innerHTML = `<div class="game-rules-box mb-3">💣 พิมพ์คำที่มีคำว่า... ประกอบอยู่ แล้วส่งต่อ (เวลาถูกซ่อนอยู่)</div><div id="tb-settings" class="custom-timer-box"><label>สุ่มเวลาสูงสุด (วิ):</label><input type="number" id="tb-max-t" value="30"></div><div id="tb-syl" class="timer-text mb-4" style="color:var(--neon-pink); font-size: 3rem; margin-top:20px;">...</div><input type="text" id="tb-input" placeholder="พิมพ์คำตอบ..." class="mb-4 text-center" style="font-size:1.2rem;" disabled><button id="tb-sub" class="btn-danger action-btn mb-4" onclick="submitTB()" disabled>ส่ง! 💣</button><button class="btn-neon-blue action-btn mt-2" id="tb-start" onclick="startTB()">▶ เริ่มเกม</button>`; }
+window.startTB = () => { playSound('tick'); document.getElementById('tb-start').style.display = 'none'; document.getElementById('tb-settings').style.display = 'none'; document.getElementById('tb-input').disabled = false; document.getElementById('tb-sub').disabled = false; document.getElementById('tb-input').value = ''; document.getElementById('tb-syl').innerText = getRandom(textBombSyllables); let max = parseInt(document.getElementById('tb-max-t').value) || 30; tbTime = Math.floor(Math.random() * (max - 10)) + 10; clearInterval(gameInterval); gameInterval = setInterval(() => { tbTime--; if(tbTime <= 0) { clearInterval(gameInterval); playSound('boom'); flashScreen('red'); document.getElementById('tb-syl').innerText = "💥 ตู้มมม! 💥"; document.getElementById('tb-input').disabled = true; document.getElementById('tb-sub').disabled = true; document.getElementById('tb-start').style.display = 'flex'; document.getElementById('tb-settings').style.display = 'flex'; } }, 1000); }
+window.submitTB = () => { let val = document.getElementById('tb-input').value.trim(); let syl = document.getElementById('tb-syl').innerText; if(val.includes(syl) && val.length > syl.length) { playSound('correct'); flashScreen('green'); document.getElementById('tb-input').value = ""; document.getElementById('tb-syl').innerText = getRandom(textBombSyllables); } else { playSound('wrong'); showToast('คำไม่ถูกต้อง!', 'error'); } }
+
+// 9. Kings Cup
+function initKingsCup(c) {
+    let kcDeck = []; ['♠', '♥', '♦', '♣'].forEach(s => [{r:'A',n:'น้ำตก',d:'ทุกคนดื่มต่อกันห้ามหยุด!'},{r:'2',n:'คุณ',d:'สั่งให้ใครก็ได้ 1 คนดื่ม'},{r:'3',n:'ฉัน',d:'คนจั่วต้องดื่มเอง'},{r:'4',n:'พื้น',d:'เอามือแตะพื้น คนสุดท้ายดื่ม!'},{r:'5',n:'ผู้ชาย',d:'ผู้ชายทุกคนดื่ม'},{r:'6',n:'ผู้หญิง',d:'ผู้หญิงทุกคนดื่ม'},{r:'7',n:'สวรรค์',d:'ชูมือขึ้นฟ้า คนสุดท้ายดื่ม!'},{r:'8',n:'บัดดี้',d:'จับคู่ 1 คน คุณดื่มเขาต้องดื่มด้วย'},{r:'9',n:'คล้องจอง',d:'พูดคำคล้องจองวนไป ใครคิดไม่ออกดื่ม'},{r:'10',n:'หมวดหมู่',d:'ตั้งหมวดหมู่ ใครตอบซ้ำ/ไม่ได้ ดื่ม'},{r:'J',n:'ตั้งกฎ',d:'ตั้งกฎใหม่ 1 ข้อ ใครฝ่าฝืนดื่ม'},{r:'Q',n:'คำถาม',d:'คุณคือ Question Master ห้ามตอบคำถามคุณ ใครเผลอดื่ม'},{r:'K',n:'พระราชา',d:'เทเครื่องดื่มลงแก้วกลาง... ใครได้ K ใบที่ 4 ดื่มแก้วกลางให้หมด!'}].forEach(r => kcDeck.push({...r, suit: s}))); kcDeck = kcDeck.sort(() => 0.5 - Math.random()); let kings = 0;
+    c.innerHTML = `<div class="game-rules-box mb-2">🃏 ผลัดกันจั่วไพ่แล้วทำตามกติกา! ระวัง K ใบที่ 4!</div><div style="font-size: 1rem; margin-bottom: 5px;">ไพ่เหลือ: <span id="deck-c" style="color:var(--neon-blue);">52</span> | 👑 King: <span id="king-c" style="color:gold;">0</span>/4</div><div class="card-container" id="kc-box"><div class="playing-card" id="kc-cobj"><div class="card-back"></div><div class="card-front hidden"><div class="card-rank" id="kc-r">A</div><div class="card-suit" id="kc-s">♠</div></div></div></div><div id="kc-r-box" class="glass-card p-3 hidden mt-3" style="width:100%; max-width:350px;"><h4 id="kc-rn" class="text-gradient mb-1">Rule</h4><p id="kc-rd" style="font-size: 0.95rem;"></p></div><button class="btn-neon-blue action-btn mt-3" onclick="initKingsCup(document.getElementById('game-content'))">🔄 สับไพ่ใหม่</button>`;
+    document.getElementById('kc-box').onclick = () => { if(kcDeck.length===0) return; playSound('tick'); const cObj = document.getElementById('kc-cobj'); cObj.classList.remove('flipped'); setTimeout(()=>{ const card = kcDeck.pop(); document.getElementById('deck-c').innerText = kcDeck.length; const f = cObj.querySelector('.card-front'); f.className = `card-front ${card.suit==='♥'||card.suit==='♦'?'card-red':'card-black'}`; document.getElementById('kc-r').innerText = card.r; document.getElementById('kc-s').innerText = card.suit; document.getElementById('kc-rn').innerText = `ไพ่ ${card.r} : ${card.n}`; document.getElementById('kc-rd').innerText = card.d; if(card.r === 'K') { kings++; document.getElementById('king-c').innerText = kings; playSound('boom'); flashScreen('red'); if(kings===4) document.getElementById('kc-rd').innerHTML += `<br><br><strong style="color:red; font-size:1.2rem;">💥 ใบที่ 4! กินแก้วกลางให้หมด!! 💥</strong>`; } else playSound('correct'); cObj.classList.add('flipped'); document.getElementById('kc-r-box').classList.remove('hidden'); }, 300); };
+}
+
+// 10. Custom Wheel
+function initCustomWheel(c) { c.innerHTML = `<div class="game-rules-box mb-2">🎡 พิมพ์ตัวเลือก (1 บรรทัดต่อ 1 ข้อ) แล้วหมุน!</div><textarea id="cw-input" rows="3" class="mb-2" style="font-size:0.9rem; max-width:300px;">กินหมูกระทะ\nกินชาบู\nนอนอยู่บ้าน\nคนซ้ายจ่าย</textarea><div style="position:relative; width:260px; margin:0 auto;"><div class="wheel-pointer"></div><div class="premium-wheel" id="cw-circle">เตรียมหมุน!</div></div><button class="btn-neon-purple mt-3 action-btn" style="max-width: 200px;" onclick="spinCW()">🎡 หมุนวงล้อ</button>`; }
+window.spinCW = () => { let opts = document.getElementById('cw-input').value.split('\n').filter(x => x.trim() !== ''); if(opts.length < 2) return showToast("ใส่ตัวเลือกอย่างน้อย 2 ข้อ", "error"); playSound('tick'); const w = document.getElementById('cw-circle'); w.style.transform = `rotate(${Math.floor(Math.random() * 360) + 1440}deg)`; w.style.animation = 'none'; w.innerText = "กำลังหมุน..."; setTimeout(() => { playSound('correct'); w.innerText = getRandom(opts); w.style.transform = 'rotate(0deg)'; }, 4000); }
+
+// 11. Spy
+function initSpy(c) { c.innerHTML=`<div class="game-rules-box">🕵️‍♂️ หา Spy ในวง! (สถานที่ถูกเพิ่มเป็น 50+)</div><div id="spy-st" class="glass-card p-4" style="width:100%; min-height:150px;"></div>`; window.spL = getRandom(spyLocations); window.spI = Math.floor(Math.random()*players.length); window.spC = 0; rSpy(); }
+function rSpy() { const st=document.getElementById('spy-st'); if(window.spC>=players.length){ playSound('boom'); st.innerHTML=`<h3 class="text-gradient">เริ่มจับผิด!</h3><button class="btn-danger mt-3 action-btn" onclick="this.innerHTML='Spy คือ: ${players[window.spI].name}'">เฉลย</button>`; return; } st.innerHTML=`<h4 class="mb-3">ส่งให้: ${players[window.spC]?players[window.spC].name:'ไม่ระบุ'}</h4><button class="btn-neon-purple action-btn" onclick="sSpy()">👀 ดูบทบาท</button>`; }
+window.sSpy = () => { playSound('tick'); const r = (window.spC===window.spI)?"<span style='color:red; font-size:2rem;'>คุณคือ SPY</span>":`สถานที่:<br><span style="color:var(--neon-blue); font-size:1.5rem;">${window.spL}</span>`; document.getElementById('spy-st').innerHTML=`<div class="mb-4 text-center display-text">${r}</div><button class="btn-neon-blue action-btn" onclick="window.spC++; rSpy();">ซ่อน & ส่งต่อ ⏭️</button>`; }
+
+// 12. Hot Potato
+function initHotPotato(c) { c.innerHTML=`<div class="game-rules-box">💣 ตอบคำถามตามหมวดแล้วส่งต่อ ระเบิดตู้มใครแพ้!</div><h3 class="mb-4 text-gradient" id="hp-c">หมวด: ...</h3><div class="display-text timer-text" id="hp-s">💣</div><button class="btn-danger action-btn" onclick="stHP()" id="hp-b">▶ เริ่มเกม</button>`; }
+window.stHP = () => { playSound('tick'); const s=document.getElementById('hp-s'); const b=document.getElementById('hp-b'); document.getElementById('hp-c').innerText=`หมวด: ${getRandom(gameData.categories)}`; s.innerText="ติ๊ก..."; b.disabled=true; clearTimeout(gameTimeout); gameTimeout=setTimeout(()=>{ playSound('boom'); flashScreen('red'); s.innerText="💥 BOOM! 💥"; s.style.color="red"; b.disabled=false; b.innerText="เล่นใหม่"; }, Math.floor(Math.random()*10000)+5000); }
+
+// 13. Heads Up
+function initHeadsUp(c) { c.innerHTML=`<div class="game-rules-box">📱 แนบหน้าผาก หงายจอ=ถูก, คว่ำจอ=ข้าม (เพิ่มคำ 50+)</div><div class="custom-timer-box"><input type="number" id="hu-t" value="60">วิ</div><button class="btn-neon-blue mb-2" onclick="startHU('animals')">🐶 สัตว์โลก</button><button class="btn-neon-pink" onclick="startHU('food')">🍔 ของกิน</button>`; }
+window.startHU = (cat) => { let t=parseInt(document.getElementById('hu-t').value)||60; let wList=[...gameData.headsup[cat].words].sort(()=>0.5-Math.random()); let idx=0, sc=0, isH=true; let c=document.getElementById('game-content'); c.innerHTML=`<div style="display:flex; justify-content:space-between; width:100%;"><div class="text-muted">⏱️ <span id="hu-tmr">${t}</span></div><div class="text-muted">✅ <span id="hu-sc">0</span></div></div><div class="display-text glass-card p-4" id="hu-w" style="font-size:3rem; color:var(--neon-pink);">แนบเลย!</div><div style="display:flex; gap:10px; margin-top:20px;"><button class="btn-danger action-btn" onclick="if(isH){playSound('wrong'); flashScreen('red'); idx++; document.getElementById('hu-w').innerText=wList[idx];}">คว่ำจอ ข้าม</button><button class="btn-neon-purple action-btn" onclick="if(isH){playSound('correct'); flashScreen('green'); sc++; document.getElementById('hu-sc').innerText=sc; idx++; document.getElementById('hu-w').innerText=wList[idx];}">หงายจอ ถูก</button></div>`; setTimeout(()=>{ playSound('correct'); document.getElementById('hu-w').innerText=wList[idx]; clearInterval(gameInterval); gameInterval=setInterval(()=>{ t--; document.getElementById('hu-tmr').innerText=t; if(t<=0){ clearInterval(gameInterval); isH=false; playSound('boom'); c.innerHTML=`<h2>หมดเวลา! ทายถูก <span style="font-size:3rem;">${sc}</span> คำ 🎉</h2><button class="btn-neon-blue mt-4 action-btn" onclick="initHeadsUp(document.getElementById('game-content'))">เล่นใหม่</button>`; } }, 1000); }, 2000); }
+
+// 14. Tap Battle
+function initTapBattle(c) { c.innerHTML=`<div class="game-rules-box">⚡ แข่งกันรัวนิ้วฝั่งตัวเองให้ไวสุด!</div><div id="tb-tm" class="timer-text mb-2">10</div><div class="tap-container" style="display:flex; width:100%; height:150px; border-radius:20px; overflow:hidden;"><div id="a-r" style="flex-basis:50%; background:#ef4444;" onclick="tbR+=5; tbB-=5; document.getElementById('a-r').style.flexBasis=tbR+'%'; document.getElementById('a-b').style.flexBasis=tbB+'%';"></div><div id="a-b" style="flex-basis:50%; background:#3b82f6;" onclick="tbB+=5; tbR-=5; document.getElementById('a-r').style.flexBasis=tbR+'%'; document.getElementById('a-b').style.flexBasis=tbB+'%';"></div></div><button class="btn-neon-pink mt-4 action-btn" id="tb-btn" onclick="stTBat()">▶ เริ่ม</button>`; }
+let tbR=50, tbB=50; window.stTBat=()=>{ document.getElementById('tb-btn').style.display='none'; tbR=50; tbB=50; let t=10; document.getElementById('a-r').style.flexBasis='50%'; document.getElementById('a-b').style.flexBasis='50%'; playSound('tick'); clearInterval(gameInterval); gameInterval=setInterval(()=>{ t--; document.getElementById('tb-tm').innerText=t; if(t<=0){ clearInterval(gameInterval); playSound('boom'); document.getElementById('tb-tm').innerHTML=`<span style="font-size:1.5rem; color:white;">${tbR>tbB?"❤️ แดงชนะ!":(tbB>tbR?"💙 น้ำเงินชนะ!":"เสมอ!")}</span>`; document.getElementById('tb-btn').style.display='flex'; document.getElementById('tb-btn').innerText='เล่นใหม่'; } }, 1000); }
+
+// 15-18. Short Text Games
+function initToD(c) { c.innerHTML=`<div class="game-rules-box">🎭 เลือกว่าจะ Truth หรือ Dare (คำถาม 100+)</div><div id="td-t" class="display-text" style="color:var(--neon-blue);"></div><div style="display:flex; gap:10px;"><button class="btn-neon-purple action-btn" onclick="rTD('truths')">Truth</button><button class="btn-neon-pink action-btn" onclick="rTD('dares')">Dare</button></div><div class="display-text glass-card p-4 mt-3" id="td-d">...</div>`; window.rTD = (t) => { playSound('tick'); document.getElementById('td-t').innerText=`ผู้ถูกเลือก: ${getRandomPlayer()}`; document.getElementById('td-d').innerText=getRandom(gameData.tod[t]); } }
+function initFiveSec(c) { c.innerHTML=`<div class="game-rules-box">⏱️ ตอบ 3 ข้อใน 5 วิ! (คำถาม 50+)</div><div class="timer-text mb-4" id="fs-tm">5</div><div class="display-text glass-card p-4" id="fs-d">...</div><button class="btn-neon-pink mt-4 action-btn" id="fs-b" onclick="stFS()">▶ เริ่มจับเวลา</button>`; window.stFS = () => { playSound('correct'); const tm=document.getElementById('fs-tm'); const b=document.getElementById('fs-b'); document.getElementById('fs-d').innerText=`โจทย์: ${getRandom(gameData.fiveSec)}`; let t=5; tm.innerText=t; b.disabled=true; clearInterval(gameInterval); gameInterval=setInterval(()=>{ t--; tm.innerText=t; playSound('tick'); if(t<=0){ clearInterval(gameInterval); playSound('wrong'); flashScreen('red'); tm.innerText="หมดเวลา!"; b.disabled=false; b.innerText="เล่นใหม่"; } }, 1000); } }
+function initGuessWho(c) { c.innerHTML=`<div class="game-rules-box">🤔 ทุกคนโหวตว่าคำใบ้หมายถึงใคร!</div><div class="display-text glass-card p-4" id="gw-d" style="color:var(--neon-purple);">...</div><button class="btn-neon-purple mt-4 action-btn" onclick="playSound('tick'); document.getElementById('gw-d').innerText=getRandom(gameData.guessWho)">🕵️ สุ่มคำใบ้</button>`; document.getElementById('gw-d').innerText=getRandom(gameData.guessWho); }
+function initHumSong(c) { c.innerHTML=`<div class="game-rules-box">🎶 ฮัมเพลงให้เพื่อนทาย ห้ามร้องเนื้อ!</div><div id="hs-d" class="display-text glass-card p-4" style="color:var(--neon-blue);">กดสุ่ม</div><button class="btn-neon-pink mt-4 action-btn" onclick="playSound('tick'); document.getElementById('hs-d').innerText='🎵 '+getRandom(['ทรงอย่างแบด', 'วัดปะหล่ะ', 'เลือดกรุ๊ปบี', 'ซ่อนกลิ่น'])">▶ สุ่มเพลง</button>`; }
+
+// ==========================================
+// 5. End Party Summary
+// ==========================================
+window.endParty = () => {
+    if(players.length === 0) { showToast('ยังไม่มีข้อมูลผู้เล่น', 'error'); return; }
+    document.getElementById('home-view').classList.add('hidden'); document.getElementById('summary-view').classList.remove('hidden');
+    let zombies = players.filter(p => p.hp <= 0); let alive = players.filter(p => p.hp > 0);
+    
+    let html = `<p style="text-align: center; margin-bottom: 20px;">เล่นไปทั้งหมด: <strong style="color: var(--neon-blue);">${gamesPlayed}</strong> เกม</p>`;
+    if(zombies.length > 0) { html += `<div style="background:rgba(239,68,68,0.1); border:1px solid #ef4444; border-radius:12px; padding:15px; margin-bottom:20px;"><h3 style="color: #ef4444; margin-bottom: 10px; text-align:center;">🧟 ผู้แพ้ (HP หมด) ต้องโดนทำโทษหนัก!</h3>`; zombies.forEach((p) => { html += `<div style="text-align: center; color:#ef4444; font-size: 1.1rem; margin-bottom: 5px;">☠️ ${p.name}</div>`; }); html += `</div>`; }
+    html += `<div style="background:rgba(16,185,129,0.1); border:1px solid #10b981; border-radius:12px; padding:15px;"><h3 style="color: var(--neon-green); margin-bottom: 10px; text-align:center;">🎉 ผู้รอดชีวิต 🎉</h3>`;
+    if(alive.length > 0) { alive.forEach((p) => { html += `<div style="text-align: center; font-size: 1.1rem; margin-bottom: 5px;">💚 ${p.name} (HP: ${p.hp})</div>`; }); } else { html += `<div style="text-align: center; color: gray;">ตายเรียบทั้งวง...</div>`; } html += `</div>`;
+    document.getElementById('summary-content').innerHTML = html;
+}
+window.copySummary = () => { let t = `🎉 สรุปผล "วงนี้มีเกม"\nเล่นไป ${gamesPlayed} เกม\n\n`; t += players.map(p => `${p.name} - HP: ${p.hp<=0?'ตาย(ซอมบี้)':p.hp}`).join('\n'); navigator.clipboard.writeText(t); showToast('✅ คัดลอกแล้ว!'); }
+window.resetAll = () => { if(confirm('ล้างข้อมูลเริ่มใหม่ทั้งหมด?')) { players = []; gamesPlayed = 0; saveState(); document.getElementById('summary-view').classList.add('hidden'); document.getElementById('home-view').classList.remove('hidden'); } }
+
+// Init
+renderPlayers(); renderGameGrid(); renderMiniHP();
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW fail:', err));
