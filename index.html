@@ -11,30 +11,31 @@
 
 <div class="bg-orb orb-1"></div><div class="bg-orb orb-2"></div><div class="bg-orb orb-3"></div>
 <div id="flash-overlay"></div>
-<div id="touch-roulette-overlay" class="hidden"></div> <!-- สำหรับเกมแตะนิ้ว -->
+<div id="touch-roulette-overlay" class="hidden"></div>
 
 <div id="app-container">
-    <!-- หน้าแรก -->
     <div id="home-view" class="dashboard-layout">
-        <div class="header-section text-center mb-3 mt-3">
+        <div class="header-section text-center mb-2 mt-3">
             <h1 class="text-gradient pulse-text" style="font-size: 2.2rem; margin-bottom: 5px;">วงนี้มีเกม 🎮</h1>
             <p class="text-muted" style="font-size: 0.9rem;">Premium Party Hub</p>
         </div>
 
-        <div class="toolbar-section mb-3">
-            <div class="theme-switcher mb-3" style="display:flex; gap:5px; flex-wrap:wrap; justify-content:center;">
-     <button onclick="setTheme('cyberpunk')" class="theme-btn" style="background:#f820c6;">Cyber</button>
-     <button onclick="setTheme('sunset')" class="theme-btn" style="background:#ff5e62;">Sunset</button>
-     <button onclick="setTheme('casino')" class="theme-btn" style="background:#d4af37;">Casino</button>
-     <button onclick="setTheme('galaxy')" class="theme-btn" style="background:#8a2be2;">Galaxy</button>
-     <button onclick="setTheme('cream')" class="theme-btn" style="background:#f5e6ca; color:#333;">Cream</button>
-     <button onclick="setTheme('emerald')" class="theme-btn" style="background:#064e3b;">Emerald</button>
-     <button onclick="setTheme('goldblack')" class="theme-btn" style="background:#b8860b;">Gold</button>
-</div>
+        <div class="toolbar-section mb-2">
             <button onclick="toggleCampfire()" id="btn-campfire" class="action-btn toolbar-btn">🏕️ โหมดแคมป์</button>
             <button onclick="shareApp()" class="action-btn toolbar-btn btn-neon-blue">🔗 ชวนเพื่อน</button>
             <button onclick="splitTeams()" class="action-btn toolbar-btn btn-neon-pink">🤝 แบ่งทีม</button>
             <button onclick="showPenaltyModal()" class="action-btn toolbar-btn btn-danger">💀 สุ่มทำโทษ</button>
+        </div>
+
+        <div class="theme-switcher mb-3" style="display:flex; gap:5px; flex-wrap:wrap; justify-content:center;">
+            <button onclick="setTheme('default')" class="theme-btn" style="background:#333;">Default</button>
+            <button onclick="setTheme('cyberpunk')" class="theme-btn" style="background:#f820c6;">Cyber</button>
+            <button onclick="setTheme('sunset')" class="theme-btn" style="background:#ff5e62;">Sunset</button>
+            <button onclick="setTheme('casino')" class="theme-btn" style="background:#d4af37;">Casino</button>
+            <button onclick="setTheme('galaxy')" class="theme-btn" style="background:#8a2be2;">Galaxy</button>
+            <button onclick="setTheme('cream')" class="theme-btn" style="background:#f5e6ca; color:#333;">Cream</button>
+            <button onclick="setTheme('emerald')" class="theme-btn" style="background:#064e3b;">Emerald</button>
+            <button onclick="setTheme('goldblack')" class="theme-btn" style="background:#b8860b;">Gold</button>
         </div>
 
         <div class="dashboard-grid">
@@ -71,7 +72,6 @@
         </div>
     </div>
 
-    <!-- หน้าต่างเล่นเกม -->
     <div id="game-view" class="hidden glass-overlay">
         <div class="game-header-container" style="position: sticky; top: 0; z-index: 11; background: rgba(0,0,0,0.8); border-bottom: 1px solid rgba(255,255,255,0.05);">
             <div class="game-header" style="display: flex; align-items: center; padding: 15px;">
@@ -83,7 +83,6 @@
         <div class="game-content" id="game-content"></div>
     </div>
 
-    <!-- หน้าต่างสรุปผล -->
     <div id="summary-view" class="hidden p-4 glass-overlay">
         <h1 class="text-gradient mb-4 mt-4 pulse-text text-center">🎉 สรุปผลปาร์ตี้ 🎉</h1>
         <div id="summary-content" class="glass-card mb-4 p-4"></div>
@@ -91,7 +90,6 @@
         <button onclick="resetAll()" class="btn-danger action-btn">🔄 เริ่มงานใหม่ทั้งหมด</button>
     </div>
 
-    <!-- Modals -->
     <div id="penalty-modal" class="hidden modal-overlay"><div class="glass-card p-4 text-center modal-box"><h2 class="mb-4 text-gradient">💀 บทลงโทษ</h2><div id="penalty-result" class="timer-text mb-4" style="font-size: 1.5rem; color: #ef4444; line-height: 1.4;">กดสุ่มเลย!</div><button class="btn-danger action-btn mb-2" onclick="rollPenalty()">🎲 สุ่มลงโทษ</button><button class="btn-neon-purple action-btn" onclick="closeModals()">ปิดหน้าต่าง</button></div></div>
     <div id="team-modal" class="hidden modal-overlay"><div class="glass-card p-4 modal-box text-center"><h2 class="mb-4 text-gradient">🤝 ผลการแบ่งทีม</h2><div id="team-result" style="text-align: left; margin-bottom: 20px;"></div><button class="btn-neon-blue action-btn mb-2" onclick="splitTeams()">🔄 สุ่มใหม่</button><button class="btn-danger action-btn" onclick="closeModals()">ปิดหน้าต่าง</button></div></div>
     <div id="toast-container"></div>
