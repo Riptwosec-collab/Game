@@ -3,18 +3,24 @@
 // ==========================================
 let players = JSON.parse(localStorage.getItem('partyPlayers')) || [];
 let gamesPlayed = parseInt(localStorage.getItem('partyGamesCount')) || 0;
+let useHP = JSON.parse(localStorage.getItem('partyUseHP'));
+if(useHP === null) useHP = true; // เปิด HP เป็นค่าเริ่มต้น
 
 const emojis = ['🐶','🐱','🐼','🦊','🦁','🐷','🐸','🐵','🦄','👽','👾','👻','🤠','🤡','🤖'];
 
-// 💀 บทลงโทษ (80 ข้อ)
+// 💀 บทลงโทษทั่วไป (80 ข้อ)
 const penalties = [
     "ดื่ม 1 แก้ว 🍺", "เต้นเพลง TikTok 15 วิ", "จ่ายเข้ากองกลาง 20 บาท", "ให้เพื่อนทางขวาดีดมะกอก", "ซิทอัพ 10 ครั้ง", "ห้ามพูด 5 นาที", "ดื่มน้ำรวดเดียวหมดแก้ว", "สารภาพความลับ 1 เรื่อง", "กระโดดตบ 20 ครั้ง", "ให้เพื่อนแคปหน้าจอแชทลงโซเชียล", "เต้นไก่ย่างถูกเผา", "บอกรักคนแรกที่เดินผ่าน", "ทำท่าลิง 1 นาที", "ถูกริบมือถือ 10 นาที", "กินกระเทียม/พริก 1 ชิ้น", "วิดพื้น 10 ครั้ง", "โทรหาคนคุยเก่า", "ให้เพื่อนวาดรูปบนหน้า", "ร้องเพลงชาติด้วยเสียงเป็ด", "เต้นบัลเล่ต์รอบวง 1 รอบ", "พูด 'ขอโทษครับ' หลังประโยค 5 นาที", "ทำท่าเหมือนคนปวดท้องเข้าห้องน้ำ", "ทำท่าเซ็กซี่อ่อยคนทางซ้าย", "โทรหาแม่บอกว่าท้อง", "อมน้ำเปล่าไว้ในปากจนกว่าจะถึงตาตัวเอง", "พูดเร็วๆ รัวๆ 1 นาที", "ทำท่าโยคะท่ายาก 30 วินาที", "ส่งเซลฟี่น่าเกลียดลงกลุ่ม", "เป็นทาสรับใช้คนทางซ้าย 10 นาที", "บอกข้อเสียของตัวเอง 3 ข้อ",
-    "ดื่มครึ่งแก้วแบบไม่ใช้มือจับ", "เต้นสายย่อ 30 วินาที", "โพสต์รูปตัวเองตอนเหวอลง Facebook", "กินมะนาว 1 ซีกโดยห้ามทำหน้าเบี้ยว", "ให้คนทางซ้ายตั้งชื่อเรียกใหม่ให้ตลอดเกม", "ห้ามเล่นมือถือจนกว่าจะจบเกม", "พูดชมคนตรงข้าม 5 ประโยคติด", "ให้เพื่อนเลือกรอยสักให้(วาดด้วยปากกา)", "เต้น Cover Blackpink 1 ท่อน", "ทำท่าสุนัขเห่า 5 ครั้ง", "กินน้ำแข็ง 1 ก้อนให้หมดปาก", "ทำเสียงแมวทุกครั้งที่จบประโยค 10 นาที", "เล่าเรื่องผี 1 เรื่อง", "พูดภาษาอังกฤษสำเนียงไทยจ๋า 5 นาที", "เปลี่ยนรูปโปรไฟล์เป็นรูปที่เพื่อนเลือกให้ 1 ชม.", "โทรหาแฟนบอกว่า 'เราเลิกกันเถอะ' (ห้ามเฉลยทันที)", "ห้ามใช้คำว่า 'ฉัน' หรือ 'ผม' 10 นาที", "ทำท่าช้าง 1 นาที", "ให้เพื่อนปะแป้งที่หน้า", "ดื่มแทนคนข้างขวา 1 ครั้ง", "กระโดดกบ 10 ครั้ง", "ทำท่าสะพานโค้ง 10 วิ", "ให้เพื่อนพิมพ์แชทหาใครก็ได้ในมือถือคุณ", "ร้องเพลงช้างด้วยภาษาต่างดาว", "สารภาพว่าเคยขโมยอะไรตอนเด็ก", "ทำตัวเป็นพนักงานเซเว่นตอนเพื่อนจะดื่ม", "พูดความลับที่น่าอายที่สุด", "เต้นแอโรบิคหน้าเซเว่น(หรือหน้าบ้าน) 30 วิ", "โพสต์สเตตัสว่า 'เหงาจัง ทักมาหน่อย'", "เป็นเก้าอี้ให้เพื่อนคนขวานั่ง 1 นาที", "ยกซดน้ำอัดลมรวดเดียวหมดขวดเล็ก", "ให้เพื่อนเขียนหน้าผากว่าอะไรก็ได้", "ใบ้คำด้วยก้น (เขียนชื่อตัวเอง)", "ร้องเพลงลูกทุ่ง 1 ท่อน", "ให้เพื่อนเลือกรูปในเครื่องโพสต์ IG Story", "ทำหน้าตลกที่สุดแล้วให้เพื่อนถ่ายรูป", "เลียนแบบท่าทางคนในวง 1 คนให้เหมือนที่สุด", "โทรหาเบอร์ล่าสุดแล้วบอกว่า 'รักนะจุ๊บๆ'", "กินขนมหรือกับแกล้มโดยไม่เคี้ยว 1 ชิ้น", "ให้คนในวงรุมจี้เอว 10 วินาที", "แบกคนข้างซ้ายเดิน 1 รอบ", "กระซิบข้างหูคนข้างขวาว่า 'คืนนี้เจอกันนะ'", "ทำท่าปั่นจักรยานอากาศ 30 ครั้ง", "กินผสม (น้ำอัดลม+เหล้า+ของกินแปลกๆ)", "กอดคนข้างซ้าย 10 วินาที", "สารภาพบาปที่ทำกับเพื่อนในวง", "พูดลิ้นพันกัน 3 ประโยค", "ทำท่าเป็นซอมบี้ 1 นาที", "ดื่ม 2 ช็อตติด", "จ่ายค่ามิกเซอร์รอบถัดไป"
+    "ดื่มครึ่งแก้วแบบไม่ใช้มือจับ", "เต้นสายย่อ 30 วินาที", "โพสต์รูปตัวเองตอนเหวอลง Facebook", "กินมะนาว 1 ซีกโดยห้ามทำหน้าเบี้ยว", "ให้คนทางซ้ายตั้งชื่อเรียกใหม่ให้ตลอดเกม", "ห้ามเล่นมือถือจนกว่าจะจบเกม", "พูดชมคนตรงข้าม 5 ประโยคติด", "ให้เพื่อนเลือกรอยสักให้(วาดด้วยปากกา)", "เต้น Cover Blackpink 1 ท่อน", "ทำท่าสุนัขเห่า 5 ครั้ง", "กินน้ำแข็ง 1 ก้อนให้หมดปาก", "ทำเสียงแมวทุกครั้งที่จบประโยค 10 นาที", "เล่าเรื่องผี 1 เรื่อง", "พูดภาษาอังกฤษสำเนียงไทยจ๋า 5 นาที", "เปลี่ยนรูปโปรไฟล์เป็นรูปที่เพื่อนเลือกให้ 1 ชม.", "โทรหาแฟนบอกว่า 'เราเลิกกันเถอะ' (ห้ามเฉลยทันที)", "ห้ามใช้คำว่า 'ฉัน' หรือ 'ผม' 10 นาที", "ทำท่าช้าง 1 นาที", "ให้เพื่อนปะแป้งที่หน้า", "ดื่มแทนคนข้างขวา 1 ครั้ง", "กระโดดกบ 10 ครั้ง", "ทำท่าสะพานโค้ง 10 วิ", "ให้เพื่อนพิมพ์แชทหาใครก็ได้ในมือถือคุณ", "ร้องเพลงช้างด้วยภาษาต่างดาว", "สารภาพว่าเคยขโมยอะไรตอนเด็ก", "ทำตัวเป็นพนักงานเซเว่นตอนเพื่อนจะดื่ม", "พูดความลับที่น่าอายที่สุด", "เต้นแอโรบิคหน้าเซเว่น(หรือหน้าบ้าน) 30 วิ", "โพสต์สเตตัสว่า 'เหงาจัง ทักมาหน่อย'", "เป็นเก้าอี้ให้เพื่อนคนขวานั่ง 1 นาที", "ยกซดน้ำอัดลมรวดเดียวหมดขวดเล็ก", "ให้เพื่อนเขียนหน้าผากว่าอะไรก็ได้", "ใบ้คำด้วยก้น (เขียนชื่อตัวเอง)", "ร้องเพลงลูกทุ่ง 1 ท่อน", "ให้เพื่อนเลือกรูปในเครื่องโพสต์ IG Story", "ทำหน้าตลกที่สุดแล้วให้เพื่อนถ่ายรูป", "เลียนแบบท่าทางคนในวง 1 คนให้เหมือนที่สุด", "โทรหาเบอร์ล่าสุดแล้วบอกว่า 'รักนะจุ๊บๆ'", "กินขนมหรือกับแกล้มโดยไม่เคี้ยว 1 ชิ้น", "ให้คนในวงรุมจี้เอว 10 วินาที", "แบกคนข้างซ้ายเดิน 1 รอบ", "กระซิบข้างหูคนข้างขวาว่า 'คืนนี้เจอกันนะ'", "ทำท่าปั่นจักรยานอากาศ 30 ครั้ง", "กินผสม (น้ำอัดลม+เหล้า+ของกินแปลกๆ)", "กอดคนข้างซ้าย 10 วินาที", "สารภาพบาปที่ทำกับเพื่อนในวง", "พูดลิ้นพันกัน 3 ประโยค", "ทำท่าเป็นซอมบี้ 1 นาที", "จ่ายค่ามิกเซอร์รอบถัดไป"
 ];
 
-// 🍺 บทลงโทษสำหรับสล็อตนรก (เน้นดื่ม)
+// 🍺 บทลงโทษสายดื่ม เน้นแอลกอฮอล์ (50 ข้อ)
 const drinkingPenalties = [
-    "ดื่มเพียว 1 ช็อต", "ดื่มครึ่งแก้วรวดเดียว", "ชนแก้วกับคนตรงข้ามแล้วดื่มให้หมด", "ดื่มแทนคนซ้ายมือ", "ดื่มแทนคนขวามือ", "ผสมเครื่องดื่มสูตรนรกแล้วดื่ม", "อมเหล้า/เบียร์ไว้ในปาก 1 นาที", "ดื่ม 2 ช็อตติด", "จ่ายค่าเหล้าขวดต่อไป", "เป็นคนชงเหล้าให้ทุกคน 3 รอบ"
+    "ดื่มเพียว 1 ช็อต", "ดื่มครึ่งแก้วรวดเดียว", "ชนแก้วกับคนตรงข้ามแล้วดื่มให้หมด", "ดื่มแทนคนซ้ายมือ", "ดื่มแทนคนขวามือ", "ผสมเครื่องดื่มสูตรนรกแล้วดื่ม", "อมเหล้า/เบียร์ไว้ในปาก 1 นาที", "ดื่ม 2 ช็อตติด", "จ่ายค่าเหล้าขวดต่อไป", "เป็นคนชงเหล้าให้ทุกคน 3 รอบ",
+    "ให้คนทางขวาชงเหล้าให้ 1 แก้ว(ห้ามบ่น)", "ให้คนทางซ้ายป้อนเหล้า", "ดื่มโดยห้ามใช้มือจับแก้ว", "ดื่ม 1 แก้ว พร้อมตะโกนว่า 'อร่อยจัด!'", "ยกหมดแก้วแล้วเต้น 10 วิ", "ชนแก้วกับทุกคนแล้วดื่ม 1 อึก", "เลือกเพื่อน 1 คนมาดื่มเป็นเพื่อน", "ดื่ม 1 แก้วแล้วห้ามเข้าห้องน้ำ 30 นาที", "ชงเข้มๆ ให้ตัวเอง 1 แก้ว", "ดื่มน้ำเปล่า 1 แก้วเต็ม (พักตับ)",
+    "ดื่มเบียร์/เหล้าจากฝาขวด 3 ฝา", "ดื่มแล้วห้ามทำหน้าเบี้ยว", "วิดพื้น 5 ครั้งแล้วดื่ม 1 ช็อต", "ให้ทุกคนในวงเทเหล้า/เบียร์ของตัวเองมารวมกันแล้วดื่ม", "ดื่ม 1 แก้วแล้วร้องเพลงชาติ", "ดื่มแบบหลับตา", "ดื่มไขว้แขนกับคนทางซ้าย(Cross drink)", "ดื่มไขว้แขนกับคนทางขวา", "ซดจากขวด 1 อึกใหญ่", "สั่งใครก็ได้ในวงดื่ม 1 แก้ว (คุณรอด)",
+    "เล่นเกมจ้องตากับคนตรงข้าม ใครกระพริบตาก่อนดื่ม", "เป่ายิ้งฉุบกับคนทางซ้าย ใครแพ้ดื่ม", "ดื่ม 1 แก้วแล้วทำท่าซุปเปอร์แมน", "หมุนตัว 5 รอบแล้วดื่ม 1 ช็อต", "ดื่ม 1 แก้วแล้วห้ามพูด 5 นาที", "จิบเหล้า 5 อึกเล็กๆ ถี่ๆ", "ดื่มรวดเดียวห้ามหายใจกลางคัน", "ให้เพื่อนในวงโหวตว่าใครควรดื่มแทนคุณ", "ดื่ม 1 แก้วแล้วโทรหาคนคุยบอกว่าเมาแล้ว", "ดื่ม 1 แก้วพร้อมทำตาเหลือก",
+    "ให้คนซ้ายและขวาหอมแก้มแลกกับการไม่ต้องดื่ม(ไม่ยอม=ดื่ม2แก้ว)", "ดื่ม 1 แก้วแล้วโพสต์สเตตัส 'เมาไม่ขับ หลับร้านเหล้า'", "ชงเหล้าสูตรหวานๆ ดื่มเอง", "ดื่ม 1 แก้วแล้วทำท่าแมวขู่", "ยกแก้วดื่มพร้อมทำเสียง 'ซู๊ดดดด' ดังๆ", "ดื่ม 1 แก้วแล้วพูดว่า 'รักทุกคนนะเว้ย'", "ให้เพื่อนวาดรูปบนหน้า 1 จุดแลกกับการไม่ต้องดื่ม", "ดื่มเหล้าพร้อมกับกินมะนาว 1 ซีก", "ดื่ม 1 แก้วแล้วใบ้คำว่า 'คนเมา' ให้เพื่อนทาย", "ยกแก้วดื่มทั้งหมดที่มีในแก้วตัวเองตอนนี้ให้เกลี้ยง!"
 ];
 
 const drawWords = ["ช้างบินได้", "คนกำลังอกหัก", "ผีดิบ", "ไก่ย่างถูกเผา", "ซูเปอร์แมน", "นางเงือก", "มนุษย์ต่างดาว", "แมวกินปลา", "ไดโนเสาร์ขี่จักรยาน", "นินจา", "หมูกระทะ", "คนเมา", "รถไฟเหาะ", "นักบินอวกาศ", "คนกำลังอาบน้ำ", "จระเข้", "โจรปล้นธนาคาร", "แฮร์รี่พอตเตอร์", "ตำรวจจับผู้ร้าย", "คนกำลังจาม", "ช่างตัดผม", "เต่าคลาน", "กอริลล่า", "คอมพิวเตอร์พัง", "คนตาบอด", "คนกำลังร้องไห้", "แมงมุมยักษ์", "ผีเสื้อสมุทร", "หมอผี", "เศรษฐี", "คนถูกหวย", "แวมไพร์", "ซอมบี้วิ่งหนีคน", "นักเตะโดนใบแดง", "สิงโตคำราม", "คนหิวข้าว", "ซานตาคลอส", "คนปวดขี้", "คนกำลังเซลฟี่", "เครื่องบินตก", "เรือไททานิค", "สไปเดอร์แมน", "แบตมือถือหมด", "หมอดู", "คนแอบหลับ", "คนล้มคลุกฝุ่น", "นักกล้าม", "คนถูกผีหลอก", "เด็กทารก", "ลิงกินกล้วย", "มนุษย์หมาป่า", "คนกำลังแคะขี้มูก", "แม่มดขี่ไม้กวาด", "พระภิกษุบิณฑบาต", "เงาะป่า", "คนกำลังเต้นรูดเสา", "โจรขโมยชุดชั้นใน", "หมาฉี่ใส่เสาไฟ", "คนโดนหมาไล่กัด", "ซูชิหน้าปลาไหล", "ชานมไข่มุกหก", "คนกำลังสระผม", "รถตุ๊กตุ๊กซิ่ง", "พญานาคพ่นไฟ", "หมอผีปราบวิญญาณ", "นางงามจักรวาล", "คนท้องแก่", "ตลกคาเฟ่", "กัปตันอเมริกา", "ไอรอนแมนบิน", "ซิลเดอเรลล่าทำรองเท้าหลุด", "สโนว์ไวท์กินแอปเปิล", "คนหัวล้านลมพัดผมปลิว", "คนกำลังสักลาย", "คนเมาอ้วกแตก", "นกกระสาคาบเด็กทารก", "ม้าโพนี่", "กระต่ายกับเต่าวิ่งแข่งกัน", "คนกำลังปิ้งบาร์บีคิว", "กิ้งก่าเปลี่ยนสี", "ปลาหมึกยักษ์รัดเรือ", "นักสืบโคนัน", "คนโดนผีอำ", "พนักงานออฟฟิศโดนเจ้านายด่า", "คนกำลังชงกาแฟ", "เครื่องซักผ้าพัง", "ทีวีสัญญาณหาย", "พัดลมเพดานหล่น", "กระเป๋าตังค์แบน", "คนโดนฉีดยา", "หมอฟันถอนฟัน", "ช้างเตะตะกร้อ", "ลิงปีนต้นมะพร้าว", "หมูสับปั้นก้อน", "พิซซ่าหน้าฮาวายเอี้ยน", "คนกำลังดำน้ำ", "ฉลามกัดเซิร์ฟบอร์ด", "คนกำลังกระโดดร่ม", "คนหลงทางในป่า", "ผีตานี"];
@@ -44,30 +50,19 @@ const gameData = {
         "ยอมกินมาม่าดิบทุกวัน | หรือ | ยอมกินข้าวเปล่าทุกวัน", "ยอมใส่รองเท้าผิดไซส์เดิน 1 วัน | หรือ | ยอมใส่เสื้อรัดรูปเกินไป 1 วัน", "ยอมมีเพื่อนสนิทขี้ขโมย | หรือ | ยอมมีเพื่อนสนิทขี้โกหก", "ยอมตกงาน 1 ปี | หรือ | ยอมทำงานที่เกลียดตลอดชีวิต", "ยอมให้ทุกคนรู้ประวัติการค้นหาในเบราว์เซอร์ | หรือ | ยอมให้ทุกคนอ่านแชทไลน์ได้หมด",
         "ยอมเกิดในยุคหิน | หรือ | ยอมเกิดในยุคสงครามโลก", "ยอมหน้าเด็กลง 10 ปีแต่ห้ามมีแฟน | หรือ | ยอมหน้าแก่ขึ้น 10 ปีแต่มีแฟนรวย", "ยอมพูดชื่อแฟนเก่าตอนละเมอ | หรือ | ยอมเรียกชื่อแฟนปัจจุบันผิดเป็นแฟนเก่า", "ยอมใส่กางเกงในกลับด้าน | หรือ | ยอมไม่ใส่กางเกงในออกนอกบ้าน", "ยอมมีนิ้วก้อยเท้า 10 นิ้ว | หรือ | ยอมมีหัวแม่มือ 10 นิ้ว"
     ],
-    // 😵 พิมพ์เมาๆ (Drunk Typing)
-    tongueTwisters: [
-        "ยายกินลำไยน้ำลายยายไหลย้อย", "หมู หมึก กุ้ง หุง อุ่น ตุ๋น ต้ม นึ่ง", "เช้าฟาดผัดฟัก เย็นฟาดฟักผัด", "ชามเขียวคว่ำเช้า ชามขาวคว่ำค่ำ", "ทหารแบกปืนเบิ้ลตึกตัก", "ลิงกินกล้วยตาละห้อย", "กล้วยตานีปลายหวีเหี่ยว", "ยักษ์ใหญ่ไล่ยักษ์เล็ก ยักษ์เล็กไล่ยักษ์ใหญ่", "กินมันติดเหงือก กินเผือกติดฟัน", "หอยร้อยหอย หอยเหล็กหอยไหล", "ปลาหมึกย่างปิ้งไฟพุพอง", "กระต่ายเต้นกระโดดตึบตับ", "ลิงค่างบ่างชะนีหนีหนาว", "หมูหันหมูสับหมูย่าง", "กินก๋วยเตี๋ยวต้มยำทำเอง"
-    ],
-    // 🤫 ข้อห้ามมรณะ (Taboo)
+    tongueTwisters: ["ยายกินลำไยน้ำลายยายไหลย้อย", "หมู หมึก กุ้ง หุง อุ่น ตุ๋น ต้ม นึ่ง", "เช้าฟาดผัดฟัก เย็นฟาดฟักผัด", "ชามเขียวคว่ำเช้า ชามขาวคว่ำค่ำ", "ทหารแบกปืนเบิ้ลตึกตัก", "ลิงกินกล้วยตาละห้อย", "กล้วยตานีปลายหวีเหี่ยว", "ยักษ์ใหญ่ไล่ยักษ์เล็ก ยักษ์เล็กไล่ยักษ์ใหญ่", "กินมันติดเหงือก กินเผือกติดฟัน", "หอยร้อยหอย หอยเหล็กหอยไหล", "ปลาหมึกย่างปิ้งไฟพุพอง", "กระต่ายเต้นกระโดดตึบตับ", "ลิงค่างบ่างชะนีหนีหนาว", "หมูหันหมูสับหมูย่าง", "กินก๋วยเตี๋ยวต้มยำทำเอง"],
     taboo: [
         {w: "หมูกระทะ", t: ["ปิ้งย่าง", "เตา", "น้ำจิ้ม"]}, {w: "โรงหนัง", t: ["ป๊อปคอร์น", "จอ", "ดู"]}, {w: "เซเว่น", t: ["ร้าน", "สะดวกซื้อ", "หิว"]}, {w: "แฟนเก่า", t: ["เลิก", "คบ", "รัก"]}, {w: "ทะเล", t: ["น้ำ", "เค็ม", "ทราย"]},
         {w: "ซอมบี้", t: ["ผี", "กัด", "ตาย"]}, {w: "ไอโฟน", t: ["แอปเปิ้ล", "มือถือ", "แพง"]}, {w: "เงินเดือน", t: ["หมด", "จ่าย", "ทำงาน"]}, {w: "ห้องน้ำ", t: ["ขี้", "ฉี่", "ส้วม"]}, {w: "ลิฟต์", t: ["ขึ้น", "ลง", "ชั้น"]},
         {w: "ชานมไข่มุก", t: ["ดูด", "หวาน", "ไต้หวัน"]}, {w: "หวย", t: ["ถูก", "กิน", "ตัวเลข"]}, {w: "แมว", t: ["ร้อง", "สัตว์", "ทาส"]}, {w: "สิว", t: ["บีบ", "หน้า", "เม็ด"]}, {w: "แว่นตา", t: ["ใส่", "มอง", "สายตา"]}
     ],
-    // 💼 นักขายมือทอง (Crazy Pitch)
     pitch1: ["กางเกงใน", "ยาดม", "รองเท้าแตะ", "ถุงยาง", "กระดาษทิชชู่", "ไม้จิ้มฟัน", "สบู่เหลว", "ผ้าอนามัย", "กรรไกรตัดเล็บ", "ปลอกคอหมา"],
     pitch2: ["แปรงสีฟัน", "รสปลาร้า", "ไฟฉาย", "ไม้ตียุง", "กาวตราช้าง", "น้ำยาล้างห้องน้ำ", "รีโมทแอร์", "กล้องวงจรปิด", "หน้ากากอนามัย", "พาวเวอร์แบงค์"],
-    // 📜 กฎสวรรค์สั่ง (Party Rules)
-    partyRules: [
-        "ห้ามชี้หน้าใครเด็ดขาด", "ห้ามเรียกชื่อเล่นเพื่อน (ให้เรียกสรรพนามอื่น)", "ก่อนดื่มต้องพูดว่า 'ชนแก้วเว้ย'", "ห้ามจับมือถือ", "พูดลงท้ายด้วย 'เมี๊ยว' ทุกประโยค", "ห้ามพูดคำหยาบเด็ดขาด", "เวลาใครดื่ม ต้องปรบมือให้กำลังใจ", "ห้ามหัวเราะเห็นฟัน", "ห้ามใช้คำว่า 'ฉัน' หรือ 'ผม'", "ใครพูดคำว่า 'ไม่' โดนทำโทษ"
-    ],
-    // 🎧 อ่านปากของฉันนะ (Read My Lips)
-    readLips: [
-        "ฉันชอบกินหอยทอด", "ยายพาหลานไปหาหมอ", "ฟันเหล็กเด็กแนว", "สี่สิบสี่ซีก", "น้ำมันหอยอร่อยดี", "หมูยอทอดกรอบ", "อย่ามองหน้าเดี๋ยวปาด้วยเบอร์โทร", "หอยแครงลวกเลือดซิบๆ", "ผัดกะเพราไก่ไข่ดาวไม่สุก", "รักนะเด็กโง่"
-    ]
+    partyRules: ["ห้ามชี้หน้าใครเด็ดขาด", "ห้ามเรียกชื่อเล่นเพื่อน (ให้เรียกสรรพนามอื่น)", "ก่อนดื่มต้องพูดว่า 'ชนแก้วเว้ย'", "ห้ามจับมือถือ", "พูดลงท้ายด้วย 'เมี๊ยว' ทุกประโยค", "ห้ามพูดคำหยาบเด็ดขาด", "เวลาใครดื่ม ต้องปรบมือให้กำลังใจ", "ห้ามหัวเราะเห็นฟัน", "ห้ามใช้คำว่า 'ฉัน' หรือ 'ผม'", "ใครพูดคำว่า 'ไม่' โดนทำโทษ"],
+    readLips: ["ฉันชอบกินหอยทอด", "ยายพาหลานไปหาหมอ", "ฟันเหล็กเด็กแนว", "สี่สิบสี่ซีก", "น้ำมันหอยอร่อยดี", "หมูยอทอดกรอบ", "อย่ามองหน้าเดี๋ยวปาด้วยเบอร์โทร", "หอยแครงลวกเลือดซิบๆ", "ผัดกะเพราไก่ไข่ดาวไม่สุก", "รักนะเด็กโง่"]
 };
 
-// อัปเดตรายชื่อเกมทั้งหมด (33 เกม)
+// อัปเดตรายชื่อเกมทั้งหมด (33 เกม - ตรวจสอบแล้วเข้าได้ครบถ้วน)
 const gameList = [
     { id: 'touch', name: 'แตะนิ้วเสี่ยงทาย', icon: '👆', color: 'pink' },
     { id: 'russian', name: 'รูเล็ตต์ลูกโม่', icon: '🔫', color: 'blue' },
@@ -77,11 +72,11 @@ const gameList = [
     { id: 'wyr', name: 'เลือกทางไหน', icon: '⚖️', color: 'purple' }, 
     { id: 'slot', name: 'สล็อตนรก', icon: '🎰', color: 'pink' },
     { id: 'memory', name: 'จำให้ดีนะ', icon: '🧠', color: 'green' },
-    { id: 'drunktype', name: 'พิมพ์เมาๆ', icon: '😵', color: 'blue' }, // ใหม่ 1
-    { id: 'taboo', name: 'ข้อห้ามมรณะ', icon: '🤫', color: 'red' }, // ใหม่ 2
-    { id: 'crazypitch', name: 'นักขายมือทอง', icon: '💼', color: 'purple' }, // ใหม่ 3
-    { id: 'partyrule', name: 'กฎสวรรค์สั่ง', icon: '📜', color: 'green' }, // ใหม่ 4
-    { id: 'readlips', name: 'อ่านปากของฉันนะ', icon: '🎧', color: 'pink' }, // ใหม่ 5
+    { id: 'drunktype', name: 'พิมพ์เมาๆ', icon: '😵', color: 'blue' }, 
+    { id: 'taboo', name: 'ข้อห้ามมรณะ', icon: '🤫', color: 'red' }, 
+    { id: 'crazypitch', name: 'นักขายมือทอง', icon: '💼', color: 'purple' }, 
+    { id: 'partyrule', name: 'กฎสวรรค์สั่ง', icon: '📜', color: 'green' }, 
+    { id: 'readlips', name: 'อ่านปากของฉันนะ', icon: '🎧', color: 'pink' }, 
     { id: 'neverhave', name: 'ฉันไม่เคย', icon: '🤫', color: 'pink' },
     { id: 'spinbottle', name: 'หมุนขวด', icon: '🍾', color: 'green' },
     { id: 'nitro', name: 'ระเบิดห้ามสั่น', icon: '📳', color: 'red' },
@@ -91,7 +86,7 @@ const gameList = [
     { id: 'twotruths', name: 'จับตอแหล', icon: '🤥', color: 'blue' },
     { id: 'draw', name: 'จิตรกรเอก', icon: '🎨', color: 'purple' },
     { id: 'kingscup', name: 'ไพ่พระราชา', icon: '🃏', color: 'pink' },
-    { id: 'wheel', name: 'วงล้อสุ่ม', icon: '🎡', color: 'blue' },
+    { id: 'wheel', name: 'รูเล็ตต์ตามใจฉัน', icon: '🎡', color: 'blue' },
     { id: 'croc', name: 'จระเข้งับนิ้ว', icon: '🐊', color: 'purple' },
     { id: 'textbomb', name: 'พิมพ์ทะลุนรก', icon: '💣', color: 'pink' },
     { id: 'headsup', name: 'ทายคำบนหัว', icon: '📱', color: 'blue' },
@@ -117,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ==========================================
-// 2. Audio, General UI & HP
+// 2. Audio, General UI, Modals & HP
 // ==========================================
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 let audioCtx; let ambientInterval = null;
@@ -134,27 +129,81 @@ document.addEventListener('click', initAudio, { once: true });
 window.changeAmbience = () => { initAudio(); clearInterval(ambientInterval); const t = document.getElementById('ambience-select').value; if(t === 'heartbeat') ambientInterval = setInterval(() => playSound('boom'), 1200); else if (t === 'crickets') ambientInterval = setInterval(() => { if(Math.random() > 0.5 && audioCtx) { const osc = audioCtx.createOscillator(); osc.type = 'square'; osc.frequency.value = 3000 + Math.random()*2000; const gain = audioCtx.createGain(); gain.gain.value = 0.02; gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1); osc.connect(gain); gain.connect(audioCtx.destination); osc.start(); osc.stop(audioCtx.currentTime + 0.1); } }, 150); }
 function showToast(msg, type = 'success') { let container = document.getElementById('toast-container'); const t = document.createElement('div'); t.className = 'toast'; t.style.borderColor = type === 'error' ? '#ef4444' : 'var(--neon-blue)'; t.innerText = msg; container.appendChild(t); setTimeout(() => t.remove(), 3000); }
 function flashScreen(type) { const overlay = document.getElementById('flash-overlay'); if(!overlay) return; overlay.style.backgroundColor = type === 'green' ? 'rgba(34, 197, 94, 0.7)' : 'rgba(239, 68, 68, 0.7)'; setTimeout(() => { overlay.style.backgroundColor = 'transparent'; }, 400); }
-let isCampfire = false; window.toggleCampfire = () => { isCampfire = !isCampfire; const btn = document.getElementById('btn-campfire'); if(isCampfire) { document.body.classList.add('campfire-mode'); btn.innerText = "🔥 ปิดโหมดแคมป์"; btn.style.background = "#d97706"; } else { document.body.classList.remove('campfire-mode'); btn.innerText = "🏕️ โหมดแคมป์"; btn.style.background = "transparent"; } }
-window.shareApp = () => { if (navigator.share) navigator.share({ title: 'วงนี้มีเกม 🎮', url: window.location.href }).catch(console.error); else { navigator.clipboard.writeText(window.location.href); showToast('✅ คัดลอกลิงก์เรียบร้อย!'); } }
+
+// --- Toggle HP Mode ---
+window.toggleHPMode = () => {
+    useHP = !useHP;
+    localStorage.setItem('partyUseHP', useHP);
+    renderPlayers();
+    renderMiniHP();
+    showToast(useHP ? "❤️ เปิดระบบ HP แล้ว" : "🖤 ปิดระบบ HP แล้ว (เล่นชิลๆ)");
+    
+    // อัปเดตข้อความปุ่มเปิดปิด
+    const hpToggleBtn = document.getElementById('hp-toggle-btn');
+    if(hpToggleBtn) hpToggleBtn.innerHTML = useHP ? '❤️ เปิด HP' : '🖤 ปิด HP';
+}
+
 window.togglePlayerList = () => { const list = document.getElementById('player-manage-section'); const icon = document.getElementById('player-toggle-icon'); if(list.style.display === 'none') { list.style.display = 'block'; icon.innerText = '▼'; } else { list.style.display = 'none'; icon.innerText = '▶'; } }
-window.showPenaltyModal = () => { initAudio(); document.getElementById('penalty-modal').classList.remove('hidden'); document.getElementById('penalty-result').innerText = 'กดสุ่มเลย!'; }
+
+// --- Penalty Modal แบบใหม่ (แยกปุ่มธรรมดา กับ ปุ่มสายแข็ง) ---
+window.showPenaltyModal = () => { 
+    initAudio(); 
+    const modal = document.getElementById('penalty-modal');
+    modal.classList.remove('hidden'); 
+    
+    const resDiv = document.getElementById('penalty-result');
+    resDiv.innerHTML = `
+        <div style="font-size:1.1rem; color:white; margin-bottom:15px;">เลือกประเภทบทลงโทษ:</div>
+        <div style="display:flex; flex-direction:column; gap:10px; width:100%;">
+            <button class="btn-neon-purple action-btn" style="padding:15px;" onclick="rollPenalty('general')">🎲 สุ่มบทลงโทษทั่วไป</button>
+            <button class="btn-danger action-btn" style="padding:15px;" onclick="rollPenalty('drink')">🍺 สายแข็ง (เน้นดื่ม!)</button>
+        </div>
+        <div id="actual-penalty-text" style="margin-top:25px; font-size:1.5rem; color:var(--neon-pink); min-height:80px; font-weight:bold;"></div>
+    `;
+}
+window.rollPenalty = (type) => { 
+    playSound('tick'); 
+    const el = document.getElementById('actual-penalty-text'); 
+    el.innerText = 'กำลังสุ่ม...'; 
+    setTimeout(() => { 
+        playSound('boom'); 
+        const arr = (type === 'drink') ? drinkingPenalties : penalties;
+        el.innerText = arr[Math.floor(Math.random() * arr.length)]; 
+    }, 800); 
+};
+
 window.splitTeams = () => { if(players.length < 2) { showToast("ต้องมีผู้เล่นอย่างน้อย 2 คน", "error"); return; } let shuffled = [...players].sort(() => 0.5 - Math.random()); let half = Math.ceil(shuffled.length / 2); document.getElementById('team-result').innerHTML = `<div style="margin-bottom:15px; background: rgba(239,68,68,0.2); border: 1px solid #ef4444; padding: 10px; border-radius: 8px;"><strong style="color:#ef4444; font-size:1.2rem;">🔴 ทีมแดง</strong><br><span style="color:white;">${shuffled.slice(0, half).map(p => p.name).join('<br>')}</span></div><div style="background: rgba(59,130,246,0.2); border: 1px solid #3b82f6; padding: 10px; border-radius: 8px;"><strong style="color:#3b82f6; font-size:1.2rem;">🔵 ทีมน้ำเงิน</strong><br><span style="color:white;">${shuffled.slice(half).map(p => p.name).join('<br>')}</span></div>`; document.getElementById('team-modal').classList.remove('hidden'); }
 window.closeModals = () => { document.getElementById('penalty-modal').classList.add('hidden'); document.getElementById('team-modal').classList.add('hidden'); }
-window.rollPenalty = () => { playSound('tick'); const el = document.getElementById('penalty-result'); el.innerText = 'กำลังสุ่ม...'; setTimeout(() => { playSound('boom'); el.innerText = penalties[Math.floor(Math.random() * penalties.length)]; }, 800); };
 
 function saveState() { localStorage.setItem('partyPlayers', JSON.stringify(players)); localStorage.setItem('partyGamesCount', gamesPlayed.toString()); renderPlayers(); renderMiniHP(); }
 window.addPlayer = () => { initAudio(); const input = document.getElementById('new-player-name'); const name = input.value.trim(); if (name && players.length < 15) { players.push({ id: Date.now(), name: `${emojis[Math.floor(Math.random() * emojis.length)]} ${name}`, hp: 3 }); input.value = ''; saveState(); } else if (players.length >= 15) { showToast('ผู้เล่นเต็มแล้ว!', 'error'); } }
 window.removePlayer = (id) => { if(confirm('ต้องการลบผู้เล่นคนนี้?')) { players = players.filter(p => p.id !== id); saveState(); } }
-window.updateHP = (id, change) => { let p = players.find(x => x.id === id); if(p) { p.hp += change; if(p.hp < 0) p.hp = 0; if(p.hp > 5) p.hp = 5; saveState(); } }
+window.updateHP = (id, change) => { if(!useHP) return; let p = players.find(x => x.id === id); if(p) { p.hp += change; if(p.hp < 0) p.hp = 0; if(p.hp > 5) p.hp = 5; saveState(); } }
+
 function renderPlayers() {
-    const list = document.getElementById('player-list'); list.innerHTML = ''; document.getElementById('player-count').innerText = players.length;
+    const list = document.getElementById('player-list'); list.innerHTML = ''; 
+    document.getElementById('player-count').innerText = players.length;
+    
+    // ติดตั้งปุ่มเปิดปิด HP ตรง Header ถ้ายังไม่มี
+    let headerGroup = document.getElementById('player-count').parentElement;
+    if(!document.getElementById('hp-toggle-btn')) {
+        headerGroup.innerHTML += ` <button id="hp-toggle-btn" onclick="toggleHPMode()" style="background:rgba(255,255,255,0.1); border:1px solid #fff; border-radius:5px; color:#fff; font-size:0.8rem; padding:2px 8px; cursor:pointer; margin-left:10px;">${useHP ? '❤️ เปิด HP' : '🖤 ปิด HP'}</button>`;
+    }
+
     players.forEach((p) => { 
-        const isZ = p.hp <= 0; const item = document.createElement('div'); item.className = `player-item ${isZ ? 'zombie' : ''}`; 
-        item.innerHTML = `<div style="font-weight: 600; text-align: left; flex:1; font-size:0.9rem;">${p.name}<br><span style="font-size:0.75rem; color:var(--text-muted);">${isZ ? '🧟 ซอมบี้' : '❤️'.repeat(p.hp)}</span></div><div class="hp-controls"><button class="hp-btn" onclick="updateHP(${p.id}, -1)">-</button><button class="hp-btn" onclick="updateHP(${p.id}, 1)">+</button><button class="hp-btn" style="color: #ef4444; margin-left: 5px;" onclick="removePlayer(${p.id})">×</button></div>`; list.appendChild(item); 
+        const isZ = (useHP && p.hp <= 0); 
+        const item = document.createElement('div'); item.className = `player-item ${isZ ? 'zombie' : ''}`; 
+        
+        let hpString = useHP ? (isZ ? '🧟 ซอมบี้' : '❤️'.repeat(p.hp)) : '';
+        let controlsHTML = useHP ? `<div class="hp-controls"><button class="hp-btn" onclick="updateHP(${p.id}, -1)">-</button><button class="hp-btn" onclick="updateHP(${p.id}, 1)">+</button><button class="hp-btn" style="color: #ef4444; margin-left: 5px;" onclick="removePlayer(${p.id})">×</button></div>` : `<div class="hp-controls"><button class="hp-btn" style="color: #ef4444; margin-left: 5px;" onclick="removePlayer(${p.id})">ลบ</button></div>`;
+
+        item.innerHTML = `<div style="font-weight: 600; text-align: left; flex:1; font-size:0.9rem;">${p.name}<br><span style="font-size:0.75rem; color:var(--text-muted);">${hpString}</span></div>${controlsHTML}`; 
+        list.appendChild(item); 
     });
 }
 function renderMiniHP() {
     const bar = document.getElementById('mini-hp-bar'); bar.innerHTML = '';
+    if(!useHP) { bar.innerHTML = `<span class="text-muted" style="padding-left:10px; font-size:0.8rem;">[ระบบ HP ปิดอยู่]</span>`; return; }
     if(players.length === 0) { bar.innerHTML = `<span class="text-muted" style="padding-left:10px;">ยังไม่มีผู้เล่น...</span>`; return; }
     players.forEach(p => { const div = document.createElement('div'); div.className = `mini-hp-item ${p.hp <= 0 ? 'mini-hp-zombie' : ''}`; div.innerText = `${p.name} ${p.hp>0 ? '❤️'+p.hp : '🧟'}`; bar.appendChild(div); });
 }
@@ -175,19 +224,16 @@ window.openGame = (gameId) => {
     const content = document.getElementById('game-content'); content.innerHTML = ''; content.classList.remove('animate-entrance'); void content.offsetWidth; content.classList.add('animate-entrance');
 
     switch(gameId) {
-        // --- 5 เกมใหม่ชุดที่ 2 ---
         case 'drunktype': initDrunkType(content); break;
         case 'taboo': initTaboo(content); break;
         case 'crazypitch': initCrazyPitch(content); break;
         case 'partyrule': initPartyRule(content); break;
         case 'readlips': initReadLips(content); break;
-        // --- 5 เกมชุด 1 (อัปเกรด) ---
         case 'defuse': initDefuse(content); break;
         case 'stopwatch': initStopwatch(content); break;
         case 'wyr': initWYR(content); break;
         case 'slot': initSlot(content); break;
         case 'memory': initMemory(content); break;
-        // --- เกมคลาสสิก (อัปเกรดตามสั่ง) ---
         case 'neverhave': initNeverHave(content); break;
         case 'spinbottle': initSpinBottle(content); break;
         case 'nitro': initNitro(content); break;
@@ -223,13 +269,13 @@ function getRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 // 4. Game Implementations (33 Games)
 // ==========================================
 
-// --- [ใหม่] 1. พิมพ์เมาๆ (Drunk Typing) ---
+// --- 1. พิมพ์เมาๆ (Drunk Typing) ---
 function initDrunkType(c) {
     c.innerHTML = `
-        <div class="game-rules-box mb-3">😵 <strong>วิธีเล่น:</strong> พิมพ์ประโยคลิ้นพันกันให้ถูกต้องเป๊ะๆ ทุกตัวอักษร ภายใน 15 วินาที! (ผิดตัวเดียวคือจบ)</div>
+        <div class="game-rules-box mb-3">😵 <strong>วิธีเล่น:</strong> พิมพ์ประโยคลิ้นพันกันให้ถูกต้องเป๊ะๆ ภายใน 15 วิ!</div>
         <div class="display-text text-gradient mb-2" id="dt-target" style="font-size:1.5rem; line-height:1.4;">...</div>
         <div class="timer-text mb-3" id="dt-timer" style="font-size:3rem; color:var(--neon-pink);">15</div>
-        <input type="text" id="dt-input" placeholder="พิมพ์ให้เป๊ะนะ..." style="width:100%; max-width:300px; text-align:center; padding:10px; font-size:1.2rem;" disabled>
+        <input type="text" id="dt-input" placeholder="พิมพ์ให้เป๊ะนะ..." style="width:100%; max-width:300px; text-align:center; padding:10px; font-size:1.2rem; background:#111; color:white; border-radius:5px;" disabled>
         <button id="dt-btn" class="btn-neon-blue mt-4 action-btn" style="max-width:200px;" onclick="startDrunkType()">▶ เริ่มพิมพ์</button>
     `;
 }
@@ -256,7 +302,7 @@ function evalDrunkType(tgt, submitted) {
     document.getElementById('dt-btn').onclick = () => initDrunkType(document.getElementById('game-content'));
 }
 
-// --- [ใหม่] 2. ข้อห้ามมรณะ (Taboo) ---
+// --- 2. ข้อห้ามมรณะ (Taboo) ---
 function initTaboo(c) {
     c.innerHTML = `
         <div class="game-rules-box mb-3">🤫 <strong>วิธีเล่น:</strong> ใบ้คำปริศนาให้เพื่อนทาย แต่ "ห้ามพูดคำต้องห้าม" เด็ดขาด เผลอหลุดโดนหัก HP!</div>
@@ -279,7 +325,7 @@ window.startTaboo = () => {
     document.getElementById('tb-forbidden').innerHTML = item.t.join('<br>');
 }
 
-// --- [ใหม่] 3. นักขายมือทอง (Crazy Pitch) ---
+// --- 3. นักขายมือทอง (Crazy Pitch) ---
 function initCrazyPitch(c) {
     c.innerHTML = `
         <div class="game-rules-box mb-3">💼 <strong>วิธีเล่น:</strong> พรีเซนต์ขาย "ของ 2 สิ่งที่ผสมกัน" ให้เพื่อนในวงภายใน 1 นาที แถให้เนียน!</div>
@@ -298,16 +344,16 @@ window.startPitch = () => {
     }, 1000);
 }
 
-// --- [ใหม่] 4. กฎสวรรค์สั่ง (Party Rules) ---
+// --- 4. กฎสวรรค์สั่ง (Party Rules) ---
 function initPartyRule(c) {
     c.innerHTML = `
-        <div class="game-rules-box mb-3">📜 <strong>วิธีเล่น:</strong> สุ่มกฎ 1 ข้อที่ทุกคนในวง "ต้องทำตาม" เป็นเวลา 15 นาที! ใครเผลอลืมตัว โดนทำโทษทันที!</div>
+        <div class="game-rules-box mb-3">📜 <strong>วิธีเล่น:</strong> สุ่มกฎ 1 ข้อที่ทุกคนในวง "ต้องทำตาม" เป็นเวลา 15 นาที! ใครลืมตัว โดนทำโทษทันที!</div>
         <div class="display-text glass-card p-4" id="pr-text" style="color:var(--neon-pink); font-size:1.5rem;">กฎคืออะไร...?</div>
         <button class="btn-neon-blue mt-4 action-btn" onclick="playSound('tick'); document.getElementById('pr-text').innerText = getRandom(gameData.partyRules)">📜 สุ่มกฎสวรรค์</button>
     `;
 }
 
-// --- [ใหม่] 5. อ่านปากของฉันนะ (Read My Lips) ---
+// --- 5. อ่านปากของฉันนะ (Read My Lips) ---
 function initReadLips(c) {
     c.innerHTML = `
         <div class="game-rules-box mb-3">🎧 <strong>วิธีเล่น:</strong> คนทายใส่หูฟังเปิดเพลงดังๆ คนใบ้อ่านประโยคตามหน้าจอโดย "ขยับแค่ปาก" ห้ามทำท่าทาง!</div>
@@ -329,7 +375,7 @@ window.startLips = () => {
 // --- 🛠️ 6. แก้ไข: ใจตรงกัน (Telepathy) จับเวลาความฮา ---
 function initTelepathy(c) {
     c.innerHTML = `
-        <div class="game-rules-box mb-3">🧠 <strong>วิธีเล่น:</strong> ดูหมวดหมู่นับ 3..2..1 แล้วตะโกนคำตอบพร้อมกัน! <br>(ระบบจะจับเวลาดูว่าพวกคุณใจตรงกันในกี่วินาที)</div>
+        <div class="game-rules-box mb-3">🧠 <strong>วิธีเล่น:</strong> ดูหมวดหมู่นับ 3..2..1 แล้วตะโกนคำตอบพร้อมกัน! <br>(ระบบจะจับเวลาดูว่าพวกคุณใช้เวลาคิดกี่วิ!)</div>
         <h3 class="text-gradient mb-2" id="tp-cat" style="min-height:30px;">หมวด: ...</h3>
         <div class="display-text timer-text" id="tp-timer" style="font-size: 4rem;">🧠</div>
         <button class="btn-neon-pink action-btn mt-4" id="tp-btn" style="max-width:300px;" onclick="startTelepathy()">▶ เริ่มนับถอยหลัง</button>
@@ -347,24 +393,22 @@ window.startTelepathy = () => {
             document.getElementById('tp-btn').style.display = 'flex'; document.getElementById('tp-btn').innerText = "✅ ใจตรงกันแล้ว กดหยุด!"; document.getElementById('tp-btn').classList.replace('btn-neon-pink','btn-neon-blue');
             document.getElementById('tp-btn').onclick = stopTelepathy;
             let start = Date.now();
-            gameStopwatch = setInterval(() => {
-                document.getElementById('tp-timer').innerText = ((Date.now() - start)/1000).toFixed(2);
-            }, 100);
+            gameStopwatch = setInterval(() => { document.getElementById('tp-timer').innerText = ((Date.now() - start)/1000).toFixed(2); }, 100);
         }
     }, 1000);
 }
 window.stopTelepathy = () => {
     clearInterval(gameStopwatch); playSound('correct');
     document.getElementById('tp-btn').innerText = "🔄 เล่นใหม่"; document.getElementById('tp-btn').classList.replace('btn-neon-blue','btn-neon-pink');
-    document.getElementById('tp-btn').onclick = initTelepathy.bind(null, document.getElementById('game-content'));
+    document.getElementById('tp-btn').onclick = () => initTelepathy(document.getElementById('game-content'));
 }
 
-// --- 🛠️ 7. แก้ไข: รูเล็ตต์ตามใจฉัน (Custom Wheel) ปรับ UI ใหม่ ---
+// --- 🛠️ 7. แก้ไข: รูเล็ตต์ตามใจฉัน (Custom Wheel) ปรับ UI ใหม่ ให้เห็นคำชัดๆ ---
 function initCustomWheel(c) {
     c.innerHTML = `
         <div class="game-rules-box mb-2">🎡 พิมพ์ตัวเลือก (1 บรรทัดต่อ 1 ข้อ) แล้วสุ่ม!</div>
         <textarea id="cw-input" rows="4" class="mb-3" style="width:100%; max-width:300px; padding:10px; border-radius:10px; background:#111; color:white; border:1px solid var(--neon-blue);">กินหมูกระทะ\nกินชาบู\nนอนอยู่บ้าน\nคนซ้ายจ่าย</textarea>
-        <div class="glass-card" id="cw-result" style="width:100%; max-width:300px; padding:30px 10px; font-size:2rem; color:var(--neon-pink); border:2px solid var(--neon-purple); display:flex; align-items:center; justify-content:center; min-height:100px;">เตรียมสุ่ม!</div>
+        <div class="glass-card" id="cw-result" style="width:100%; max-width:300px; padding:30px 10px; font-size:2rem; color:var(--neon-pink); border:2px solid var(--neon-purple); display:flex; align-items:center; justify-content:center; min-height:100px; text-align:center;">เตรียมสุ่ม!</div>
         <button class="btn-neon-purple mt-4 action-btn" style="max-width: 250px; font-size:1.2rem; padding:15px;" onclick="spinCW()">🎲 สุ่มวงล้อ</button>
     `;
 }
@@ -373,16 +417,12 @@ window.spinCW = async () => {
     if(opts.length < 2) return showToast("ใส่ตัวเลือกอย่างน้อย 2 ข้อ", "error");
     const res = document.getElementById('cw-result');
     playSound('tick');
-    for(let i=0; i<20; i++) {
-        res.innerText = getRandom(opts);
-        await sleep(100); playSound('tick');
-    }
+    for(let i=0; i<20; i++) { res.innerText = getRandom(opts); await sleep(100); playSound('tick'); }
     playSound('correct'); flashScreen('green');
 }
 
 // --- 🛠️ 8. แก้ไข: สล็อตนรก (Slot) ปรับใช้บทลงโทษแบบดื่ม ---
 function initSlot(c) {
-    let slotSymbols = ['🍺', '💀', '💖', '😈', '👽', '💩', '🤑'];
     c.innerHTML = `
         <div class="game-rules-box mb-3">🎰 <strong>วิธีเล่น:</strong> กดสปินสล็อต! <br>🍺x3 = แจกเหล้า, 💀x3 = เสีย 2HP, 💖x3 = เพิ่ม 1HP, อื่นๆ = ทำโทษสุ่ม!</div>
         <div style="display:flex; justify-content:center; gap:10px; margin: 20px 0;">
@@ -401,7 +441,7 @@ window.spinSlot = async () => {
     btn.disabled = true; res.innerText = "กำลังหมุน...";
     for(let i=0; i<20; i++) { s1.innerText = getRandom(slotSymbols); s2.innerText = getRandom(slotSymbols); s3.innerText = getRandom(slotSymbols); playSound('tick'); await sleep(50); }
     let r1 = getRandom(slotSymbols), r2 = getRandom(slotSymbols), r3 = getRandom(slotSymbols);
-    if(Math.random() > 0.6) { r2 = r1; r3 = r1; } // โกงให้ถูกแจ็กพอตง่ายขึ้นหน่อย
+    if(Math.random() > 0.6) { r2 = r1; r3 = r1; } 
     s1.innerText = r1; await sleep(300); playSound('tick'); s2.innerText = r2; await sleep(300); playSound('tick'); s3.innerText = r3; await sleep(300);
     if(r1===r2 && r2===r3) {
         playSound('correct'); flashScreen('green');
@@ -413,8 +453,8 @@ window.spinSlot = async () => {
 // --- 🛠️ 9. แก้ไข: กู้ระเบิด (Defuse) เลือกเส้นได้ถึง 15 ---
 function initDefuse(c) {
     c.innerHTML = `
-        <div class="game-rules-box mb-3">💣 <strong>วิธีเล่น:</strong> มีระเบิดซ่อนอยู่ใน 1 สาย! เลือกตัดสายไฟ ถ้าโชคดีส่งให้เพื่อนต่อ ถ้าตู้มโดนหัก HP!</div>
-        <div class="custom-timer-box mb-2" style="justify-content:center;"><label>จำนวนสายไฟ:</label><input type="number" id="wd-count" value="4" min="2" max="15" style="width:60px; padding:5px; background:#222; color:white; border-radius:5px;"></div>
+        <div class="game-rules-box mb-3">💣 <strong>วิธีเล่น:</strong> มีระเบิดซ่อนอยู่ใน 1 สาย! เลือกตัดสายไฟ ถ้าโชคดีรอด ถ้าตู้มโดนหัก HP!</div>
+        <div class="custom-timer-box mb-2" style="justify-content:center;"><label>จำนวนสายไฟ(2-15):</label><input type="number" id="wd-count" value="4" min="2" max="15" style="width:60px; padding:5px; background:#222; color:white; border-radius:5px;"></div>
         <button class="btn-neon-purple action-btn mb-3" style="max-width:150px; font-size:0.9rem; padding:10px;" onclick="genDefuse()">สร้างระเบิด</button>
         <div class="timer-text mb-2" id="defuse-display" style="font-size: 4rem;">💣 00:00</div>
         <div style="display:flex; justify-content:center; flex-wrap:wrap; gap:10px; width:100%; max-width:350px;" id="wire-container"></div>
@@ -427,7 +467,7 @@ window.genDefuse = () => {
     let colors = ['#ef4444', '#3b82f6', '#10b981', '#eab308', '#ec4899', '#a855f7', '#f97316', '#06b6d4', '#84cc16', '#64748b', '#fff', '#fb7185', '#38bdf8', '#34d399', '#facc15'];
     let bombWire = Math.floor(Math.random() * count);
     for(let i=0; i<count; i++) {
-        let btn = document.createElement('div'); btn.style = `width:20px; height:80px; background:${colors[i%colors.length]}; border-radius:10px; cursor:pointer; box-shadow: inset 0 0 5px rgba(0,0,0,0.5); border: 1px solid #fff;`;
+        let btn = document.createElement('div'); btn.style = `width:30px; height:80px; background:${colors[i%colors.length]}; border-radius:15px; cursor:pointer; box-shadow: inset 0 0 5px rgba(0,0,0,0.5); border: 2px solid #fff;`;
         btn.onclick = () => {
             if(i === bombWire) { playSound('boom'); flashScreen('red'); document.getElementById('defuse-display').innerText = "💥 ตู้มมม!!"; document.getElementById('defuse-display').style.color = "red"; wContainer.innerHTML = ''; showToast("ตัดผิดเส้น! โดนหัก HP!", "error"); } 
             else { playSound('tick'); btn.style.opacity = '0'; btn.style.pointerEvents = 'none'; showToast("รอดตัว! ส่งให้เพื่อนตัดต่อ"); }
@@ -440,7 +480,7 @@ let swStart = 0, swTarget = 0, swRunning = false;
 function initStopwatch(c) {
     c.innerHTML = `
         <div class="game-rules-box mb-3">⏱️ <strong>วิธีเล่น:</strong> กดเริ่มแล้วนับในใจ กะให้เป๊ะตามเป้าหมายแล้วกดหยุด ใครห่างเป้าที่สุดแพ้!</div>
-        <div class="custom-timer-box mb-3" style="justify-content:center;"><label>ตั้งเป้าหมาย (วิ):</label><input type="number" id="sw-input" placeholder="สุ่ม" style="width:80px; padding:5px; background:#222; color:white; border-radius:5px;"></div>
+        <div class="custom-timer-box mb-3" style="justify-content:center;"><label>ตั้งเป้าหมาย(วิ):</label><input type="number" id="sw-input" placeholder="สุ่ม" style="width:80px; padding:5px; background:#222; color:white; border-radius:5px;"></div>
         <h3 class="text-gradient" id="sw-target-disp">เป้าหมาย: 0.00 วินาที</h3>
         <div class="timer-text mb-4 mt-3" id="sw-display" style="font-size: 4rem;">??.??</div>
         <button id="sw-btn" class="btn-neon-purple action-btn p-3" style="max-width:250px; font-size:1.5rem;" onclick="handleStopwatch()">▶ เริ่มจับเวลา</button>
@@ -469,9 +509,9 @@ function initWYR(c) {
     c.innerHTML = `
         <div class="game-rules-box mb-3">⚖️ <strong>วิธีเล่น:</strong> โหวตว่าจะเลือกฝั่งไหน! ฝั่งไหนเป็นเสียงข้างน้อย(คนแปลก) โดนทำโทษ!</div>
         <div id="wyr-area" class="hidden" style="width:100%; display:flex; flex-direction:column; gap:10px; margin-top:20px;">
-            <div id="wyr-1" class="glass-card p-4" style="flex:1; background:rgba(239,68,68,0.2); border:1px solid #ef4444; color:white; font-size:1.2rem; display:flex; align-items:center; justify-content:center; min-height:80px;">A</div>
+            <div id="wyr-1" class="glass-card p-4" style="flex:1; background:rgba(239,68,68,0.2); border:1px solid #ef4444; color:white; font-size:1.2rem; display:flex; align-items:center; justify-content:center; min-height:80px; text-align:center;">A</div>
             <div style="font-size:1.5rem; font-weight:bold; color:var(--neon-pink);">VS</div>
-            <div id="wyr-2" class="glass-card p-4" style="flex:1; background:rgba(59,130,246,0.2); border:1px solid #3b82f6; color:white; font-size:1.2rem; display:flex; align-items:center; justify-content:center; min-height:80px;">B</div>
+            <div id="wyr-2" class="glass-card p-4" style="flex:1; background:rgba(59,130,246,0.2); border:1px solid #3b82f6; color:white; font-size:1.2rem; display:flex; align-items:center; justify-content:center; min-height:80px; text-align:center;">B</div>
         </div>
         <button class="btn-neon-purple mt-4 action-btn" onclick="rollWYR()">▶ สุ่มคำถาม</button>
     `;
@@ -485,7 +525,7 @@ window.rollWYR = () => {
 // --- 🛠️ 12. แก้ไข: Hot Potato เลือกเวลาได้ ---
 function initHotPotato(c) { 
     c.innerHTML=`<div class="game-rules-box mb-2">💣 ตอบคำถามตามหมวดแล้วส่งต่อ ระเบิดตู้มใครแพ้!</div>
-    <div class="custom-timer-box mb-3" style="justify-content:center;"><label>ตั้งเวลา (วิ):</label><input type="number" id="hp-time" placeholder="Auto" style="width:60px; padding:5px; background:#222; color:white; border-radius:5px;"></div>
+    <div class="custom-timer-box mb-3" style="justify-content:center;"><label>ตั้งเวลา(วิ):</label><input type="number" id="hp-time" placeholder="Auto" style="width:60px; padding:5px; background:#222; color:white; border-radius:5px;"></div>
     <h3 class="mb-4 text-gradient" id="hp-c" style="min-height:30px;">หมวด: ...</h3><div class="display-text timer-text" id="hp-s">💣</div><button class="btn-danger action-btn mt-3" onclick="stHP()" id="hp-b">▶ เริ่มเกม</button>`; 
 }
 window.stHP = () => { playSound('tick'); const s=document.getElementById('hp-s'); const b=document.getElementById('hp-b'); document.getElementById('hp-c').innerText=`หมวด: ${getRandom(gameData.categories)}`; s.innerText="ติ๊ก..."; b.disabled=true; clearTimeout(gameTimeout); let t = parseInt(document.getElementById('hp-time').value)*1000; if(!t) t = Math.floor(Math.random()*10000)+5000; gameTimeout=setTimeout(()=>{ playSound('boom'); flashScreen('red'); s.innerText="💥 BOOM! 💥"; s.style.color="red"; b.disabled=false; b.innerText="เล่นใหม่"; }, t); }
@@ -494,16 +534,16 @@ window.stHP = () => { playSound('tick'); const s=document.getElementById('hp-s')
 let tbR=50, tbB=50;
 function initTapBattle(c) { 
     c.innerHTML=`<div class="game-rules-box mb-2">⚡ แข่งกันรัวนิ้วฝั่งตัวเองให้ไวสุด!</div>
-    <div class="custom-timer-box mb-2" style="justify-content:center;"><label>ตั้งเวลา (วิ):</label><input type="number" id="tb-time-in" value="10" style="width:60px; padding:5px; background:#222; color:white; border-radius:5px;"></div>
+    <div class="custom-timer-box mb-2" style="justify-content:center;"><label>ตั้งเวลา(วิ):</label><input type="number" id="tb-time-in" placeholder="10" style="width:60px; padding:5px; background:#222; color:white; border-radius:5px;"></div>
     <div id="tb-tm" class="timer-text mb-2">10</div><div class="tap-container" style="display:flex; width:100%; height:150px; border-radius:20px; overflow:hidden;"><div id="a-r" style="flex-basis:50%; background:#ef4444;" onclick="tbR+=5; tbB-=5; document.getElementById('a-r').style.flexBasis=tbR+'%'; document.getElementById('a-b').style.flexBasis=tbB+'%';"></div><div id="a-b" style="flex-basis:50%; background:#3b82f6;" onclick="tbB+=5; tbR-=5; document.getElementById('a-r').style.flexBasis=tbR+'%'; document.getElementById('a-b').style.flexBasis=tbB+'%';"></div></div><button class="btn-neon-pink mt-4 action-btn" id="tb-btn" onclick="stTBat()">▶ เริ่ม</button>`; 
 }
 window.stTBat=()=>{ document.getElementById('tb-btn').style.display='none'; tbR=50; tbB=50; let t=parseInt(document.getElementById('tb-time-in').value)||10; document.getElementById('a-r').style.flexBasis='50%'; document.getElementById('a-b').style.flexBasis='50%'; playSound('tick'); document.getElementById('tb-tm').innerText=t; clearInterval(gameInterval); gameInterval=setInterval(()=>{ t--; document.getElementById('tb-tm').innerText=t; if(t<=0){ clearInterval(gameInterval); playSound('boom'); document.getElementById('tb-tm').innerHTML=`<span style="font-size:1.5rem; color:white;">${tbR>tbB?"❤️ แดงชนะ!":(tbB>tbR?"💙 น้ำเงินชนะ!":"เสมอ!")}</span>`; document.getElementById('tb-btn').style.display='flex'; document.getElementById('tb-btn').innerText='เล่นใหม่'; } }, 1000); }
 
-// --- 🛠️ 14. แก้ไข: แตะนิ้วเสี่ยงทาย เลือกจำนวนคนโดนทำโทษได้ 1-9 ---
+// --- 🛠️ 14. แก้ไข: แตะนิ้วเสี่ยงทาย เลือกจำนวนคนโดนทำโทษได้ 1-10 ---
 function initTouchRoulette(c) {
     c.innerHTML = `
         <div class="game-rules-box mb-3">👆 <strong>วิธีเล่น:</strong> ให้ทุกคนเอานิ้วแตะค้างไว้บนหน้าจอ ระบบจะสุ่ม "คนซวย" ออกมา!</div>
-        <div class="custom-timer-box mb-3" style="justify-content:center;"><label>จำนวนผู้โชคร้าย (1-9):</label><input type="number" id="tr-losers" value="1" min="1" max="9" style="width:60px; padding:5px; background:#222; color:white; border-radius:5px;"></div>
+        <div class="custom-timer-box mb-3" style="justify-content:center;"><label>จำนวนผู้โชคร้าย (1-10):</label><input type="number" id="tr-losers" value="1" min="1" max="10" style="width:60px; padding:5px; background:#222; color:white; border-radius:5px;"></div>
         <div class="display-text text-gradient" style="font-size:2rem; margin-top:20px;">กดปุ่มด้านล่างเพื่อเริ่ม!</div>
         <button class="btn-neon-pink action-btn mt-4" style="max-width:300px; padding: 20px;" onclick="startTouchRoulette()">▶ เริ่มแตะนิ้ว</button>
     `;
@@ -540,7 +580,7 @@ let cylinder = [];
 function initRussianRoulette(c) {
     c.innerHTML = `
         <div class="game-rules-box mb-2">🔫 <strong>วิธีเล่น:</strong> ผลัดกันเหนี่ยวไก ใครโดนกระสุนเสีย HP!</div>
-        <div class="custom-timer-box mb-3" style="justify-content:center;"><label>จำนวนช่องกระสุน (2-20):</label><input type="number" id="rr-chamb" value="6" min="2" max="20" style="width:60px; padding:5px; background:#222; color:white; border-radius:5px;"></div>
+        <div class="custom-timer-box mb-3" style="justify-content:center;"><label>จำนวนช่องกระสุน(2-20):</label><input type="number" id="rr-chamb" value="6" min="2" max="20" style="width:60px; padding:5px; background:#222; color:white; border-radius:5px;"></div>
         <button class="btn-neon-purple action-btn mb-2" style="max-width:150px; font-size:0.9rem; padding:10px;" onclick="loadGun()">บรรจุกระสุน</button>
         <div class="display-text" style="font-size:1.5rem; color:var(--text-muted);">กระสุนที่เหลือ: <span id="rr-shots" style="color:var(--text-main);">-</span></div><div style="font-size: 5rem; margin: 20px 0;">🔫</div>
         <button id="rr-btn" class="btn-danger action-btn mb-4" style="max-width:250px; font-size:1.5rem; padding:20px;" onclick="pullTrigger()" disabled>💥 เหนี่ยวไก 💥</button>
@@ -561,13 +601,14 @@ window.pullTrigger = () => {
 // --- 🛠️ 16. แก้ไข: 5 Sec Challenge เลือกเวลาได้ถึง 20 ---
 function initFiveSec(c) { 
     c.innerHTML=`<div class="game-rules-box mb-2">⏱️ ตอบให้ครบภายในเวลาที่กำหนด!</div>
-    <div class="custom-timer-box mb-3" style="justify-content:center;"><label>ตั้งเวลา (วิ):</label><input type="number" id="fs-time-in" value="5" max="20" style="width:60px; padding:5px; background:#222; color:white; border-radius:5px;"></div>
+    <div class="custom-timer-box mb-3" style="justify-content:center;"><label>ตั้งเวลา(วิ):</label><input type="number" id="fs-time-in" value="5" max="20" style="width:60px; padding:5px; background:#222; color:white; border-radius:5px;"></div>
     <div class="timer-text mb-3" id="fs-tm" style="font-size:4rem;">5</div><div class="display-text glass-card p-4" id="fs-d">...</div><button class="btn-neon-pink mt-4 action-btn" id="fs-b" onclick="stFS()">▶ เริ่มจับเวลา</button>`; 
 }
 window.stFS = () => { playSound('correct'); const tm=document.getElementById('fs-tm'); const b=document.getElementById('fs-b'); document.getElementById('fs-d').innerText=`โจทย์: ${getRandom(gameData.fiveSec)}`; let t=parseInt(document.getElementById('fs-time-in').value)||5; tm.innerText=t; b.disabled=true; clearInterval(gameInterval); gameInterval=setInterval(()=>{ t--; tm.innerText=t; playSound('tick'); if(t<=0){ clearInterval(gameInterval); playSound('wrong'); flashScreen('red'); tm.innerText="หมดเวลา!"; b.disabled=false; b.innerText="เล่นใหม่"; } }, 1000); }
 
+
 // ---------------------------------------------
-// Existing Games Keep Same Structure
+// Other Core Games
 // ---------------------------------------------
 
 function initHiLow(c) {
@@ -577,14 +618,14 @@ function initHiLow(c) {
         if(hlDeck.length === 0) return showToast("ไพ่หมดแล้ว", "error");
         const nextC = hlDeck.pop(); const cObj = document.getElementById('hl-card'); cObj.innerHTML = `<div class="card-front ${nextC.s==='♥'||nextC.s==='♦'?'card-red':'card-black'}"><div class="card-rank">${nextC.r}</div><div class="card-suit">${nextC.s}</div></div>`;
         setTimeout(() => {
-            if(nextC.val === curCard.val) { playSound('wrong'); showToast('แต้มเท่ากัน! ถือว่าแพ้ โดนทำโทษ!', 'error'); } else if ((guess === 'higher' && nextC.val > curCard.val) || (guess === 'lower' && nextC.val < curCard.val)) { playSound('correct'); showToast('✅ ทายถูก! รอดตัว ส่งต่อให้คนถัดไป'); } else { playSound('wrong'); flashScreen('red'); showToast('❌ ทายผิด! โดนทำโทษหัก HP เลย!', 'error'); }
+            if(nextC.val === curCard.val) { playSound('wrong'); showToast('แต้มเท่ากัน! ถือว่าแพ้ โดนทำโทษ!', 'error'); } else if ((guess === 'higher' && nextC.val > curCard.val) || (guess === 'lower' && nextC.val < curCard.val)) { playSound('correct'); showToast('✅ ทายถูก! รอดตัว ส่งต่อให้คนถัดไป'); } else { playSound('wrong'); flashScreen('red'); showToast('❌ ทายผิด! โดนทำโทษ!', 'error'); }
             curCard = nextC;
         }, 300);
     }
 }
 
 function initTwoTruths(c) {
-    c.innerHTML = `<div class="game-rules-box mb-3">🤥 ผู้ถูกเลือกต้องเล่าเรื่องจริง 2 โกหก 1. เพื่อนมีเวลา 2 นาทีจับผิด ถ้าเพื่อนทายผิด เพื่อนโดนหัก HP เรียบ!</div><div class="display-text" style="color:var(--neon-blue); font-size:1.5rem; margin-bottom:5px;">ผู้ถูกเลือกให้ตอแหล:</div><div class="timer-text mb-4" style="font-size:3rem; color:var(--neon-pink);">${getRandomPlayer()}</div><div id="2t1l-timer" class="timer-text mb-4 hidden" style="font-size: 4rem;">120</div><button id="btn-2t1l-start" class="btn-neon-purple action-btn mt-4" style="max-width:250px;" onclick="startTwoTruths()">⏱️ เริ่มจับเวลาซักค้าน</button><button class="btn-neon-blue mt-2 action-btn" style="max-width:200px;" onclick="initTwoTruths(document.getElementById('game-content'))">🔄 สุ่มคนใหม่</button>`;
+    c.innerHTML = `<div class="game-rules-box mb-3">🤥 ผู้ถูกเลือกต้องเล่าเรื่องจริง 2 โกหก 1. เพื่อนมีเวลา 2 นาทีจับผิด ถ้าเพื่อนทายผิด เพื่อนโดนทำโทษ!</div><div class="display-text" style="color:var(--neon-blue); font-size:1.5rem; margin-bottom:5px;">ผู้ถูกเลือกให้ตอแหล:</div><div class="timer-text mb-4" style="font-size:3rem; color:var(--neon-pink);">${getRandomPlayer()}</div><div id="2t1l-timer" class="timer-text mb-4 hidden" style="font-size: 4rem;">120</div><button id="btn-2t1l-start" class="btn-neon-purple action-btn mt-4" style="max-width:250px;" onclick="startTwoTruths()">⏱️ เริ่มจับเวลาซักค้าน</button><button class="btn-neon-blue mt-2 action-btn" style="max-width:200px;" onclick="initTwoTruths(document.getElementById('game-content'))">🔄 สุ่มคนใหม่</button>`;
 }
 window.startTwoTruths = () => { playSound('tick'); document.getElementById('btn-2t1l-start').style.display = 'none'; document.getElementById('2t1l-timer').classList.remove('hidden'); let t = 120; clearInterval(gameInterval); gameInterval = setInterval(() => { t--; document.getElementById('2t1l-timer').innerText = t; if(t <= 0) { clearInterval(gameInterval); playSound('boom'); flashScreen('red'); document.getElementById('2t1l-timer').innerText = "หมดเวลาโหวต!"; } }, 1000); }
 
@@ -618,29 +659,37 @@ window.finishDrawTurn = () => { clearInterval(gameInterval); drawImages.push(doc
 window.setDrawColor = (c, btn) => { curColor = c; document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active')); if(btn.classList.contains('color-btn')) btn.classList.add('active'); }
 window.clearCanvas = () => { if(drawCtx) drawCtx.clearRect(0, 0, 1000, 1000); }
 
-function initCroc(c) {
-    c.innerHTML = `<div class="game-rules-box mb-3">🐊 ผลัดกันกดฟันจระเข้ทีละซี่ โดนงับ = หัก 1 HP!</div><div id="croc-status" class="display-text text-gradient mb-2" style="font-size:1.2rem; min-height:40px;">เลืออกดฟันได้เลย!</div><div class="croc-mouth-bg" style="position:relative; width:100%; max-width:350px; margin: 0 auto;"><div class="croc-jaw" id="croc-top-jaw"></div><div style="height:40px; background:#111; margin:5px 0; border-radius:10px; box-shadow:0 0 10px #000;"></div><div class="croc-jaw" id="croc-bottom-jaw"></div></div><button class="btn-neon-blue mt-4 action-btn" style="max-width:200px;" onclick="initCroc(document.getElementById('game-content'))">🔄 สุ่มใหม่</button>`;
-    const top = document.getElementById('croc-top-jaw'); const bottom = document.getElementById('croc-bottom-jaw'); const trap = Math.floor(Math.random() * 16) + 1;
-    for(let i=1; i<=16; i++) {
-        let btn = document.createElement('div'); btn.innerText = i;
-        if(i <= 8) { btn.className = 'croc-tooth-top'; top.appendChild(btn); } else { btn.className = 'croc-tooth-bottom'; bottom.appendChild(btn); }
-        btn.onclick = () => {
-            if(btn.classList.contains('pressed')) return;
-            if(i === trap) { playSound('boom'); flashScreen('red'); document.getElementById('croc-status').innerHTML = `<span style="color:red; font-size:1.5rem;">งับ!! โดนซี่ที่ ${i} (เสีย HP)</span>`; document.querySelectorAll('.croc-tooth-top, .croc-tooth-bottom').forEach(b => b.classList.add('pressed')); } 
-            else { playSound('tick'); btn.classList.add('pressed'); document.getElementById('croc-status').innerHTML = `<span style="color:var(--neon-green);">รอดตัว! กดซี่ที่ ${i}</span>`; }
-        };
+let memSeq = [], memPlayerStep = 0, memColors = ['#ef4444', '#10b981', '#3b82f6', '#eab308'];
+function initMemory(c) {
+    memSeq = [];
+    c.innerHTML = `
+        <div class="game-rules-box mb-3">🧠 <strong>วิธีเล่น:</strong> จำลำดับไฟให้ดีแล้วกดตาม! (สลับกันเล่นคนละตา ถ้ากดพลาดโดนทำโทษ!)</div>
+        <div id="mem-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; width:200px; margin:20px auto;">
+            <div id="mem-btn-0" style="width:100%; height:95px; background:#ef4444; border-radius:15px; opacity:0.4; cursor:pointer;" onclick="memClick(0)"></div>
+            <div id="mem-btn-1" style="width:100%; height:95px; background:#10b981; border-radius:15px; opacity:0.4; cursor:pointer;" onclick="memClick(1)"></div>
+            <div id="mem-btn-2" style="width:100%; height:95px; background:#3b82f6; border-radius:15px; opacity:0.4; cursor:pointer;" onclick="memClick(2)"></div>
+            <div id="mem-btn-3" style="width:100%; height:95px; background:#eab308; border-radius:15px; opacity:0.4; cursor:pointer;" onclick="memClick(3)"></div>
+        </div>
+        <h3 id="mem-level" class="text-gradient mb-3">Level: 0</h3>
+        <button id="mem-btn" class="btn-neon-green action-btn" style="max-width:200px;" onclick="memNextRound()">▶ เริ่มเกม</button>
+    `;
+}
+window.memNextRound = async () => {
+    document.getElementById('mem-btn').style.display = 'none'; memSeq.push(Math.floor(Math.random() * 4)); document.getElementById('mem-level').innerText = `Level: ${memSeq.length}`; memPlayerStep = 0;
+    await sleep(500);
+    for(let i=0; i<memSeq.length; i++) {
+        let b = document.getElementById(`mem-btn-${memSeq[i]}`); playSound('tick');
+        b.style.opacity = '1'; b.style.boxShadow = `0 0 20px ${memColors[memSeq[i]]}`; await sleep(400); b.style.opacity = '0.4'; b.style.boxShadow = 'none'; await sleep(200);
     }
 }
-
-let tbTime = 0;
-function initTextBomb(c) { c.innerHTML = `<div class="game-rules-box mb-3">💣 พิมพ์คำที่มีคำว่า... ประกอบอยู่ แล้วส่งต่อ (เวลาถูกซ่อนอยู่)</div><div id="tb-settings" class="custom-timer-box"><label>สุ่มเวลาสูงสุด (วิ):</label><input type="number" id="tb-max-t" value="30" style="width:60px; padding:5px; background:#222; color:white; border-radius:5px;"></div><div id="tb-syl" class="timer-text mb-4" style="color:var(--neon-pink); font-size: 3rem; margin-top:20px;">...</div><input type="text" id="tb-input" placeholder="พิมพ์คำตอบ..." class="mb-4 text-center" style="font-size:1.2rem;" disabled><button id="tb-sub" class="btn-danger action-btn mb-4" onclick="submitTB()" disabled>ส่ง! 💣</button><button class="btn-neon-blue action-btn mt-2" id="tb-start" onclick="startTB()">▶ เริ่มเกม</button>`; }
-window.startTB = () => { playSound('tick'); document.getElementById('tb-start').style.display = 'none'; document.getElementById('tb-settings').style.display = 'none'; document.getElementById('tb-input').disabled = false; document.getElementById('tb-sub').disabled = false; document.getElementById('tb-input').value = ''; document.getElementById('tb-syl').innerText = getRandom(textBombSyllables); let max = parseInt(document.getElementById('tb-max-t').value) || 30; tbTime = Math.floor(Math.random() * (max - 10)) + 10; clearInterval(gameInterval); gameInterval = setInterval(() => { tbTime--; if(tbTime <= 0) { clearInterval(gameInterval); playSound('boom'); flashScreen('red'); document.getElementById('tb-syl').innerText = "💥 ตู้มมม! 💥"; document.getElementById('tb-input').disabled = true; document.getElementById('tb-sub').disabled = true; document.getElementById('tb-start').style.display = 'flex'; document.getElementById('tb-settings').style.display = 'flex'; } }, 1000); }
-window.submitTB = () => { let val = document.getElementById('tb-input').value.trim(); let syl = document.getElementById('tb-syl').innerText; if(val.includes(syl) && val.length > syl.length) { playSound('correct'); flashScreen('green'); document.getElementById('tb-input').value = ""; document.getElementById('tb-syl').innerText = getRandom(textBombSyllables); } else { playSound('wrong'); showToast('คำไม่ถูกต้อง!', 'error'); } }
-
-function initKingsCup(c) {
-    let kcDeck = []; ['♠', '♥', '♦', '♣'].forEach(s => [{r:'A',n:'น้ำตก',d:'ทุกคนดื่มต่อกันห้ามหยุด!'},{r:'2',n:'คุณ',d:'สั่งให้ใครก็ได้ 1 คนดื่ม'},{r:'3',n:'ฉัน',d:'คนจั่วต้องดื่มเอง'},{r:'4',n:'พื้น',d:'เอามือแตะพื้น คนสุดท้ายดื่ม!'},{r:'5',n:'ผู้ชาย',d:'ผู้ชายทุกคนดื่ม'},{r:'6',n:'ผู้หญิง',d:'ผู้หญิงทุกคนดื่ม'},{r:'7',n:'สวรรค์',d:'ชูมือขึ้นฟ้า คนสุดท้ายดื่ม!'},{r:'8',n:'บัดดี้',d:'จับคู่ 1 คน คุณดื่มเขาต้องดื่มด้วย'},{r:'9',n:'คล้องจอง',d:'พูดคำคล้องจองวนไป ใครคิดไม่ออกดื่ม'},{r:'10',n:'หมวดหมู่',d:'ตั้งหมวดหมู่ ใครตอบซ้ำ/ไม่ได้ ดื่ม'},{r:'J',n:'ตั้งกฎ',d:'ตั้งกฎใหม่ 1 ข้อ ใครฝ่าฝืนดื่ม'},{r:'Q',n:'คำถาม',d:'คุณคือ Question Master ห้ามตอบคำถามคุณ ใครเผลอดื่ม'},{r:'K',n:'พระราชา',d:'เทเครื่องดื่มลงแก้วกลาง... ใครได้ K ใบที่ 4 ดื่มแก้วกลางให้หมด!'}].forEach(r => kcDeck.push({...r, suit: s}))); kcDeck = kcDeck.sort(() => 0.5 - Math.random()); let kings = 0;
-    c.innerHTML = `<div class="game-rules-box mb-2">🃏 ผลัดกันจั่วไพ่แล้วทำตามกติกา! ระวัง K ใบที่ 4!</div><div style="font-size: 1rem; margin-bottom: 5px;">ไพ่เหลือ: <span id="deck-c" style="color:var(--neon-blue);">52</span> | 👑 King: <span id="king-c" style="color:gold;">0</span>/4</div><div class="card-container" id="kc-box"><div class="playing-card" id="kc-cobj"><div class="card-back"></div><div class="card-front hidden"><div class="card-rank" id="kc-r">A</div><div class="card-suit" id="kc-s">♠</div></div></div></div><div id="kc-r-box" class="glass-card p-3 hidden mt-3" style="width:100%; max-width:350px;"><h4 id="kc-rn" class="text-gradient mb-1">Rule</h4><p id="kc-rd" style="font-size: 0.95rem;"></p></div><button class="btn-neon-blue action-btn mt-3" onclick="initKingsCup(document.getElementById('game-content'))">🔄 สับไพ่ใหม่</button>`;
-    document.getElementById('kc-box').onclick = () => { if(kcDeck.length===0) return; playSound('tick'); const cObj = document.getElementById('kc-cobj'); cObj.classList.remove('flipped'); setTimeout(()=>{ const card = kcDeck.pop(); document.getElementById('deck-c').innerText = kcDeck.length; const f = cObj.querySelector('.card-front'); f.className = `card-front ${card.suit==='♥'||card.suit==='♦'?'card-red':'card-black'}`; document.getElementById('kc-r').innerText = card.r; document.getElementById('kc-s').innerText = card.suit; document.getElementById('kc-rn').innerText = `ไพ่ ${card.r} : ${card.n}`; document.getElementById('kc-rd').innerText = card.d; if(card.r === 'K') { kings++; document.getElementById('king-c').innerText = kings; playSound('boom'); flashScreen('red'); if(kings===4) document.getElementById('kc-rd').innerHTML += `<br><br><strong style="color:red; font-size:1.2rem;">💥 ใบที่ 4! กินแก้วกลางให้หมด!! 💥</strong>`; } else playSound('correct'); cObj.classList.add('flipped'); document.getElementById('kc-r-box').classList.remove('hidden'); }, 300); };
+window.memClick = async (idx) => {
+    if(memSeq.length === 0) return; let b = document.getElementById(`mem-btn-${idx}`); b.style.opacity = '1'; setTimeout(() => b.style.opacity = '0.4', 200);
+    if(idx === memSeq[memPlayerStep]) {
+        playSound('tick'); memPlayerStep++;
+        if(memPlayerStep === memSeq.length) { playSound('correct'); showToast('ผ่าน! ส่งให้คนต่อไป'); document.getElementById('mem-btn').style.display = 'flex'; document.getElementById('mem-btn').innerText = '▶ เล่นตาต่อไป'; }
+    } else {
+        playSound('boom'); flashScreen('red'); document.getElementById('mem-level').innerHTML = `<span style="color:red;">ผิดเต็มๆ! โดนทำโทษ!</span>`; memSeq = []; document.getElementById('mem-btn').style.display = 'flex'; document.getElementById('mem-btn').innerText = '🔄 เริ่มใหม่';
+    }
 }
 
 function initSpy(c) { c.innerHTML=`<div class="game-rules-box">🕵️‍♂️ หา Spy ในวง!</div><div id="spy-st" class="glass-card p-4" style="width:100%; min-height:150px;"></div>`; window.spL = getRandom(spyLocations); window.spI = Math.floor(Math.random()*players.length); window.spC = 0; rSpy(); }
@@ -653,6 +702,19 @@ window.startHU = (cat) => { let t=parseInt(document.getElementById('hu-t').value
 function initToD(c) { c.innerHTML=`<div class="game-rules-box">🎭 เลือกว่าจะ Truth หรือ Dare</div><div id="td-t" class="display-text" style="color:var(--neon-blue);"></div><div style="display:flex; gap:10px;"><button class="btn-neon-purple action-btn" onclick="rTD('truths')">Truth</button><button class="btn-neon-pink action-btn" onclick="rTD('dares')">Dare</button></div><div class="display-text glass-card p-4 mt-3" id="td-d">...</div>`; window.rTD = (t) => { playSound('tick'); document.getElementById('td-t').innerText=`ผู้ถูกเลือก: ${getRandomPlayer()}`; document.getElementById('td-d').innerText=getRandom(gameData.tod[t]); } }
 function initGuessWho(c) { c.innerHTML=`<div class="game-rules-box">🤔 ทุกคนโหวตว่าคำใบ้หมายถึงใคร!</div><div class="display-text glass-card p-4" id="gw-d" style="color:var(--neon-purple);">...</div><button class="btn-neon-purple mt-4 action-btn" onclick="playSound('tick'); document.getElementById('gw-d').innerText=getRandom(gameData.guessWho)">🕵️ สุ่มคำใบ้</button>`; document.getElementById('gw-d').innerText=getRandom(gameData.guessWho); }
 function initHumSong(c) { c.innerHTML=`<div class="game-rules-box">🎶 ฮัมเพลงให้เพื่อนทาย ห้ามร้องเนื้อ!</div><div id="hs-d" class="display-text glass-card p-4" style="color:var(--neon-blue);">กดสุ่ม</div><button class="btn-neon-pink mt-4 action-btn" onclick="playSound('tick'); document.getElementById('hs-d').innerText='🎵 '+getRandom(['ทรงอย่างแบด', 'วัดปะหล่ะ', 'เลือดกรุ๊ปบี', 'ซ่อนกลิ่น'])">▶ สุ่มเพลง</button>`; }
+function initMostLikely(c) { c.innerHTML = `<div class="game-rules-box mb-3">👉 <strong>วิธีเล่น:</strong> อ่านคำถามแล้วนับ 3..2..1 ทุกคนชี้ไปที่เพื่อนที่ตรงสเปคที่สุด!</div><div class="display-text glass-card p-4" id="ml-text" style="color:var(--neon-blue); font-size:1.8rem;">กดสุ่มคำถาม</div><button class="btn-neon-purple mt-4 action-btn" onclick="playSound('tick'); document.getElementById('ml-text').innerText='ใครน่าจะ... ' + getRandom(gameData.mostLikely)">▶ สุ่มคำถาม</button>`; }
+let duelState = 'idle';
+function initReactionDuel(c) { c.innerHTML = `<div class="game-rules-box mb-3" style="position:relative; z-index:100;">🤠 <strong>วิธีเล่น:</strong> วางมือถือตรงกลาง รอจนหน้าจอขึ้น "ยิง!!" ใครแตะฝั่งตัวเองไวกว่าชนะ</div><button class="btn-neon-purple action-btn mt-4" style="position:relative; z-index:100; max-width:250px;" onclick="startDuel()">▶ เริ่มดวล</button><div id="duel-arena" class="hidden" style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:50;"><div class="duel-zone duel-top" onpointerdown="duelTap('แดง')">รอ...</div><div class="duel-zone duel-bottom" onpointerdown="duelTap('น้ำเงิน')">รอ...</div></div>`; }
+window.startDuel = () => { document.getElementById('duel-arena').classList.remove('hidden'); duelState = 'waiting'; document.querySelectorAll('.duel-zone').forEach(el => { el.innerText = "รอ..."; el.style.background = el.classList.contains('duel-top') ? '#ef4444' : '#3b82f6'; }); const waitTime = Math.floor(Math.random() * 4000) + 2000; playSound('tick'); clearTimeout(gameTimeout); gameTimeout = setTimeout(() => { duelState = 'shoot'; playSound('correct'); flashScreen('green'); document.querySelectorAll('.duel-zone').forEach(el => { el.innerText = "ยิง!!"; el.style.background = '#10b981'; }); }, waitTime); }
+window.duelTap = (color) => { if(duelState === 'waiting') { clearTimeout(gameTimeout); duelState = 'ended'; playSound('wrong'); alert(`❌ ฟาวล์! ฝั่งสี${color} แตะก่อนสัญญาณ ถือว่าแพ้!`); initReactionDuel(document.getElementById('game-content')); } else if (duelState === 'shoot') { duelState = 'ended'; playSound('gun'); flashScreen('red'); alert(`🔫 สี${color} ยิงไวกว่า ชนะดวล!!`); initReactionDuel(document.getElementById('game-content')); } }
+
+let nitroTimer, nitroState = 'idle', nitroStartTime = 0;
+function initNitro(c) { c.innerHTML = `<div class="game-rules-box mb-3">📳 <strong>วิธีเล่น:</strong> กดปุ่ม 'รับระเบิด' แล้วรีบกด 'ส่งต่อ' ห้ามถือไว้นานเกิน 2 วิ และห้ามส่งเร็วกว่า 0.5 วิ (ไม่งั้นตู้ม!)</div><div class="timer-text mb-4" id="nitro-display" style="font-size: 6rem;">💣</div><button id="nitro-btn" class="btn-danger action-btn p-3" style="font-size:1.5rem; max-width:300px;" onclick="handleNitro()">👇 รับระเบิด!</button>`; nitroState = 'idle'; }
+window.handleNitro = () => { const btn = document.getElementById('nitro-btn'); const d = document.getElementById('nitro-display'); if(nitroState === 'idle') { nitroState = 'holding'; playSound('tick'); d.innerText = "🔥"; btn.innerText = "ส่งต่อ!!"; btn.classList.replace('btn-danger', 'btn-neon-blue'); nitroStartTime = Date.now(); nitroTimer = setTimeout(() => { if(nitroState === 'holding') blowNitro('ช้าไป! ระเบิดคามือ 💥'); }, 2000); } else if (nitroState === 'holding') { const heldTime = Date.now() - nitroStartTime; clearTimeout(nitroTimer); if(heldTime < 400) { blowNitro('ส่งเร็วไป! ลื่นหลุดมือระเบิด 💥'); } else { playSound('correct'); d.innerText = "💣"; btn.innerText = "👇 รับระเบิด!"; btn.classList.replace('btn-neon-blue', 'btn-danger'); nitroState = 'idle'; showToast('รอด! ให้เพื่อนคนถัดไปกดรับ'); } } else { initNitro(document.getElementById('game-content')); } }
+function blowNitro(msg) { playSound('boom'); flashScreen('red'); document.getElementById('nitro-display').innerText = "💥"; document.getElementById('nitro-btn').innerText = "เล่นใหม่"; document.getElementById('nitro-btn').classList.replace('btn-neon-blue', 'btn-danger'); nitroState = 'blown'; showToast(msg, 'error'); }
+
+function initSpinBottle(c) { c.innerHTML = `<div class="game-rules-box mb-3">🍾 <strong>วิธีเล่น:</strong> วางมือถือกลางวง กดปุ่มหมุนขวด ปลายขวดชี้ไปทางใคร คนนั้นโดน!</div><div style="margin: 40px auto; padding:20px; border-radius:50%; width:250px; height:250px; border:4px dashed var(--neon-green); display:flex; align-items:center; justify-content:center; position:relative; background: rgba(0,0,0,0.3);"><div id="bottle-obj" style="font-size: 5rem; transition: transform 3s cubic-bezier(0.25, 1, 0.5, 1); transform-origin: center;">🍾</div></div><button class="btn-neon-green mt-4 action-btn" style="border-color:#10b981; color:#10b981; max-width:250px;" onclick="spinTheBottle()">🔄 หมุนขวด</button>`; }
+window.spinTheBottle = () => { playSound('tick'); const b = document.getElementById('bottle-obj'); b.style.transform = `rotate(${Math.floor(Math.random() * 360) + 1440}deg)`; setTimeout(() => playSound('correct'), 3000); }
 
 // ==========================================
 // 5. End Party Summary
@@ -663,12 +725,16 @@ window.endParty = () => {
     let zombies = players.filter(p => p.hp <= 0); let alive = players.filter(p => p.hp > 0);
     
     let html = `<p style="text-align: center; margin-bottom: 20px;">เล่นไปทั้งหมด: <strong style="color: var(--neon-blue);">${gamesPlayed}</strong> เกม</p>`;
-    if(zombies.length > 0) { html += `<div style="background:rgba(239,68,68,0.1); border:1px solid #ef4444; border-radius:12px; padding:15px; margin-bottom:20px;"><h3 style="color: #ef4444; margin-bottom: 10px; text-align:center;">🧟 ผู้แพ้ (HP หมด) ต้องโดนทำโทษหนัก!</h3>`; zombies.forEach((p) => { html += `<div style="text-align: center; color:#ef4444; font-size: 1.1rem; margin-bottom: 5px;">☠️ ${p.name}</div>`; }); html += `</div>`; }
-    html += `<div style="background:rgba(16,185,129,0.1); border:1px solid #10b981; border-radius:12px; padding:15px;"><h3 style="color: var(--neon-green); margin-bottom: 10px; text-align:center;">🎉 ผู้รอดชีวิต 🎉</h3>`;
-    if(alive.length > 0) { alive.forEach((p) => { html += `<div style="text-align: center; font-size: 1.1rem; margin-bottom: 5px;">💚 ${p.name} (HP: ${p.hp})</div>`; }); } else { html += `<div style="text-align: center; color: gray;">ตายเรียบทั้งวง...</div>`; } html += `</div>`;
+    if(useHP) {
+        if(zombies.length > 0) { html += `<div style="background:rgba(239,68,68,0.1); border:1px solid #ef4444; border-radius:12px; padding:15px; margin-bottom:20px;"><h3 style="color: #ef4444; margin-bottom: 10px; text-align:center;">🧟 ผู้แพ้ (HP หมด) ต้องโดนทำโทษหนัก!</h3>`; zombies.forEach((p) => { html += `<div style="text-align: center; color:#ef4444; font-size: 1.1rem; margin-bottom: 5px;">☠️ ${p.name}</div>`; }); html += `</div>`; }
+        html += `<div style="background:rgba(16,185,129,0.1); border:1px solid #10b981; border-radius:12px; padding:15px;"><h3 style="color: var(--neon-green); margin-bottom: 10px; text-align:center;">🎉 ผู้รอดชีวิต 🎉</h3>`;
+        if(alive.length > 0) { alive.forEach((p) => { html += `<div style="text-align: center; font-size: 1.1rem; margin-bottom: 5px;">💚 ${p.name} (HP: ${p.hp})</div>`; }); } else { html += `<div style="text-align: center; color: gray;">ตายเรียบทั้งวง...</div>`; } html += `</div>`;
+    } else {
+        html += `<div style="text-align: center; color: var(--neon-pink); font-size:1.2rem;">โหมดเล่นชิลๆ วันนี้ไม่มีใครตาย! 🍻</div>`;
+    }
     document.getElementById('summary-content').innerHTML = html;
 }
-window.copySummary = () => { let t = `🎉 สรุปผล "วงนี้มีเกม"\nเล่นไป ${gamesPlayed} เกม\n\n`; t += players.map(p => `${p.name} - HP: ${p.hp<=0?'ตาย(ซอมบี้)':p.hp}`).join('\n'); navigator.clipboard.writeText(t); showToast('✅ คัดลอกแล้ว!'); }
+window.copySummary = () => { let t = `🎉 สรุปผล "วงนี้มีเกม"\nเล่นไป ${gamesPlayed} เกม\n\n`; if(useHP) { t += players.map(p => `${p.name} - HP: ${p.hp<=0?'ตาย(ซอมบี้)':p.hp}`).join('\n'); } else { t += players.map(p => `${p.name} 🍻`).join('\n'); } navigator.clipboard.writeText(t); showToast('✅ คัดลอกแล้ว!'); }
 window.resetAll = () => { if(confirm('ล้างข้อมูลเริ่มใหม่ทั้งหมด?')) { players = []; gamesPlayed = 0; saveState(); document.getElementById('summary-view').classList.add('hidden'); document.getElementById('home-view').classList.remove('hidden'); } }
 
 // Init
