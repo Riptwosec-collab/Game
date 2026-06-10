@@ -1,0 +1,21 @@
+{
+  "name": "วงนี้มีเกม",
+  "short_name": "วงนี้มีเกม",
+  "description": "เว็บแอปเกมปาร์ตี้สำหรับเล่นกับเพื่อนบนมือถือ",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#09090b",
+  "theme_color": "#09090b",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["games", "entertainment"],
+  "lang": "th"
+}

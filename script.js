@@ -5,6 +5,8 @@ let players = JSON.parse(localStorage.getItem('partyPlayers')) || [];
 let gamesPlayed = parseInt(localStorage.getItem('partyGamesCount')) || 0;
 let useHP = JSON.parse(localStorage.getItem('partyUseHP'));
 if(useHP === null) useHP = true; // เปิด HP เป็นค่าเริ่มต้น
+let currentCategory = localStorage.getItem('partyGameCategory') || 'all';
+let penaltyLevel = localStorage.getItem('partyPenaltyLevel') || 'fun';
 
 const emojis = ['🐶','🐱','🐼','🦊','🦁','🐷','🐸','🐵','🦄','👽','👾','👻','🤠','🤡','🤖'];
 
@@ -99,6 +101,87 @@ const gameList = [
     { id: 'humsong', name: 'ฮัมเพลงปริศนา', icon: '🎶', color: 'purple' }
 ];
 
+const gameMeta = {
+    touch: ['ไว', 'แตะนิ้วพร้อมกัน แล้วปล่อยให้ระบบเลือกผู้โชคดี'],
+    russian: ['ลุ้น', 'ผลัดกันเหนี่ยวไก ลูกโม่สุ่มว่าใครโดน'],
+    duel: ['ดวล', 'วางมือถือกลางวง รอสัญญาณแล้วยิงให้ไว'],
+    defuse: ['เสี่ยง', 'ตัดสายระเบิดให้ถูกก่อนจะตู้ม'],
+    stopwatch: ['จับเวลา', 'กดหยุดเวลาให้ใกล้เป้าหมายที่สุด'],
+    wyr: ['คุยฮา', 'เลือกข้างจากคำถามสองทางแล้วเถียงให้สนุก'],
+    slot: ['สุ่ม', 'หมุนสล็อตเพื่อรับรางวัลหรือบทลงโทษ'],
+    memory: ['จำ', 'จำลำดับสีแล้วกดตามให้ถูก'],
+    drunktype: ['พิมพ์', 'พิมพ์ประโยคให้ถูกภายในเวลา'],
+    taboo: ['ใบ้คำ', 'อธิบายคำหลักโดยห้ามพูดคำต้องห้าม'],
+    crazypitch: ['ขายของ', 'ขายของแปลกให้เพื่อนเชื่อให้ได้'],
+    partyrule: ['กฎวง', 'สุ่มกฎใหม่ให้ทุกคนทำตาม'],
+    readlips: ['อ่านปาก', 'ใส่หูฟังแล้วอ่านปากเพื่อน'],
+    neverhave: ['สารภาพ', 'ตอบว่าฉันเคยหรือไม่เคย'],
+    spinbottle: ['คลาสสิก', 'หมุนขวดให้ชี้คนที่โดนภารกิจ'],
+    nitro: ['ส่งต่อ', 'รับระเบิดแล้วส่งต่อให้ทันเวลา'],
+    mostlikely: ['โหวต', 'ทุกคนชี้ว่าใครน่าจะเป็นที่สุด'],
+    telepathy: ['เข้าขา', 'ตอบให้ตรงใจกับเพื่อนในวง'],
+    hilow: ['ไพ่', 'ทายว่าไพ่ใบต่อไปสูงหรือต่ำกว่า'],
+    twotruths: ['โกหก', 'เล่า 2 เรื่องจริง 1 เรื่องหลอก'],
+    draw: ['วาด', 'วาดต่อกันแล้วดูว่ารูปเพี้ยนแค่ไหน'],
+    kingscup: ['ไพ่', 'จับไพ่แล้วทำตามกฎราชา'],
+    wheel: ['วงล้อ', 'หมุนวงล้อสุ่มภารกิจ'],
+    croc: ['เสี่ยงนิ้ว', 'กดฟันจระเข้แล้วลุ้นโดนงับ'],
+    textbomb: ['คำไว', 'หาคำให้ทันก่อนระเบิดแตก'],
+    headsup: ['ทายคำ', 'แนบมือถือบนหน้าผากให้เพื่อนใบ้'],
+    tapbattle: ['แข่งนิ้ว', 'รัวแตะหน้าจอแข่งกันสองฝั่ง'],
+    spy: ['สืบสวน', 'ทุกคนรู้สถานที่ ยกเว้น Spy'],
+    hotpotato: ['ส่งต่อ', 'ส่งระเบิดร้อนให้พ้นมือ'],
+    tod: ['Truth/Dare', 'สุ่มคำถามจริงใจหรือคำท้า'],
+    fivesec: ['5 วิ', 'ตอบให้ครบก่อนหมดเวลา'],
+    guesswho: ['ทายคน', 'อ่านคำใบ้แล้วโหวตว่าเป็นใคร'],
+    humsong: ['เพลง', 'ฮัมเพลงให้เพื่อนทาย ห้ามร้องเนื้อ']
+};
+
+const categoryLabels = {
+    all: 'ทั้งหมด',
+    fast: 'เกมไว',
+    risk: 'เกมเสี่ยง',
+    clue: 'เกมใบ้คำ',
+    drink: 'สายดื่ม',
+    phone: 'ใช้มือถือกลางวง'
+};
+
+const gameProfiles = {
+    touch: { categories: ['fast', 'risk', 'phone'], min: 2, vibe: 'สุ่มคนโดนแบบเร็ว เล่นดีมากเวลาเปิดวง' },
+    russian: { categories: ['risk', 'phone'], min: 2, vibe: 'ลุ้นทีละคน เหมาะกับวงที่ชอบเสียงฮา' },
+    duel: { categories: ['fast', 'risk', 'phone'], min: 2, vibe: 'สองฝั่งแตะหน้าจอ แข่งรีแอคชันแบบเดือด' },
+    defuse: { categories: ['risk', 'phone'], min: 1, vibe: 'ตัดสายระเบิด ใช้เวลาสั้นแต่ลุ้นหนัก' },
+    stopwatch: { categories: ['fast', 'phone'], min: 1, vibe: 'กะเวลาให้เป๊ะ เล่นแทรกได้ทุกช่วง' },
+    wyr: { categories: ['clue'], min: 2, vibe: 'คำถามสองทาง เปิดประเด็นคุยฮา' },
+    slot: { categories: ['fast', 'risk', 'drink'], min: 1, vibe: 'หมุนไว ได้ผลทันที เหมาะกับสายสุ่ม' },
+    memory: { categories: ['fast', 'phone'], min: 1, vibe: 'จำลำดับไฟ เล่นวนทีละคนได้ง่าย' },
+    drunktype: { categories: ['fast', 'phone', 'drink'], min: 1, vibe: 'พิมพ์แข่งเวลา เหมาะกับมือถือสุด ๆ' },
+    taboo: { categories: ['clue'], min: 3, vibe: 'ใบ้คำห้ามพูด เหมาะกับวง 3 คนขึ้นไป' },
+    crazypitch: { categories: ['clue'], min: 2, vibe: 'แถขายของแปลก เหมาะกับคนพูดเก่ง' },
+    partyrule: { categories: ['fast', 'drink'], min: 1, vibe: 'สุ่มกฎทั้งวง เพิ่มความปั่นระหว่างเล่น' },
+    readlips: { categories: ['clue'], min: 2, vibe: 'อ่านปากเพื่อน เล่นแล้วหลุดขำง่าย' },
+    neverhave: { categories: ['drink'], min: 2, vibe: 'สารภาพ/ยกแก้ว เหมาะกับวงสนิท' },
+    spinbottle: { categories: ['risk', 'phone'], min: 2, vibe: 'คลาสสิก วางมือถือกลางวงแล้วหมุน' },
+    nitro: { categories: ['fast', 'risk', 'phone'], min: 2, vibe: 'ส่งระเบิดให้ทัน จังหวะเร็วและตื่นเต้น' },
+    mostlikely: { categories: ['clue', 'drink'], min: 3, vibe: 'โหวตชี้เพื่อน เหมาะกับวงหลายคน' },
+    telepathy: { categories: ['clue'], min: 2, vibe: 'วัดใจว่าคิดตรงกันไหม เล่นเป็นคู่สนุก' },
+    hilow: { categories: ['risk', 'phone'], min: 1, vibe: 'ทายไพ่สูงต่ำ เล่นง่ายไม่ต้องอธิบายนาน' },
+    twotruths: { categories: ['clue'], min: 2, vibe: 'เล่าเรื่องจริงปนโกหก ชวนจับผิดกัน' },
+    draw: { categories: ['clue', 'phone'], min: 1, vibe: 'วาดต่อกันบนมือถือ ภาพมักเพี้ยนแบบฮา' },
+    kingscup: { categories: ['drink', 'risk'], min: 2, vibe: 'ไพ่ปาร์ตี้สายดื่ม เล่นยาวได้ทั้งวง' },
+    wheel: { categories: ['fast', 'risk', 'phone'], min: 1, vibe: 'วงล้อสุ่มภารกิจ กดง่ายเห็นผลไว' },
+    croc: { categories: ['risk', 'phone'], min: 1, vibe: 'กดฟันเสี่ยงโดนงับ เล่นคั่นวงได้ดี' },
+    textbomb: { categories: ['fast', 'clue', 'phone'], min: 2, vibe: 'คิดคำแข่งเวลา กดดันกำลังดี' },
+    headsup: { categories: ['clue', 'phone'], min: 2, vibe: 'แนบมือถือบนหน้าผาก ให้เพื่อนใบ้คำ' },
+    tapbattle: { categories: ['fast', 'phone'], min: 2, vibe: 'แข่งรัวนิ้วสองฝั่ง เหมาะกับคู่ดวล' },
+    spy: { categories: ['clue'], min: 3, vibe: 'ตามหา Spy เหมาะกับวง 3 คนขึ้นไป' },
+    hotpotato: { categories: ['fast', 'risk', 'phone'], min: 2, vibe: 'ส่งระเบิดร้อน เล่นได้ไวและเสียงดังแน่นอน' },
+    tod: { categories: ['drink', 'risk'], min: 2, vibe: 'Truth or Dare เลือกได้ทั้งถามและท้า' },
+    fivesec: { categories: ['fast', 'clue'], min: 2, vibe: 'ตอบภายใน 5 วิ เหมาะกับช่วงอยากเร่งจังหวะ' },
+    guesswho: { categories: ['clue'], min: 3, vibe: 'คำใบ้หมายถึงใครในวง โหวตแล้วฮา' },
+    humsong: { categories: ['clue'], min: 2, vibe: 'ฮัมเพลงให้ทาย เล่นง่ายและไม่ต้องเตรียมของ' }
+};
+
 // โหลดและตั้งค่า Theme
 window.setTheme = (themeName) => {
     document.body.className = ''; 
@@ -130,6 +213,32 @@ window.changeAmbience = () => { initAudio(); clearInterval(ambientInterval); con
 function showToast(msg, type = 'success') { let container = document.getElementById('toast-container'); const t = document.createElement('div'); t.className = 'toast'; t.style.borderColor = type === 'error' ? '#ef4444' : 'var(--neon-blue)'; t.innerText = msg; container.appendChild(t); setTimeout(() => t.remove(), 3000); }
 function flashScreen(type) { const overlay = document.getElementById('flash-overlay'); if(!overlay) return; overlay.style.backgroundColor = type === 'green' ? 'rgba(34, 197, 94, 0.7)' : 'rgba(239, 68, 68, 0.7)'; setTimeout(() => { overlay.style.backgroundColor = 'transparent'; }, 400); }
 
+window.toggleCampfire = () => {
+    document.body.classList.toggle('campfire-mode');
+    const enabled = document.body.classList.contains('campfire-mode');
+    localStorage.setItem('partyCampfireMode', enabled ? '1' : '0');
+    const btn = document.getElementById('btn-campfire');
+    if(btn) btn.innerText = enabled ? '🔥 โหมดแคมป์เปิด' : '🏕️ โหมดแคมป์';
+    showToast(enabled ? 'เปิดโหมดแคมป์แล้ว' : 'ปิดโหมดแคมป์แล้ว');
+};
+
+window.shareApp = async () => {
+    const shareData = {
+        title: 'วงนี้มีเกม',
+        text: 'มาเล่นเกมปาร์ตี้ในวงนี้กัน',
+        url: location.href
+    };
+    try {
+        if(navigator.share) await navigator.share(shareData);
+        else {
+            await navigator.clipboard.writeText(location.href);
+            showToast('คัดลอกลิงก์แล้ว ส่งให้เพื่อนได้เลย');
+        }
+    } catch (err) {
+        if(err.name !== 'AbortError') showToast('แชร์ไม่สำเร็จ ลองคัดลอกลิงก์แทน', 'error');
+    }
+};
+
 // --- Toggle HP Mode ---
 window.toggleHPMode = () => {
     useHP = !useHP;
@@ -153,10 +262,11 @@ window.showPenaltyModal = () => {
     
     const resDiv = document.getElementById('penalty-result');
     resDiv.innerHTML = `
-        <div style="font-size:1.1rem; color:white; margin-bottom:15px;">เลือกประเภทบทลงโทษ:</div>
+        <div style="font-size:1.1rem; color:white; margin-bottom:8px;">ระดับตอนนี้: <span style="color:var(--neon-blue);">${getPenaltyLevelLabel()}</span></div>
+        <div style="font-size:0.9rem; color:var(--text-muted); margin-bottom:15px;">ปรับระดับได้จากแผงหน้าเลือกเกม</div>
         <div style="display:flex; flex-direction:column; gap:10px; width:100%;">
-            <button class="btn-neon-purple action-btn" style="padding:15px;" onclick="rollPenalty('general')">🎲 สุ่มบทลงโทษทั่วไป</button>
-            <button class="btn-danger action-btn" style="padding:15px;" onclick="rollPenalty('drink')">🍺 สายแข็ง (เน้นดื่ม!)</button>
+            <button class="btn-neon-purple action-btn" style="padding:15px;" onclick="rollPenalty('selected')">🎲 สุ่มตามระดับที่เลือก</button>
+            <button class="btn-danger action-btn" style="padding:15px;" onclick="rollPenalty('drink')">🍺 สุ่มสายดื่มทันที</button>
         </div>
         <div id="actual-penalty-text" style="margin-top:25px; font-size:1.5rem; color:var(--neon-pink); min-height:80px; font-weight:bold;"></div>
     `;
@@ -167,7 +277,7 @@ window.rollPenalty = (type) => {
     el.innerText = 'กำลังสุ่ม...'; 
     setTimeout(() => { 
         playSound('boom'); 
-        const arr = (type === 'drink') ? drinkingPenalties : penalties;
+        const arr = getPenaltyPool(type);
         el.innerText = arr[Math.floor(Math.random() * arr.length)]; 
     }, 800); 
 };
@@ -175,7 +285,13 @@ window.rollPenalty = (type) => {
 window.splitTeams = () => { if(players.length < 2) { showToast("ต้องมีผู้เล่นอย่างน้อย 2 คน", "error"); return; } let shuffled = [...players].sort(() => 0.5 - Math.random()); let half = Math.ceil(shuffled.length / 2); document.getElementById('team-result').innerHTML = `<div style="margin-bottom:15px; background: rgba(239,68,68,0.2); border: 1px solid #ef4444; padding: 10px; border-radius: 8px;"><strong style="color:#ef4444; font-size:1.2rem;">🔴 ทีมแดง</strong><br><span style="color:white;">${shuffled.slice(0, half).map(p => p.name).join('<br>')}</span></div><div style="background: rgba(59,130,246,0.2); border: 1px solid #3b82f6; padding: 10px; border-radius: 8px;"><strong style="color:#3b82f6; font-size:1.2rem;">🔵 ทีมน้ำเงิน</strong><br><span style="color:white;">${shuffled.slice(half).map(p => p.name).join('<br>')}</span></div>`; document.getElementById('team-modal').classList.remove('hidden'); }
 window.closeModals = () => { document.getElementById('penalty-modal').classList.add('hidden'); document.getElementById('team-modal').classList.add('hidden'); }
 
-function saveState() { localStorage.setItem('partyPlayers', JSON.stringify(players)); localStorage.setItem('partyGamesCount', gamesPlayed.toString()); renderPlayers(); renderMiniHP(); }
+function saveState() {
+    localStorage.setItem('partyPlayers', JSON.stringify(players));
+    localStorage.setItem('partyGamesCount', gamesPlayed.toString());
+    renderPlayers();
+    renderMiniHP();
+    renderRecommendations();
+}
 window.addPlayer = () => { initAudio(); const input = document.getElementById('new-player-name'); const name = input.value.trim(); if (name && players.length < 15) { players.push({ id: Date.now(), name: `${emojis[Math.floor(Math.random() * emojis.length)]} ${name}`, hp: 3 }); input.value = ''; saveState(); } else if (players.length >= 15) { showToast('ผู้เล่นเต็มแล้ว!', 'error'); } }
 window.removePlayer = (id) => { if(confirm('ต้องการลบผู้เล่นคนนี้?')) { players = players.filter(p => p.id !== id); saveState(); } }
 window.updateHP = (id, change) => { if(!useHP) return; let p = players.find(x => x.id === id); if(p) { p.hp += change; if(p.hp < 0) p.hp = 0; if(p.hp > 5) p.hp = 5; saveState(); } }
@@ -211,8 +327,152 @@ function renderMiniHP() {
 // ==========================================
 // 3. Core Engine
 // ==========================================
-function renderGameGrid() { const grid = document.getElementById('game-grid'); grid.innerHTML = ''; gameList.forEach(game => { const card = document.createElement('div'); card.className = `game-card`; card.style.borderColor = `var(--neon-${game.color})`; card.innerHTML = `<div class="game-icon">${game.icon}</div><div style="font-weight: 600; font-size: 0.85rem;">${game.name}</div>`; card.onclick = () => openGame(game.id); grid.appendChild(card); }); }
-window.randomGameSelect = () => { openGame(gameList[Math.floor(Math.random() * gameList.length)].id); }
+function getPenaltyLevelLabel() {
+    return ({ chill: 'ชิล', fun: 'ฮา', hard: 'เดือด', drink: 'สายดื่ม' })[penaltyLevel] || 'ฮา';
+}
+
+function getPenaltyPool(type = 'selected') {
+    if(type === 'drink' || penaltyLevel === 'drink') return drinkingPenalties;
+    if(penaltyLevel === 'chill') return penalties.slice(0, 24);
+    if(penaltyLevel === 'hard') return penalties.slice(Math.floor(penalties.length * 0.35));
+    return penalties;
+}
+
+window.setPenaltyLevel = (level) => {
+    penaltyLevel = level;
+    localStorage.setItem('partyPenaltyLevel', penaltyLevel);
+    renderPenaltyTabs();
+    showToast(`ตั้งบทลงโทษเป็นระดับ ${getPenaltyLevelLabel()} แล้ว`);
+};
+
+function renderPenaltyTabs() {
+    document.querySelectorAll('#penalty-tabs button').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.level === penaltyLevel);
+    });
+}
+
+window.setGameCategory = (category) => {
+    currentCategory = category;
+    localStorage.setItem('partyGameCategory', currentCategory);
+    renderCategoryTabs();
+    renderGameGrid();
+    renderRecommendations();
+};
+
+function getFilteredGames() {
+    if(currentCategory === 'all') return gameList;
+    return gameList.filter(game => gameProfiles[game.id]?.categories.includes(currentCategory));
+}
+
+function renderCategoryTabs() {
+    const tabs = document.getElementById('category-tabs');
+    if(!tabs) return;
+    tabs.innerHTML = '';
+    Object.entries(categoryLabels).forEach(([id, label]) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = id === currentCategory ? 'active' : '';
+        btn.innerText = label;
+        btn.onclick = () => setGameCategory(id);
+        tabs.appendChild(btn);
+    });
+}
+
+function pickRecommendedGames() {
+    const count = players.length || 2;
+    const pool = getFilteredGames().filter(game => {
+        const profile = gameProfiles[game.id];
+        if(!profile) return true;
+        if(count >= 6) return profile.min <= count;
+        return profile.min <= Math.max(count, 2);
+    });
+    const preferred = pool.filter(game => {
+        const cats = gameProfiles[game.id]?.categories || [];
+        if(count <= 2) return cats.includes('fast') || cats.includes('phone') || cats.includes('risk');
+        if(count <= 5) return cats.includes('clue') || cats.includes('fast') || cats.includes('risk');
+        return cats.includes('clue') || cats.includes('drink') || cats.includes('risk');
+    });
+    return [...(preferred.length ? preferred : pool)]
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 3);
+}
+
+function renderRecommendations() {
+    const list = document.getElementById('recommendation-list');
+    if(!list) return;
+    const recs = pickRecommendedGames();
+    list.innerHTML = '';
+    recs.forEach(game => {
+        const profile = gameProfiles[game.id] || {};
+        const item = document.createElement('button');
+        item.type = 'button';
+        item.className = 'recommend-card';
+        item.innerHTML = `
+            <span class="recommend-icon">${game.icon}</span>
+            <span class="recommend-copy">
+                <strong>${game.name}</strong>
+                <small>${profile.vibe || 'แตะเพื่อเริ่มเล่นทันที'}</small>
+            </span>
+        `;
+        item.onclick = () => openGame(game.id);
+        list.appendChild(item);
+    });
+}
+
+window.refreshRecommendations = () => {
+    renderRecommendations();
+    showToast('สุ่มเกมแนะนำใหม่แล้ว');
+};
+
+window.quickStart = () => {
+    initAudio();
+    if(players.length === 0) {
+        const sampleNames = ['ต้น', 'มายด์', 'บอส', 'แพรว'];
+        players = sampleNames.map((name, index) => ({
+            id: Date.now() + index,
+            name: `${emojis[index % emojis.length]} ${name}`,
+            hp: 3
+        }));
+        saveState();
+        showToast('เพิ่มผู้เล่นตัวอย่าง 4 คนแล้ว');
+    }
+    currentCategory = 'fast';
+    localStorage.setItem('partyGameCategory', currentCategory);
+    renderCategoryTabs();
+    renderGameGrid();
+    const rec = pickRecommendedGames()[0] || gameList[Math.floor(Math.random() * gameList.length)];
+    showToast(`เริ่มเร็ว: ${rec.name}`);
+    setTimeout(() => openGame(rec.id), 350);
+};
+
+function renderGameGrid() {
+    const grid = document.getElementById('game-grid');
+    if(!grid) return;
+    grid.innerHTML = '';
+    const games = getFilteredGames();
+    games.forEach(game => {
+        const meta = gameMeta[game.id] || ['เกม', 'แตะเพื่อเริ่มเล่น'];
+        const card = document.createElement('button');
+        card.type = 'button';
+        card.className = `game-card game-card-${game.color}`;
+        card.style.borderColor = `var(--neon-${game.color})`;
+        card.innerHTML = `
+            <span class="game-card-badge">${meta[0]}</span>
+            <span class="game-icon">${game.icon}</span>
+            <span class="game-card-title">${game.name}</span>
+            <span class="game-card-desc">${meta[1]}</span>
+        `;
+        card.onclick = () => openGame(game.id);
+        grid.appendChild(card);
+    });
+    if(games.length === 0) {
+        grid.innerHTML = `<div class="empty-state">ยังไม่มีเกมในหมวดนี้</div>`;
+    }
+}
+window.randomGameSelect = () => {
+    const games = getFilteredGames();
+    openGame(games[Math.floor(Math.random() * games.length)].id);
+}
 let gameInterval, gameTimeout, gameStopwatch;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -738,5 +998,15 @@ window.copySummary = () => { let t = `🎉 สรุปผล "วงนี้�
 window.resetAll = () => { if(confirm('ล้างข้อมูลเริ่มใหม่ทั้งหมด?')) { players = []; gamesPlayed = 0; saveState(); document.getElementById('summary-view').classList.add('hidden'); document.getElementById('home-view').classList.remove('hidden'); } }
 
 // Init
-renderPlayers(); renderGameGrid(); renderMiniHP();
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW fail:', err));
+if(localStorage.getItem('partyCampfireMode') === '1') {
+    document.body.classList.add('campfire-mode');
+    const btn = document.getElementById('btn-campfire');
+    if(btn) btn.innerText = '🔥 โหมดแคมป์เปิด';
+}
+renderPlayers();
+renderCategoryTabs();
+renderPenaltyTabs();
+renderGameGrid();
+renderRecommendations();
+renderMiniHP();
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(err => console.log('SW fail:', err));

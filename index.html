@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>วงนี้มีเกม - Premium Party Hub</title>
+    <meta name="theme-color" content="#09090b">
+    <meta name="description" content="เว็บแอปเกมปาร์ตี้สำหรับเล่นกับเพื่อนบนมือถือ มีเกม 33 เกม ระบบ HP สุ่มทีม สุ่มทำโทษ และโหมดเริ่มเร็ว">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="icon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -16,18 +21,26 @@
 <div id="app-container">
     <div id="home-view" class="dashboard-layout">
         <div class="header-section text-center mb-2 mt-3">
+            <p class="app-kicker">Party Game Hub</p>
             <h1 class="text-gradient pulse-text" style="font-size: 2.2rem; margin-bottom: 5px;">วงนี้มีเกม 🎮</h1>
-            <p class="text-muted" style="font-size: 0.9rem;">Premium Party Hub</p>
+            <p class="text-muted" style="font-size: 0.9rem;">รวมเกมปาร์ตี้ เล่นง่าย เปิดบนมือถือแล้วเริ่มวงได้ทันที</p>
+            <div class="quick-stats" aria-label="ข้อมูลแอป">
+                <span>33 เกม</span>
+                <span>ระบบ HP</span>
+                <span>สุ่มทีม</span>
+                <span>ทำโทษ</span>
+            </div>
         </div>
 
         <div class="toolbar-section mb-2">
+            <button onclick="quickStart()" class="action-btn toolbar-btn btn-neon-green">⚡ เริ่มเร็ว</button>
             <button onclick="toggleCampfire()" id="btn-campfire" class="action-btn toolbar-btn">🏕️ โหมดแคมป์</button>
             <button onclick="shareApp()" class="action-btn toolbar-btn btn-neon-blue">🔗 ชวนเพื่อน</button>
             <button onclick="splitTeams()" class="action-btn toolbar-btn btn-neon-pink">🤝 แบ่งทีม</button>
             <button onclick="showPenaltyModal()" class="action-btn toolbar-btn btn-danger">💀 สุ่มทำโทษ</button>
         </div>
 
-        <div class="theme-switcher mb-3" style="display:flex; gap:5px; flex-wrap:wrap; justify-content:center;">
+        <div class="theme-switcher mb-3" style="display:flex; gap:5px; flex-wrap:wrap; justify-content:center;" aria-label="เลือกธีม">
             <button onclick="setTheme('default')" class="theme-btn" style="background:#333;">Default</button>
             <button onclick="setTheme('cyberpunk')" class="theme-btn" style="background:#f820c6;">Cyber</button>
             <button onclick="setTheme('sunset')" class="theme-btn" style="background:#ff5e62;">Sunset</button>
@@ -57,6 +70,31 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <h3 class="text-gradient" style="margin: 0;">🎮 เลือกเกม</h3>
                     <button onclick="randomGameSelect()" class="btn-neon-purple" style="width: auto; padding: 5px 15px; font-size: 0.8rem;">🎲 สุ่มเกม</button>
+                </div>
+                <div class="control-panel mb-3">
+                    <div class="control-row">
+                        <span>🎯 หมวดเกม</span>
+                        <div class="category-tabs" id="category-tabs" aria-label="หมวดเกม"></div>
+                    </div>
+                    <div class="control-row">
+                        <span>🔥 ความแรงบทลงโทษ</span>
+                        <div class="penalty-tabs" id="penalty-tabs" aria-label="ความแรงบทลงโทษ">
+                            <button type="button" onclick="setPenaltyLevel('chill')" data-level="chill">ชิล</button>
+                            <button type="button" onclick="setPenaltyLevel('fun')" data-level="fun">ฮา</button>
+                            <button type="button" onclick="setPenaltyLevel('hard')" data-level="hard">เดือด</button>
+                            <button type="button" onclick="setPenaltyLevel('drink')" data-level="drink">สายดื่ม</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="recommend-panel mb-3">
+                    <div class="recommend-header">
+                        <div>
+                            <p class="section-kicker">เหมาะกับวงนี้</p>
+                            <h4>เกมแนะนำตอนนี้</h4>
+                        </div>
+                        <button onclick="refreshRecommendations()" class="btn-neon-blue">🔄 แนะนำใหม่</button>
+                    </div>
+                    <div id="recommendation-list" class="recommendation-list"></div>
                 </div>
                 <div class="mb-3" style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.3); padding: 5px 10px; border-radius: 12px;">
                     <span style="font-size: 0.8rem;">🔊 เสียงคลอ:</span>
@@ -90,7 +128,7 @@
         <button onclick="resetAll()" class="btn-danger action-btn">🔄 เริ่มงานใหม่ทั้งหมด</button>
     </div>
 
-    <div id="penalty-modal" class="hidden modal-overlay"><div class="glass-card p-4 text-center modal-box"><h2 class="mb-4 text-gradient">💀 บทลงโทษ</h2><div id="penalty-result" class="timer-text mb-4" style="font-size: 1.5rem; color: #ef4444; line-height: 1.4;">กดสุ่มเลย!</div><button class="btn-danger action-btn mb-2" onclick="rollPenalty()">🎲 สุ่มลงโทษ</button><button class="btn-neon-purple action-btn" onclick="closeModals()">ปิดหน้าต่าง</button></div></div>
+    <div id="penalty-modal" class="hidden modal-overlay"><div class="glass-card p-4 text-center modal-box"><h2 class="mb-4 text-gradient">💀 บทลงโทษ</h2><div id="penalty-result" class="timer-text mb-4" style="font-size: 1.5rem; color: #ef4444; line-height: 1.4;">เลือกประเภทแล้วสุ่มได้เลย!</div><button class="btn-neon-purple action-btn" onclick="closeModals()">ปิดหน้าต่าง</button></div></div>
     <div id="team-modal" class="hidden modal-overlay"><div class="glass-card p-4 modal-box text-center"><h2 class="mb-4 text-gradient">🤝 ผลการแบ่งทีม</h2><div id="team-result" style="text-align: left; margin-bottom: 20px;"></div><button class="btn-neon-blue action-btn mb-2" onclick="splitTeams()">🔄 สุ่มใหม่</button><button class="btn-danger action-btn" onclick="closeModals()">ปิดหน้าต่าง</button></div></div>
     <div id="toast-container"></div>
 </div>
