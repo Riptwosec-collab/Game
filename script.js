@@ -476,9 +476,27 @@ window.randomGameSelect = () => {
 let gameInterval, gameTimeout, gameStopwatch;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
+function ensurePlayersForGame(gameId) {
+    const minPlayers = gameProfiles[gameId]?.min || 1;
+    if(players.length >= minPlayers) return;
+
+    const guestNames = ['ผู้เล่น 1', 'ผู้เล่น 2', 'ผู้เล่น 3', 'ผู้เล่น 4'];
+    const missing = minPlayers - players.length;
+    for(let i = 0; i < missing; i++) {
+        const nameIndex = players.length + i;
+        players.push({
+            id: Date.now() + i,
+            name: `${emojis[nameIndex % emojis.length]} ${guestNames[nameIndex] || `ผู้เล่น ${nameIndex + 1}`}`,
+            hp: 3
+        });
+    }
+    saveState();
+    showToast(`เพิ่มผู้เล่นทดลองให้ครบ ${minPlayers} คนแล้ว`);
+}
+
 window.openGame = (gameId) => {
     initAudio(); 
-    if(players.length < 2 && !['wheel', 'croc', 'tapbattle', 'draw', 'kingscup', 'touch', 'russian', 'hilow', 'duel', 'spinbottle', 'defuse', 'stopwatch', 'slot', 'memory', 'drunktype', 'partyrule'].includes(gameId)) { showToast("ต้องใช้ผู้เล่นอย่างน้อย 2 คน", "error"); return; }
+    ensurePlayersForGame(gameId);
     gamesPlayed++; saveState();
     const game = gameList.find(g => g.id === gameId); document.getElementById('game-title').innerText = `${game.icon} ${game.name}`;
     const content = document.getElementById('game-content'); content.innerHTML = ''; content.classList.remove('animate-entrance'); void content.offsetWidth; content.classList.add('animate-entrance');

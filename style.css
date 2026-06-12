@@ -702,10 +702,124 @@ select {
     .game-content {
         padding-left: 8px;
         padding-right: 8px;
+        overflow-x: hidden;
     }
 
     .display-text.glass-card {
         padding: 1rem !important;
+    }
+
+    .game-content,
+    .game-content * {
+        max-width: 100%;
+        min-width: 0;
+    }
+
+    .game-content [style*="display:flex"] {
+        max-width: 100% !important;
+    }
+
+    .game-content > [style*="display:flex"],
+    .game-content [style*="display:flex"][style*="gap"] {
+        flex-wrap: wrap;
+    }
+
+    .game-content [style*="display:flex"][style*="gap"] > button {
+        flex: 1 1 138px;
+    }
+
+    .game-content .glass-card,
+    .game-content textarea,
+    .game-content input,
+    .game-content button {
+        max-width: 100% !important;
+    }
+
+    .game-content [style*="font-size:6rem"],
+    .game-content [style*="font-size: 6rem"] {
+        font-size: clamp(3rem, 20vw, 4.6rem) !important;
+    }
+
+    .game-content [style*="font-size:5rem"],
+    .game-content [style*="font-size: 5rem"] {
+        font-size: clamp(2.8rem, 18vw, 4rem) !important;
+    }
+
+    .game-content [style*="font-size:4rem"],
+    .game-content [style*="font-size: 4rem"] {
+        font-size: clamp(2.35rem, 15vw, 3.35rem) !important;
+    }
+
+    .game-content [style*="font-size:3rem"],
+    .game-content [style*="font-size: 3rem"] {
+        font-size: clamp(2rem, 12vw, 2.7rem) !important;
+    }
+
+    .game-content [style*="font-size:2rem"],
+    .game-content [style*="font-size: 2rem"] {
+        font-size: clamp(1.45rem, 8vw, 2rem) !important;
+    }
+
+    .game-content [style*="width:250px"][style*="height:250px"] {
+        width: min(72vw, 250px) !important;
+        height: min(72vw, 250px) !important;
+        margin: 18px auto !important;
+    }
+
+    .game-content [style*="width:200px"] {
+        width: min(100%, 200px) !important;
+    }
+
+    .game-content [style*="width:70px"] {
+        width: clamp(58px, 19vw, 70px) !important;
+    }
+
+    .game-content [style*="height:80px"] {
+        height: clamp(64px, 21vw, 80px) !important;
+    }
+
+    .game-content [style*="min-height:80px"] {
+        min-height: 72px !important;
+    }
+
+    .game-content .card-container {
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+
+    .game-content .playing-card {
+        width: min(38vw, 140px);
+        height: min(54vw, 200px);
+    }
+
+    .game-content .card-rank {
+        font-size: clamp(1.6rem, 8vw, 2.2rem);
+    }
+
+    .game-content .card-suit {
+        font-size: clamp(2.8rem, 14vw, 3.7rem);
+    }
+
+    .game-content .tap-container {
+        flex-wrap: nowrap !important;
+    }
+
+    .game-content #wire-container > div {
+        flex: 0 0 30px;
+    }
+
+    .game-content #draw-settings > div {
+        gap: 10px;
+        align-items: center;
+    }
+
+    .game-content #draw-settings label {
+        overflow-wrap: anywhere;
+    }
+
+    .touch-circle {
+        width: clamp(72px, 24vw, 100px);
+        height: clamp(72px, 24vw, 100px);
     }
 }
 
@@ -718,6 +832,14 @@ select {
     .toolbar-section {
         grid-template-columns: 1fr 1fr;
     }
+
+    .game-content [style*="padding:20px"] {
+        padding: 14px !important;
+    }
+
+    .game-content [style*="gap:10px"] {
+        gap: 8px !important;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -728,5 +850,356 @@ select {
         animation-iteration-count: 1 !important;
         scroll-behavior: auto !important;
         transition-duration: 0.01ms !important;
+    }
+}
+
+/* Hard mobile overflow guard for every game screen */
+html,
+body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+#app-container,
+#home-view,
+#game-view,
+#summary-view,
+.dashboard-layout,
+.glass-overlay {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.game-rules-box,
+.display-text,
+.toast {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+#toast-container {
+    left: max(10px, env(safe-area-inset-left));
+    right: max(10px, env(safe-area-inset-right));
+    width: auto;
+    max-width: none;
+    transform: none;
+    align-items: stretch;
+}
+
+.toast {
+    white-space: normal;
+    line-height: 1.35;
+}
+
+@media (max-width: 620px) {
+    #app-container {
+        max-width: 100vw;
+    }
+
+    .glass-overlay {
+        min-width: 0;
+    }
+
+    .game-header-container,
+    .game-header,
+    .mini-hp-bar {
+        width: 100%;
+        max-width: 100vw;
+        min-width: 0;
+    }
+
+    .game-header {
+        overflow: hidden;
+    }
+
+    .game-header .back-btn {
+        flex: 0 0 auto;
+        margin-right: 8px !important;
+    }
+
+    .game-header #game-title {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .game-content {
+        width: 100%;
+        max-width: 100vw;
+        padding-left: 10px;
+        padding-right: 10px;
+        box-sizing: border-box;
+    }
+
+    .game-content > *:not(#duel-arena) {
+        width: 100%;
+        max-width: calc(100vw - 20px) !important;
+        box-sizing: border-box;
+    }
+
+    .game-rules-box {
+        width: 100% !important;
+        max-width: calc(100vw - 20px) !important;
+        padding: 10px 12px !important;
+        font-size: clamp(0.86rem, 4vw, 1rem) !important;
+        line-height: 1.55 !important;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .display-text {
+        width: 100% !important;
+        max-width: calc(100vw - 20px) !important;
+        line-height: 1.38;
+    }
+
+    .timer-text {
+        max-width: calc(100vw - 20px) !important;
+        overflow-wrap: anywhere;
+    }
+
+    .game-content button {
+        white-space: normal;
+        line-height: 1.25;
+        overflow-wrap: anywhere;
+    }
+
+    .game-content [style*="display:flex"][style*="justify-content:space-between"],
+    .game-content [style*="display:flex"][style*="justify-content: space-between"] {
+        align-items: stretch !important;
+        gap: 8px !important;
+    }
+
+    .game-content [style*="display:flex"][style*="justify-content:space-between"] > *,
+    .game-content [style*="display:flex"][style*="justify-content: space-between"] > * {
+        min-width: 0;
+        flex: 1 1 120px;
+    }
+
+    .game-content [style*="max-width:300px"],
+    .game-content [style*="max-width: 300px"],
+    .game-content [style*="max-width:350px"],
+    .game-content [style*="max-width: 350px"],
+    .game-content [style*="max-width:400px"],
+    .game-content [style*="max-width: 400px"] {
+        max-width: calc(100vw - 20px) !important;
+    }
+
+    .game-content [style*="padding:30px"] {
+        padding: 18px 10px !important;
+    }
+
+    .modal-overlay {
+        overflow-x: hidden;
+    }
+
+    .modal-box {
+        width: 100%;
+        max-width: calc(100vw - 28px) !important;
+    }
+}
+
+/* Final phone layout fix: prevent clipping, overlap, and blocked taps */
+@media (max-width: 620px) {
+    body {
+        display: block !important;
+        width: 100vw !important;
+        max-width: 100vw !important;
+        overflow-x: clip !important;
+    }
+
+    #app-container {
+        width: 100vw !important;
+        max-width: 100vw !important;
+        margin: 0 !important;
+        overflow-x: clip !important;
+    }
+
+    #game-view {
+        width: 100vw !important;
+        max-width: 100vw !important;
+        min-height: 100dvh !important;
+        overflow-x: clip !important;
+    }
+
+    .game-header-container {
+        position: sticky !important;
+        top: 0 !important;
+        width: 100vw !important;
+        max-width: 100vw !important;
+        z-index: 100 !important;
+        overflow: hidden !important;
+    }
+
+    .game-header {
+        display: grid !important;
+        grid-template-columns: auto minmax(0, 1fr) !important;
+        align-items: center !important;
+        gap: 8px !important;
+        min-height: 58px !important;
+        padding: 10px !important;
+    }
+
+    .game-header .back-btn {
+        position: relative !important;
+        z-index: 2001 !important;
+        margin: 0 !important;
+        max-width: 92px !important;
+        white-space: nowrap !important;
+        pointer-events: auto !important;
+    }
+
+    .game-header #game-title {
+        min-width: 0 !important;
+        width: 100% !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+    }
+
+    .mini-hp-bar {
+        min-height: 42px !important;
+        width: 100vw !important;
+        max-width: 100vw !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        flex-wrap: nowrap !important;
+        align-items: center !important;
+        padding: 7px 10px !important;
+    }
+
+    .game-content {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        gap: 12px !important;
+        width: 100vw !important;
+        max-width: 100vw !important;
+        padding: 16px 10px 32px !important;
+        margin: 0 !important;
+        overflow-x: clip !important;
+        box-sizing: border-box !important;
+    }
+
+    .game-content > *:not(#duel-arena) {
+        position: static !important;
+        width: 100% !important;
+        max-width: calc(100vw - 20px) !important;
+        min-width: 0 !important;
+        flex: 0 0 auto !important;
+        box-sizing: border-box !important;
+    }
+
+    .game-rules-box {
+        position: static !important;
+        z-index: auto !important;
+        width: 100% !important;
+        max-width: calc(100vw - 20px) !important;
+        margin: 0 auto 8px !important;
+        padding: 10px 12px !important;
+        font-size: clamp(0.86rem, 3.8vw, 1rem) !important;
+        line-height: 1.5 !important;
+        border-radius: 8px !important;
+        transform: none !important;
+    }
+
+    .display-text,
+    .timer-text,
+    .game-content h1,
+    .game-content h2,
+    .game-content h3,
+    .game-content h4,
+    .game-content p,
+    .game-content label,
+    .game-content span {
+        max-width: 100% !important;
+        overflow-wrap: anywhere !important;
+        word-break: break-word !important;
+    }
+
+    .game-content [style*="display:flex"],
+    .game-content [style*="display: flex"] {
+        width: 100% !important;
+        max-width: calc(100vw - 20px) !important;
+        min-width: 0 !important;
+        flex-wrap: wrap !important;
+        box-sizing: border-box !important;
+    }
+
+    .game-content [style*="display:flex"] > *,
+    .game-content [style*="display: flex"] > * {
+        min-width: 0 !important;
+        max-width: 100% !important;
+    }
+
+    .game-content [style*="display:flex"] > button,
+    .game-content [style*="display: flex"] > button {
+        flex: 1 1 140px !important;
+    }
+
+    .game-content input,
+    .game-content textarea,
+    .game-content button,
+    .game-content .glass-card {
+        max-width: calc(100vw - 20px) !important;
+        box-sizing: border-box !important;
+    }
+
+    .game-content [style*="font-size: 6rem"],
+    .game-content [style*="font-size:6rem"] {
+        font-size: clamp(2.8rem, 18vw, 4.2rem) !important;
+    }
+
+    .game-content [style*="font-size: 5rem"],
+    .game-content [style*="font-size:5rem"] {
+        font-size: clamp(2.5rem, 16vw, 3.6rem) !important;
+    }
+
+    .game-content [style*="font-size: 4rem"],
+    .game-content [style*="font-size:4rem"] {
+        font-size: clamp(2.1rem, 13vw, 3rem) !important;
+    }
+
+    .game-content [style*="font-size: 3rem"],
+    .game-content [style*="font-size:3rem"] {
+        font-size: clamp(1.8rem, 10vw, 2.45rem) !important;
+    }
+
+    .game-content [style*="font-size: 2rem"],
+    .game-content [style*="font-size:2rem"] {
+        font-size: clamp(1.35rem, 7vw, 1.85rem) !important;
+    }
+
+    #duel-arena {
+        position: fixed !important;
+        inset: 0 !important;
+        width: 100vw !important;
+        height: 100dvh !important;
+        max-width: 100vw !important;
+        z-index: 1000 !important;
+    }
+
+    #toast-container {
+        top: max(10px, env(safe-area-inset-top)) !important;
+        left: 10px !important;
+        right: 10px !important;
+        width: auto !important;
+        max-width: none !important;
+        transform: none !important;
+        z-index: 100000 !important;
+    }
+
+    .toast {
+        width: 100% !important;
+        max-width: calc(100vw - 20px) !important;
+        padding: 10px 12px !important;
+        border-radius: 8px !important;
+        white-space: normal !important;
+        overflow-wrap: anywhere !important;
+        word-break: break-word !important;
     }
 }
