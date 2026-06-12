@@ -434,22 +434,6 @@ select {
     overflow: hidden;
 }
 
-.game-card::after {
-    content: "";
-    position: absolute;
-    inset: auto -18px -30px auto;
-    width: 86px;
-    height: 86px;
-    border-radius: 999px;
-    background: color-mix(in srgb, var(--neon-blue) 22%, transparent);
-    pointer-events: none;
-}
-
-.game-card-pink::after { background: color-mix(in srgb, var(--neon-pink) 24%, transparent); }
-.game-card-purple::after { background: color-mix(in srgb, var(--neon-purple) 24%, transparent); }
-.game-card-green::after { background: color-mix(in srgb, var(--neon-green) 24%, transparent); }
-.game-card-red::after { background: rgba(239, 68, 68, 0.2); }
-
 .game-card:hover {
     transform: translateY(-2px);
 }
